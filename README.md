@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/prettier/prettier-logo/master/images/prettier-banner-light.png" width="500">
+  <img src="https://raw.githubusercontent.com/prettier/prettier-logo/master/images/prettier-banner-light.png" width="600">
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@ This extension is based on the latest version of [Prettier](https://prettier.io/
 
 ## Install
 
-- [Get the Chrome Extension]()
+- [Get the Chrome Extension](https://github.com/u3u/prettier-chrome/releases/download/v0.1.0/prettier.crx)
 
 ## Usage
 
