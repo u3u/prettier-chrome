@@ -11,7 +11,6 @@ module.exports = {
     config.resolve.alias
       .set('assets', path.resolve(__dirname, 'src/assets'))
       .set('components', path.resolve(__dirname, 'src/components'))
-      .set('layouts', path.resolve(__dirname, 'src/layouts'))
       .set('utils', path.resolve(__dirname, 'src/utils'))
       .set('views', path.resolve(__dirname, 'src/views'));
 
