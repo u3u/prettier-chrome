@@ -10,7 +10,8 @@
     "format": "prettier-eslint \"**/*.{ts,tsx,js,jsx,json,scss,md}\" --write",
     "watch": "npm run watch:vue & npm run watch:bili",
     "watch:vue": "vue-cli-service build --watch",
-    "watch:bili": "bili --watch"
+    "watch:bili": "bili --watch",
+    "contributors": "all-contributors"
   },
   "dependencies": {
     "element-ui": "^2.3.9",
@@ -31,6 +32,7 @@
     "@vue/cli-service": "^3.0.0-beta.11",
     "@vue/eslint-config-airbnb": "^3.0.0-beta.11",
     "@vue/eslint-config-typescript": "^3.0.0-beta.11",
+    "all-contributors-cli": "^4.11.1",
     "babel-plugin-component": "git://github.com/u3u/babel-plugin-component.git",
     "babel-plugin-emotion": "^9.1.2",
     "babel-plugin-jsx-v-model": "^2.0.3",

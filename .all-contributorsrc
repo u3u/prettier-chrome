@@ -1,0 +1,22 @@
+{
+  "projectName": "prettier-chrome",
+  "projectOwner": "u3u",
+  "badgeTemplate": "<img alt=\"All Contributors\" src=\"https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg?style=for-the-badge\">",
+  "commit": false,
+  "contributors": [
+    {
+      "login": "u3u",
+      "name": "さくら",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/20062482?v=4",
+      "profile": "https://qwq.cat",
+      "contributions": [
+        "code",
+        "doc",
+        "example",
+        "design",
+        "ideas"
+      ]
+    }
+  ],
+  "repoType": "github"
+}
