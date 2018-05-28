@@ -13,8 +13,7 @@ function craeteContextMenus(ctxMenus: chrome.contextMenus.CreateProperties[]) {
   });
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-  craeteContextMenus(contextMenus);
+function registerCommands(ctxMenus: chrome.contextMenus.CreateProperties[]) {
   chrome.commands.onCommand.addListener((command: string) => {
     if (command === 'format-document') {
       const formatContextMenu: any = contextMenus.find(
@@ -25,4 +24,19 @@ chrome.runtime.onInstalled.addListener(() => {
       formatContextMenu.click();
     }
   });
+}
+
+let initialized = false;
+
+function init() {
+  if (initialized) return;
+  craeteContextMenus(contextMenus);
+  registerCommands(contextMenus);
+  initialized = true;
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  init();
 });
+
+init();
