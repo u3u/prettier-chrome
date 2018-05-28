@@ -127,6 +127,7 @@ export default class Popup extends Vue {
     this.save();
     MessageBox.alert('Saved successfully', 'Message', {
       type: 'success',
+      confirmButtonText: 'OK',
       customClass: msgbox,
     });
   }
