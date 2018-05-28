@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build && bili",
     "lint": "vue-cli-service lint",
     "lint:prettier": "prettier-eslint-check \"**/*.{ts,tsx,js,jsx,json,scss,md}\"",
     "format": "prettier-eslint \"**/*.{ts,tsx,js,jsx,json,scss,md}\" --write",
