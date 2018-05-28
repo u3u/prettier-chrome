@@ -1,0 +1,28 @@
+import contextMenus from './background/menus';
+
+function craeteContextMenus(ctxMenus: chrome.contextMenus.CreateProperties[]) {
+  // https://crxdoc-zh.appspot.com/extensions/contextMenus#method-create
+  ctxMenus.forEach((menu) => {
+    const createProps = { ...menu, contexts: ['all'] } as any;
+    delete createProps.click;
+    chrome.contextMenus.create(createProps);
+  });
+  chrome.contextMenus.onClicked.addListener((info, tab) => {
+    const menu = ctxMenus.find(item => item.id === info.menuItemId) as any;
+    if (menu.click) menu.click(info, tab);
+  });
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  craeteContextMenus(contextMenus);
+  chrome.commands.onCommand.addListener((command: string) => {
+    if (command === 'format-document') {
+      const formatContextMenu: any = contextMenus.find(
+        item =>
+          item.title !== undefined &&
+          item.title.toLowerCase().includes('format'),
+      );
+      formatContextMenu.click();
+    }
+  });
+});

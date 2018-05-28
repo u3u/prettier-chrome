@@ -1,0 +1,48 @@
+{
+  "manifest_version": 2,
+  "name": "Prettier",
+  "author": "u3u <qwq@qwq.cat>",
+  "version": "0.1.0",
+  "description": "Prettier is an opinionated code formatter.",
+  "homepage_url": "https://github.com/u3u/prettier-chrome",
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "permissions": ["contextMenus", "storage"],
+  "background": {
+    "scripts": ["scripts/background.min.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file:///*"],
+      "js": [
+        "lib/prettier/standalone.js",
+        "lib/prettier/parser-markdown.js",
+        "lib/prettier/parser-babylon.js",
+        "lib/prettier/parser-flow.js",
+        "lib/prettier/parser-graphql.js",
+        "lib/prettier/parser-postcss.js",
+        "lib/prettier/parser-typescript.js",
+        "lib/prettier/parser-vue.js",
+        "scripts/content.min.js"
+      ]
+    }
+  ],
+  "commands": {
+    "format-document": {
+      "suggested_key": {
+        "default": "Alt+F"
+      },
+      "description": "Format Document"
+    }
+  },
+  "browser_action": {
+    "default_icon": "icons/icon.png",
+    "default_popup": "index.html#/popup"
+  },
+  "content_security_policy":
+    "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
