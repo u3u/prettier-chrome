@@ -1,0 +1,69 @@
+{
+  "name": "prettier-chrome",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve --open",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "lint:prettier": "prettier-eslint-check \"**/*.{ts,tsx,js,jsx,json,scss,md}\"",
+    "format": "prettier-eslint \"**/*.{ts,tsx,js,jsx,json,scss,md}\" --write",
+    "watch": "npm run watch:vue & npm run watch:bili",
+    "watch:vue": "vue-cli-service build --watch",
+    "watch:bili": "bili --watch"
+  },
+  "dependencies": {
+    "element-ui": "^2.3.9",
+    "prettier": "^1.13.0",
+    "vue": "^2.5.16",
+    "vue-class-component": "^6.0.0",
+    "vue-property-decorator": "^6.0.0",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
+    "vuex-class": "^0.3.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.66",
+    "@types/prettier": "^1.12.4",
+    "@vue/cli-plugin-babel": "^3.0.0-beta.11",
+    "@vue/cli-plugin-eslint": "^3.0.0-beta.11",
+    "@vue/cli-plugin-typescript": "^3.0.0-beta.11",
+    "@vue/cli-service": "^3.0.0-beta.11",
+    "@vue/eslint-config-airbnb": "^3.0.0-beta.11",
+    "@vue/eslint-config-typescript": "^3.0.0-beta.11",
+    "babel-plugin-component": "git://github.com/u3u/babel-plugin-component.git",
+    "babel-plugin-emotion": "^9.1.2",
+    "babel-plugin-jsx-v-model": "^2.0.3",
+    "bili": "^3.1.2",
+    "emotion": "^9.1.3",
+    "less": "^3.0.4",
+    "less-loader": "^4.1.0",
+    "lint-staged": "^6.0.0",
+    "node-sass": "^4.9.0",
+    "prettier-eslint-check": "^1.0.1",
+    "prettier-eslint-cli": "^4.7.1",
+    "rollup-plugin-typescript2": "^0.14.0",
+    "sass-loader": "^7.0.1",
+    "vue-emotion": "^0.4.2",
+    "vue-template-compiler": "^2.5.16",
+    "vue-tsx-support": "^1.2.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "*.{ts,tsx,js,jsx,json,scss,md}": [
+      "prettier-eslint --write",
+      "git add"
+    ]
+  }
+}
