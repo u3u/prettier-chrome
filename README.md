@@ -58,4 +58,4 @@ This project follows the [all-contributors](https://github.com/kentcdodds/all-co
 **prettier-chrome** © [u3u](https://github.com/u3u), Released under the [MIT](./LICENSE) License.  
 Authored and maintained by u3u with help from contributors ([list](https://github.com/u3u/prettier-chrome/contributors)).
 
-> [qwq.cat](https://qwq.cat) · GitHub [@u3u](https://github.com/u3u)
+> [qwq.cat](https://qwq.cat) · GitHub [@u3u](https://github.com/u3u) · Twitter [@hanser0v0](https://twitter.com/hanser0v0)
