@@ -19,7 +19,7 @@ This extension is based on the latest version of [Prettier](https://prettier.io/
 
 ## Install
 
-- [Get the Chrome Extension](https://github.com/u3u/prettier-chrome/releases/download/v0.1.0/prettier.crx)
+- [Get the Chrome Extension](https://github.com/u3u/prettier-chrome/releases/download/v0.1.1/prettier.crx)
 
 ## Usage
 
