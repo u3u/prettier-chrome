@@ -35,8 +35,6 @@ function init() {
   initialized = true;
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-  init();
-});
+chrome.runtime.onInstalled.addListener(init);
 
 init();
