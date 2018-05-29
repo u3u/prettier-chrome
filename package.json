@@ -14,7 +14,7 @@
     "contributors": "all-contributors"
   },
   "dependencies": {
-    "element-ui": "^2.3.9",
+    "element-ui": "^2.4.0",
     "prettier": "^1.13.0",
     "vue": "^2.5.16",
     "vue-class-component": "^6.0.0",
