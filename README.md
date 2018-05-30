@@ -24,7 +24,10 @@ This extension is based on the latest version of [Prettier](https://prettier.io/
 
 ## Usage
 
-Press <kbd>ALT</kbd> + <kbd>F</kbd> to format when a markdown editor is in focus!
+- macOS: Press <kbd>Alt</kbd> + <kbd>F</kbd> to format when a markdown editor is in focus!
+- Windows: Press <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> to format when a markdown editor is in focus!
+
+_You can also customize shortcuts here: `chrome://extensions/shortcuts`_
 
 ## Configurable options
 
