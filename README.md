@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
+  <a href="https://chrome.google.com/webstore/detail/prettier/nnaminoiljgamnfnemmlcbdlmnleponp"><img alt="Chrome Web Store" src="https://img.shields.io/chrome-web-store/v/nnaminoiljgamnfnemmlcbdlmnleponp.svg?style=for-the-badge"></a>
   <a href="https://travis-ci.org/u3u/prettier-chrome"><img alt="Build Status" src="https://img.shields.io/travis/u3u/prettier-chrome/master.svg?style=for-the-badge"></a>
   <a href="./LICENSE"><img alt="LICENSE MIT" src="https://img.shields.io/badge/license-mit-blue.svg?style=for-the-badge"></a>
   <a href="https://github.com/prettier/prettier"><img alt="Code Style: Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=for-the-badge"></a>
-  <a href="#contributors"><img alt="All Contributors" src="https://img.shields.io/badge/all_contributors-1-orange.svg?style=for-the-badge"></a>
 </p>
 
 > 🎨 An extension that can be formatted using Prettier in Chrome
@@ -19,6 +19,7 @@ This extension is based on the latest version of [Prettier](https://prettier.io/
 
 ## Install
 
+- [Chrome Web Store](https://chrome.google.com/webstore/detail/prettier/nnaminoiljgamnfnemmlcbdlmnleponp)
 - [Get the Chrome Extension](https://github.com/u3u/prettier-chrome/releases/download/v0.1.1/prettier.crx)
 
 ## Usage
