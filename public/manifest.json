@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Prettier",
   "author": "u3u <qwq@qwq.cat>",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Prettier is an opinionated code formatter.",
   "homepage_url": "https://github.com/u3u/prettier-chrome",
   "icons": {
