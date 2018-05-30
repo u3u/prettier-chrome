@@ -34,7 +34,8 @@
   "commands": {
     "format-document": {
       "suggested_key": {
-        "default": "Alt+F"
+        "default": "Alt+Shift+F",
+        "mac": "Alt+F"
       },
       "description": "Format Document"
     }
