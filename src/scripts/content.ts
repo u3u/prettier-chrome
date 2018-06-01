@@ -23,6 +23,9 @@ chrome.runtime.onMessage.addListener(({ action, options }) => {
           });
         }
       }
+      ['keydown', 'keyup', 'change'].forEach(event =>
+        activeElement.dispatchEvent(new Event(event)),
+      );
     }
   }
 });
