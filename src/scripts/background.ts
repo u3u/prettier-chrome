@@ -2,6 +2,7 @@ import contextMenus from './background/menus';
 
 function craeteContextMenus(ctxMenus: chrome.contextMenus.CreateProperties[]) {
   // https://crxdoc-zh.appspot.com/extensions/contextMenus#method-create
+  chrome.contextMenus.removeAll();
   ctxMenus.forEach((menu) => {
     const createProps = { ...menu, contexts: ['all'] } as any;
     delete createProps.click;
