@@ -31,6 +31,7 @@
       ]
     }
   ],
+  "web_accessible_resources": ["scripts/*"],
   "commands": {
     "format-document": {
       "suggested_key": {

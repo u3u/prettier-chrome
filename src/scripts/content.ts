@@ -1,31 +1,27 @@
-import { isMultiTextbox } from './utils';
+const script = document.createElement('script');
+script.src = chrome.runtime.getURL('scripts/prettier.min.js');
+document.body.appendChild(script);
 
 chrome.runtime.onMessage.addListener(({ action, options }) => {
   if (action === 'format') {
-    const { activeElement } = document;
-    if (isMultiTextbox(activeElement)) {
-      if (activeElement.tagName === 'TEXTAREA') {
-        const textarea = activeElement as HTMLTextAreaElement;
-        if (textarea.value.length > 0) {
-          textarea.value = prettier.format(textarea.value, {
-            parser: 'markdown',
-            plugins: prettierPlugins,
-            ...options,
-          });
-        }
-      } else {
-        const element = activeElement as HTMLElement;
-        if (element.innerText.length > 0) {
-          element.innerText = prettier.format(element.innerText, {
-            parser: 'markdown',
-            plugins: prettierPlugins,
-            ...options,
-          });
-        }
-      }
-      ['keydown', 'keyup', 'change'].forEach(event =>
-        activeElement.dispatchEvent(new Event(event)),
-      );
-    }
+    window.postMessage({ action: 'getValue', options }, '*');
+  }
+});
+
+window.addEventListener('message', (event) => {
+  if (event.source !== window) return;
+  const { action, options, value } = event.data;
+  if (action === 'prettier') {
+    window.postMessage(
+      {
+        action: 'setValue',
+        value: prettier.format(value, {
+          parser: 'markdown',
+          plugins: prettierPlugins,
+          ...options,
+        }),
+      },
+      '*',
+    );
   }
 });
