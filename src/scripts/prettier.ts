@@ -3,10 +3,9 @@ import MarkdownEditorFactory from './utils/MarkdownEditorFactory';
 
 window.addEventListener('message', (event) => {
   if (event.source !== window) return;
+  const { activeElement } = document;
   const { action, options, value } = event.data;
-  const editor = MarkdownEditorFactory.createMarkdownEditor(
-    document.activeElement,
-  );
+  const editor = MarkdownEditorFactory.createMarkdownEditor(activeElement);
   if (editor !== null) {
     switch (action) {
       case 'getValue':
@@ -21,6 +20,9 @@ window.addEventListener('message', (event) => {
         break;
       case 'setValue':
         editor.setValue(value);
+        ['keydown', 'keyup', 'change'].forEach(type =>
+          activeElement.dispatchEvent(new Event(type)),
+        );
         break;
     }
   }
