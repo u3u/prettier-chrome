@@ -1,5 +1,6 @@
 const script = document.createElement('script');
 script.src = chrome.runtime.getURL('scripts/prettier.min.js');
+script.onload = () => script.remove();
 document.body.appendChild(script);
 
 chrome.runtime.onMessage.addListener(({ action, options }) => {
