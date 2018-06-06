@@ -1383,9 +1383,9 @@
   version "9.6.18"
   resolved "https://registry.npmjs.org/@types/node/-/node-9.6.18.tgz#092e13ef64c47e986802c9c45a61c1454813b31d"
 
-"@types/prettier@^1.12.4":
-  version "1.12.4"
-  resolved "https://registry.npmjs.org/@types/prettier/-/prettier-1.12.4.tgz#6b9c9fdd9c5b13f94f7b27a5501e6091fd810ac0"
+"@types/prettier@^1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.13.0.tgz#18f3b5e27cdb55b0708b833c69ed5aa025249b9c"
 
 "@vue/babel-preset-app@^3.0.0-beta.15":
   version "3.0.0-beta.15"
