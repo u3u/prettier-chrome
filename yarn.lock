@@ -1355,9 +1355,9 @@
   dependencies:
     "@types/estree" "*"
 
-"@types/chrome@^0.0.68":
-  version "0.0.68"
-  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.68.tgz#b413eadfe4f662120d29b3c7b7d3a8aadd63d19e"
+"@types/chrome@^0.0.69":
+  version "0.0.69"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.69.tgz#1d45bb79dd712b05704e4411f9eff3f270e19651"
   dependencies:
     "@types/filesystem" "*"
 
