@@ -16,8 +16,8 @@ export default new Vuex.Store({
     cacheOptions: { ...options },
   },
   mutations: {
-    updateCache(state, paylaod) {
-      Object.assign(state.cacheOptions, paylaod);
+    updateCache(state, payload) {
+      Object.assign(state.cacheOptions, payload);
     },
     save(state) {
       Object.assign(state.options, state.cacheOptions);
