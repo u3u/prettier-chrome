@@ -5,7 +5,7 @@
 }(this, (function () { 'use strict';
 
 var name = "prettier";
-var version$1 = "1.13.0";
+var version$1 = "1.13.5";
 var description = "Prettier is an opinionated code formatter";
 var bin = {
   "prettier": "./bin/prettier.js"
@@ -60,7 +60,7 @@ var dependencies = {
   "semver": "5.4.1",
   "string-width": "2.1.1",
   "typescript": "2.9.0-dev.20180421",
-  "typescript-eslint-parser": "eslint/typescript-eslint-parser#2960b002746c01fb9cb15bb5f4c1e7e925c6519a",
+  "typescript-eslint-parser": "16.0.0",
   "unicode-regex": "1.0.1",
   "unified": "6.1.6"
 };
@@ -79,7 +79,7 @@ var devDependencies = {
   "eslint-plugin-react": "7.7.0",
   "jest": "21.1.0",
   "mkdirp": "0.5.1",
-  "prettier": "1.12.1",
+  "prettier": "1.13.4",
   "prettylint": "1.0.0",
   "rimraf": "2.6.2",
   "rollup": "0.47.6",
@@ -106,7 +106,7 @@ var scripts = {
   "lint": "cross-env EFF_NO_LINK_RULES=true eslint . --format node_modules/eslint-friendly-formatter",
   "lint-docs": "prettylint {.,docs,website,website/blog}/*.md",
   "build": "node ./scripts/build/build.js",
-  "build-docs": "node ./scripts/old-build/build-docs.js",
+  "build-docs": "node ./scripts/build-docs.js",
   "check-deps": "node ./scripts/check-deps.js"
 };
 var _package = {
@@ -7366,13 +7366,15 @@ function normalize(options, opts) {
 
   if (!rawOptions.parser) {
     if (!rawOptions.filepath) {
-      throw new UndefinedParserError("No parser and no file path given, couldn't infer a parser.");
-    }
+      var logger = opts.logger || console;
+      logger.warn("No parser and no filepath given, using 'babylon' the parser now " + "but this will throw an error in the future. " + "Please specify a parser or a filepath so one can be inferred.");
+      rawOptions.parser = "babylon";
+    } else {
+      rawOptions.parser = inferParser(rawOptions.filepath, rawOptions.plugins);
 
-    rawOptions.parser = inferParser(rawOptions.filepath, rawOptions.plugins);
-
-    if (!rawOptions.parser) {
-      throw new UndefinedParserError("No parser could be inferred for file: ".concat(rawOptions.filepath));
+      if (!rawOptions.parser) {
+        throw new UndefinedParserError("No parser could be inferred for file: ".concat(rawOptions.filepath));
+      }
     }
   }
 
@@ -9146,8 +9148,7 @@ function printDocToString(doc, options) {
                     out.pop();
                   }
 
-                  if (out.length && typeof out[out.length - 1] === "string" && (options.parser !== "markdown" || // preserve markdown's `break` node (two trailing spaces)
-                  !/\S {2}$/.test(out[out.length - 1]))) {
+                  if (out.length && typeof out[out.length - 1] === "string") {
                     out[out.length - 1] = out[out.length - 1].replace(/[^\S\n]*$/, "");
                   }
                 }
@@ -10505,6 +10506,13 @@ function attachComments(text, ast, opts) {
 }
 
 function coreFormat(text, opts, addAlignmentSize) {
+  if (!text || !text.trim().length) {
+    return {
+      formatted: "",
+      cursorOffset: 0
+    };
+  }
+
   addAlignmentSize = addAlignmentSize || 0;
   var parsed = parser.parse(text, opts);
   var ast = parsed.ast;
@@ -11863,7 +11871,7 @@ function handleTypeAliasComments(enclosingNode, followingNode, comment) {
 }
 
 function handleVariableDeclaratorComments(enclosingNode, followingNode, comment) {
-  if (enclosingNode && enclosingNode.type === "VariableDeclarator" && followingNode && (followingNode.type === "ObjectExpression" || followingNode.type === "ArrayExpression")) {
+  if (enclosingNode && (enclosingNode.type === "VariableDeclarator" || enclosingNode.type === "AssignmentExpression") && followingNode && (followingNode.type === "ObjectExpression" || followingNode.type === "ArrayExpression" || followingNode.type === "TemplateLiteral" || followingNode.type === "TaggedTemplateExpression")) {
     addLeadingComment$2(followingNode, comment);
     return true;
   }
@@ -14794,7 +14802,7 @@ function printMethod(path, options, print) {
 }
 
 function couldGroupArg(arg) {
-  return arg.type === "ObjectExpression" && (arg.properties.length > 0 || arg.comments) || arg.type === "ArrayExpression" && (arg.elements.length > 0 || arg.comments) || arg.type === "TSTypeAssertionExpression" || arg.type === "TSAsExpression" || arg.type === "FunctionExpression" || arg.type === "ArrowFunctionExpression" && (arg.body.type === "BlockStatement" || arg.body.type === "ArrowFunctionExpression" || arg.body.type === "ObjectExpression" || arg.body.type === "ArrayExpression" || arg.body.type === "CallExpression" || arg.body.type === "OptionalCallExpression" || isJSXNode(arg.body));
+  return arg.type === "ObjectExpression" && (arg.properties.length > 0 || arg.comments) || arg.type === "ArrayExpression" && (arg.elements.length > 0 || arg.comments) || arg.type === "TSTypeAssertionExpression" || arg.type === "TSAsExpression" || arg.type === "FunctionExpression" || arg.type === "ArrowFunctionExpression" && !arg.returnType && (arg.body.type === "BlockStatement" || arg.body.type === "ArrowFunctionExpression" || arg.body.type === "ObjectExpression" || arg.body.type === "ArrayExpression" || arg.body.type === "CallExpression" || arg.body.type === "OptionalCallExpression" || isJSXNode(arg.body));
 }
 
 function shouldGroupLastArg(args) {
@@ -14815,28 +14823,17 @@ function shouldGroupFirstArg(args) {
   return (!firstArg.comments || !firstArg.comments.length) && (firstArg.type === "FunctionExpression" || firstArg.type === "ArrowFunctionExpression" && firstArg.body.type === "BlockStatement") && !couldGroupArg(secondArg);
 }
 
-var functionCompositionFunctionNames = {
-  pipe: true,
-  // RxJS, Ramda
-  pipeP: true,
-  // Ramda
-  pipeK: true,
-  // Ramda
-  compose: true,
-  // Ramda, Redux
-  composeFlipped: true,
-  // Not from any library, but common in Haskell, so supported
-  composeP: true,
-  // Ramda
-  composeK: true,
-  // Ramda
-  flow: true,
-  // Lodash
-  flowRight: true,
-  // Lodash
-  connect: true // Redux
-
-};
+var functionCompositionFunctionNames = new Set(["pipe", // RxJS, Ramda
+"pipeP", // Ramda
+"pipeK", // Ramda
+"compose", // Ramda, Redux
+"composeFlipped", // Not from any library, but common in Haskell, so supported
+"composeP", // Ramda
+"composeK", // Ramda
+"flow", // Lodash
+"flowRight", // Lodash
+"connect" // Redux
+]);
 
 function isFunctionCompositionFunction(node) {
   switch (node.type) {
@@ -14848,13 +14845,13 @@ function isFunctionCompositionFunction(node) {
 
     case "Identifier":
       {
-        return functionCompositionFunctionNames[node.name];
+        return functionCompositionFunctionNames.has(node.name);
       }
 
     case "StringLiteral":
     case "Literal":
       {
-        return functionCompositionFunctionNames[node.value];
+        return functionCompositionFunctionNames.has(node.value);
       }
   }
 }
@@ -15548,12 +15545,13 @@ function printMemberChain(path, options, print) {
   //     .map(x => x)
   //
   // In order to detect those cases, we use an heuristic: if the first
-  // node is an identifier with the name starting with a capital letter.
-  // The rationale is that they are likely to be factories.
+  // node is an identifier with the name starting with a capital
+  // letter or just a sequence of _$. The rationale is that they are
+  // likely to be factories.
 
 
   function isFactory(name) {
-    return /^[A-Z]/.test(name);
+    return /^[A-Z]|^[_$]+$/.test(name);
   } // In case the Identifier is shorter than tab width, we can keep the
   // first call in a single line, if it's an ExpressionStatement.
   //
@@ -15578,7 +15576,7 @@ function printMemberChain(path, options, print) {
     }
 
     var lastNode = getLast$4(groups[0]).node;
-    return (lastNode.type === "MemberExpression" || lastNode.type === "OptionalMemberExpression") && lastNode.property.type === "Identifier" && (isFactory(lastNode.property.name) || isExpression && isShort(lastNode.property.name) || hasComputed);
+    return (lastNode.type === "MemberExpression" || lastNode.type === "OptionalMemberExpression") && lastNode.property.type === "Identifier" && (isFactory(lastNode.property.name) || hasComputed);
   }
 
   var shouldMerge = groups.length >= 2 && !groups[1][0].node.comments && shouldNotWrap(groups);
@@ -16695,6 +16693,10 @@ function genericPrint$2(path, options, print) {
 
     case "Identifier":
       return JSON.stringify(node.name);
+
+    default:
+      /* istanbul ignore next */
+      throw new Error("unknown type: " + JSON.stringify(node.type));
   }
 }
 
@@ -17008,6 +17010,8 @@ function cleanCSSStrings(value) {
 
 var clean_1$2 = clean$3;
 
+var colorAdjusterFunctions = ["red", "green", "blue", "alpha", "a", "rgb", "hue", "h", "saturation", "s", "lightness", "l", "whiteness", "w", "blackness", "b", "tint", "shade", "blend", "blenda", "contrast", "hsl", "hsla", "hwb", "hwba"];
+
 function getAncestorCounter(path, typeOrTypes) {
   var types = [].concat(typeOrTypes);
   var counter = -1;
@@ -17247,6 +17251,14 @@ function isMediaAndSupportsKeywords$1(node) {
   return node.value && ["not", "and", "or"].indexOf(node.value.toLowerCase()) !== -1;
 }
 
+function isColorAdjusterFuncNode$1(node) {
+  if (node.type !== "value-func") {
+    return false;
+  }
+
+  return colorAdjusterFunctions.indexOf(node.value.toLowerCase()) !== -1;
+}
+
 var utils$4 = {
   getAncestorCounter: getAncestorCounter,
   getAncestorNode: getAncestorNode$1,
@@ -17290,7 +17302,8 @@ var utils$4 = {
   isRightCurlyBraceNode: isRightCurlyBraceNode$1,
   isWordNode: isWordNode$1,
   isColonNode: isColonNode$1,
-  isMediaAndSupportsKeywords: isMediaAndSupportsKeywords$1
+  isMediaAndSupportsKeywords: isMediaAndSupportsKeywords$1,
+  isColorAdjusterFuncNode: isColorAdjusterFuncNode$1
 };
 
 var printNumber$2 = util.printNumber;
@@ -17349,6 +17362,7 @@ var isRightCurlyBraceNode = utils$4.isRightCurlyBraceNode;
 var isWordNode = utils$4.isWordNode;
 var isColonNode = utils$4.isColonNode;
 var isMediaAndSupportsKeywords = utils$4.isMediaAndSupportsKeywords;
+var isColorAdjusterFuncNode = utils$4.isColorAdjusterFuncNode;
 
 function shouldPrintComma$1(options) {
   switch (options.trailingComma) {
@@ -17594,6 +17608,7 @@ function genericPrint$3(path, options, print) {
       {
         var _parentNode2 = path.getParentNode();
 
+        var parentParentNode = path.getParentNode(1);
         var declAncestorProp = getPropOfDeclNode(path);
         var isGridValue = declAncestorProp && _parentNode2.type === "value-value" && (declAncestorProp === "grid" || declAncestorProp.startsWith("grid-template"));
         var atRuleAncestorNode = getAncestorNode(path, "css-atrule");
@@ -17684,12 +17699,15 @@ function genericPrint$3(path, options, print) {
 
           if (insideValueFunctionNode(path, "calc") && (isAdditionNode(iNode) || isAdditionNode(iNextNode) || isSubtractionNode(iNode) || isSubtractionNode(iNextNode)) && hasEmptyRawBefore(iNextNode)) {
             continue;
-          }
+          } // Print spaces after `+` and `-` in color adjuster functions as is (e.g. `color(red l(+ 20%))`)
+          // Adjusters with signed numbers (e.g. `color(red l(+20%))`) output as-is.
 
+
+          var isColorAdjusterNode = (isAdditionNode(iNode) || isSubtractionNode(iNode)) && i === 0 && (iNextNode.type === "value-number" || iNextNode.isHex) && parentParentNode && isColorAdjusterFuncNode(parentParentNode) && !hasEmptyRawBefore(iNextNode);
           var requireSpaceBeforeOperator = iNextNextNode && iNextNextNode.type === "value-func" || iNextNextNode && isWordNode(iNextNextNode) || iNode.type === "value-func" || isWordNode(iNode);
           var requireSpaceAfterOperator = iNextNode.type === "value-func" || isWordNode(iNextNode) || iPrevNode && iPrevNode.type === "value-func" || iPrevNode && isWordNode(iPrevNode); // Formatting `/`, `+`, `-` sign
 
-          if (!(isMultiplicationNode(iNextNode) || isMultiplicationNode(iNode)) && !insideValueFunctionNode(path, "calc") && (isDivisionNode(iNextNode) && !requireSpaceBeforeOperator || isDivisionNode(iNode) && !requireSpaceAfterOperator || isAdditionNode(iNextNode) && !requireSpaceBeforeOperator || isAdditionNode(iNode) && !requireSpaceAfterOperator || isSubtractionNode(iNextNode) || isSubtractionNode(iNode)) && (hasEmptyRawBefore(iNextNode) || isMathOperator && (!iPrevNode || iPrevNode && isMathOperatorNode(iPrevNode)))) {
+          if (!(isMultiplicationNode(iNextNode) || isMultiplicationNode(iNode)) && !insideValueFunctionNode(path, "calc") && !isColorAdjusterNode && (isDivisionNode(iNextNode) && !requireSpaceBeforeOperator || isDivisionNode(iNode) && !requireSpaceAfterOperator || isAdditionNode(iNextNode) && !requireSpaceBeforeOperator || isAdditionNode(iNode) && !requireSpaceAfterOperator || isSubtractionNode(iNextNode) || isSubtractionNode(iNode)) && (hasEmptyRawBefore(iNextNode) || isMathOperator && (!iPrevNode || iPrevNode && isMathOperatorNode(iPrevNode)))) {
             continue;
           } // Ignore inline comment, they already contain newline at end (i.e. `// Comment`)
           // Add `hardline` after inline comment (i.e. `// comment\n foo: bar;`)
@@ -18019,13 +18037,16 @@ function genericPrint$4(path, options, print) {
         var parts = [];
         path.map(function (pathChild, index) {
           parts.push(concat$8([pathChild.call(print)]));
-          parts.push(hardline$7);
 
-          if (index !== n.definitions.length - 1 && isNextLineEmpty$4(options.originalText, pathChild.getValue(), options)) {
+          if (index !== n.definitions.length - 1) {
             parts.push(hardline$7);
+
+            if (isNextLineEmpty$4(options.originalText, pathChild.getValue(), options)) {
+              parts.push(hardline$7);
+            }
           }
         }, "definitions");
-        return concat$8(parts, hardline$7);
+        return concat$8([concat$8(parts), hardline$7]);
       }
 
     case "OperationDefinition":
@@ -18330,9 +18351,9 @@ var languageGraphql = {
 
 var _require$$0$builders$5 = doc.builders;
 var hardline$9 = _require$$0$builders$5.hardline;
-var literalline$3 = _require$$0$builders$5.literalline;
+var literalline$4 = _require$$0$builders$5.literalline;
 var concat$10 = _require$$0$builders$5.concat;
-var markAsRoot$1 = _require$$0$builders$5.markAsRoot;
+var markAsRoot$2 = _require$$0$builders$5.markAsRoot;
 var mapDoc$4 = doc.utils.mapDoc;
 
 function embed$2(path, print, textToDoc, options) {
@@ -18349,7 +18370,7 @@ function embed$2(path, print, textToDoc, options) {
       var doc$$2 = textToDoc(node.value, {
         parser: parser
       });
-      return markAsRoot$1(concat$10([style, node.lang, hardline$9, replaceNewlinesWithLiterallines(doc$$2), style]));
+      return markAsRoot$2(concat$10([style, node.lang, hardline$9, replaceNewlinesWithLiterallines(doc$$2), style]));
     }
   }
 
@@ -18375,7 +18396,7 @@ function embed$2(path, print, textToDoc, options) {
   function replaceNewlinesWithLiterallines(doc$$2) {
     return mapDoc$4(doc$$2, function (currentDoc) {
       return typeof currentDoc === "string" && currentDoc.includes("\n") ? concat$10(currentDoc.split(/(\n)/g).map(function (v, i) {
-        return i % 2 === 0 ? v : literalline$3;
+        return i % 2 === 0 ? v : literalline$4;
       })) : currentDoc;
     });
   }
@@ -18439,6 +18460,8 @@ var _require$$0$builders$4 = doc.builders;
 var concat$9 = _require$$0$builders$4.concat;
 var join$7 = _require$$0$builders$4.join;
 var line$6 = _require$$0$builders$4.line;
+var literalline$3 = _require$$0$builders$4.literalline;
+var markAsRoot$1 = _require$$0$builders$4.markAsRoot;
 var hardline$8 = _require$$0$builders$4.hardline;
 var softline$5 = _require$$0$builders$4.softline;
 var fill$4 = _require$$0$builders$4.fill;
@@ -18571,7 +18594,9 @@ function genericPrint$5(path, options, print) {
       {
         var _parentNode2 = path.getParentNode();
 
-        return replaceNewlinesWithHardlines(_parentNode2.type === "root" && util.getLast(_parentNode2.children) === node ? node.value.trimRight() : node.value);
+        var value = _parentNode2.type === "root" && util.getLast(_parentNode2.children) === node ? node.value.trimRight() : node.value;
+        var isHtmlComment = /^<!--[\s\S]*-->$/.test(value);
+        return replaceNewlinesWith(value, isHtmlComment ? hardline$8 : markAsRoot$1(literalline$3));
       }
 
     case "list":
@@ -18649,10 +18674,10 @@ function genericPrint$5(path, options, print) {
       return printChildren(path, options, print);
 
     case "break":
-      return concat$9([/\s/.test(options.originalText[node.position.start.offset]) ? "  " : "\\", hardline$8]);
+      return /\s/.test(options.originalText[node.position.start.offset]) ? concat$9(["  ", markAsRoot$1(literalline$3)]) : concat$9(["\\", hardline$8]);
 
     case "liquidNode":
-      return replaceNewlinesWithHardlines(node.value);
+      return replaceNewlinesWith(node.value, hardline$8);
 
     case "tableRow": // handled in "table"
 
@@ -18696,8 +18721,8 @@ function getNthListSiblingIndex(node, parentNode) {
   });
 }
 
-function replaceNewlinesWithHardlines(str) {
-  return join$7(hardline$8, str.split("\n"));
+function replaceNewlinesWith(str, doc$$2) {
+  return join$7(doc$$2, str.split("\n"));
 }
 
 function getNthSiblingIndex(node, parentNode, condition) {
@@ -18968,7 +18993,8 @@ function shouldPrePrintDoubleHardline(node, data) {
   var isInTightListItem = data.parentNode.type === "listItem" && !data.parentNode.loose;
   var isPrevNodeLooseListItem = data.prevNode && data.prevNode.type === "listItem" && data.prevNode.loose;
   var isPrevNodePrettierIgnore = isPrettierIgnore(data.prevNode) === "next";
-  return isPrevNodeLooseListItem || !(isSiblingNode || isInTightListItem || isPrevNodePrettierIgnore);
+  var isBlockHtmlWithoutBlankLineBetweenPrevHtml = node.type === "html" && data.prevNode && data.prevNode.type === "html" && data.prevNode.position.end.line + 1 === node.position.start.line;
+  return isPrevNodeLooseListItem || !(isSiblingNode || isInTightListItem || isPrevNodePrettierIgnore || isBlockHtmlWithoutBlankLineBetweenPrevHtml);
 }
 
 function shouldPrePrintTripleHardline(node, data) {

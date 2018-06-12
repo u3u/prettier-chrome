@@ -16745,6 +16745,34 @@ module.exports = createError;
 
 const htmlTagNames = __webpack_require__(101);
 
+const colorAdjusterFunctions = [
+  "red",
+  "green",
+  "blue",
+  "alpha",
+  "a",
+  "rgb",
+  "hue",
+  "h",
+  "saturation",
+  "s",
+  "lightness",
+  "l",
+  "whiteness",
+  "w",
+  "blackness",
+  "b",
+  "tint",
+  "shade",
+  "blend",
+  "blenda",
+  "contrast",
+  "hsl",
+  "hsla",
+  "hwb",
+  "hwba"
+];
+
 function getAncestorCounter(path, typeOrTypes) {
   const types = [].concat(typeOrTypes);
 
@@ -17089,6 +17117,14 @@ function isMediaAndSupportsKeywords(node) {
   );
 }
 
+function isColorAdjusterFuncNode(node) {
+  if (node.type !== "value-func") {
+    return false;
+  }
+
+  return colorAdjusterFunctions.indexOf(node.value.toLowerCase()) !== -1;
+}
+
 module.exports = {
   getAncestorCounter,
   getAncestorNode,
@@ -17132,7 +17168,8 @@ module.exports = {
   isRightCurlyBraceNode,
   isWordNode,
   isColonNode,
-  isMediaAndSupportsKeywords
+  isMediaAndSupportsKeywords,
+  isColorAdjusterFuncNode
 };
 
 
@@ -29369,10 +29406,11 @@ function parseNestedCSS(node) {
     let selector = "";
 
     if (typeof node.selector === "string") {
-      selector =
-        node.raws.selector && node.raws.selector.raw
-          ? node.raws.selector.raw
-          : node.selector;
+      selector = node.raws.selector
+        ? node.raws.selector.scss
+          ? node.raws.selector.scss
+          : node.raws.selector.raw
+        : node.selector;
 
       if (node.raws.between && node.raws.between.trim().length > 0) {
         selector += node.raws.between;
@@ -29384,10 +29422,11 @@ function parseNestedCSS(node) {
     let value = "";
 
     if (typeof node.value === "string") {
-      value =
-        node.raws.value && node.raws.value.raw
-          ? node.raws.value.raw
-          : node.value;
+      value = node.raws.value
+        ? node.raws.value.scss
+          ? node.raws.value.scss
+          : node.raws.value.raw
+        : node.value;
 
       value = value.trim();
 
@@ -29397,10 +29436,11 @@ function parseNestedCSS(node) {
     let params = "";
 
     if (typeof node.params === "string") {
-      params =
-        node.raws.params && node.raws.params.raw
-          ? node.raws.params.raw
-          : node.params;
+      params = node.raws.params
+        ? node.raws.params.scss
+          ? node.raws.params.scss
+          : node.raws.params.raw
+        : node.params;
 
       if (node.raws.afterName && node.raws.afterName.trim().length > 0) {
         params = node.raws.afterName + params;

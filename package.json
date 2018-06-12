@@ -11,7 +11,8 @@
     "watch": "npm run watch:vue & npm run watch:bili",
     "watch:vue": "vue-cli-service build --watch",
     "watch:bili": "bili --watch",
-    "contributors": "all-contributors"
+    "contributors": "all-contributors",
+    "upgrade:prettier": "cp -R node_modules/prettier/ public/lib/prettier/"
   },
   "dependencies": {
     "element-ui": "^2.4.1",

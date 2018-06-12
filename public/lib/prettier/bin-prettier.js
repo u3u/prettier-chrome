@@ -14,7 +14,7 @@ var thirdParty__default = thirdParty['default'];
 var readline = _interopDefault(require('readline'));
 
 var name = "prettier";
-var version$1 = "1.13.0";
+var version$1 = "1.13.5";
 var description = "Prettier is an opinionated code formatter";
 var bin = {
   "prettier": "./bin/prettier.js"
@@ -69,7 +69,7 @@ var dependencies = {
   "semver": "5.4.1",
   "string-width": "2.1.1",
   "typescript": "2.9.0-dev.20180421",
-  "typescript-eslint-parser": "eslint/typescript-eslint-parser#2960b002746c01fb9cb15bb5f4c1e7e925c6519a",
+  "typescript-eslint-parser": "16.0.0",
   "unicode-regex": "1.0.1",
   "unified": "6.1.6"
 };
@@ -88,7 +88,7 @@ var devDependencies = {
   "eslint-plugin-react": "7.7.0",
   "jest": "21.1.0",
   "mkdirp": "0.5.1",
-  "prettier": "1.12.1",
+  "prettier": "1.13.4",
   "prettylint": "1.0.0",
   "rimraf": "2.6.2",
   "rollup": "0.47.6",
@@ -115,7 +115,7 @@ var scripts = {
   "lint": "cross-env EFF_NO_LINK_RULES=true eslint . --format node_modules/eslint-friendly-formatter",
   "lint-docs": "prettylint {.,docs,website,website/blog}/*.md",
   "build": "node ./scripts/build/build.js",
-  "build-docs": "node ./scripts/old-build/build-docs.js",
+  "build-docs": "node ./scripts/build-docs.js",
   "check-deps": "node ./scripts/check-deps.js"
 };
 var _package = {
@@ -7050,13 +7050,15 @@ function normalize(options, opts) {
 
   if (!rawOptions.parser) {
     if (!rawOptions.filepath) {
-      throw new UndefinedParserError("No parser and no file path given, couldn't infer a parser.");
-    }
+      var logger = opts.logger || console;
+      logger.warn("No parser and no filepath given, using 'babylon' the parser now " + "but this will throw an error in the future. " + "Please specify a parser or a filepath so one can be inferred.");
+      rawOptions.parser = "babylon";
+    } else {
+      rawOptions.parser = inferParser(rawOptions.filepath, rawOptions.plugins);
 
-    rawOptions.parser = inferParser(rawOptions.filepath, rawOptions.plugins);
-
-    if (!rawOptions.parser) {
-      throw new UndefinedParserError(`No parser could be inferred for file: ${rawOptions.filepath}`);
+      if (!rawOptions.parser) {
+        throw new UndefinedParserError(`No parser could be inferred for file: ${rawOptions.filepath}`);
+      }
     }
   }
 
@@ -8827,8 +8829,7 @@ function printDocToString$1(doc, options) {
                     out.pop();
                   }
 
-                  if (out.length && typeof out[out.length - 1] === "string" && (options.parser !== "markdown" || // preserve markdown's `break` node (two trailing spaces)
-                  !/\S {2}$/.test(out[out.length - 1]))) {
+                  if (out.length && typeof out[out.length - 1] === "string") {
                     out[out.length - 1] = out[out.length - 1].replace(/[^\S\n]*$/, "");
                   }
                 }
@@ -10186,6 +10187,13 @@ function attachComments(text, ast, opts) {
 }
 
 function coreFormat(text, opts, addAlignmentSize) {
+  if (!text || !text.trim().length) {
+    return {
+      formatted: "",
+      cursorOffset: 0
+    };
+  }
+
   addAlignmentSize = addAlignmentSize || 0;
   var parsed = parser.parse(text, opts);
   var ast = parsed.ast;
@@ -10776,22 +10784,76 @@ typeof process !== 'undefined' && (process.env && process.env.IGNORE_TEST_WIN32 
   };
 }
 
-function createIgnorer(ignorePath, withNodeModules) {
-  var ignoreText = "";
+/**
+ * @param {string} filename
+ * @returns {Promise<null | string>}
+ */
 
-  if (ignorePath) {
-    var resolvedIgnorePath = path.resolve(ignorePath);
 
-    try {
-      ignoreText = fs.readFileSync(resolvedIgnorePath, "utf8");
-    } catch (readError) {
-      if (readError.code !== "ENOENT") {
-        throw new Error(`Unable to read ${resolvedIgnorePath}: ${readError.message}`);
+function getFileContentOrNull(filename) {
+  return new Promise(function (resolve, reject) {
+    fs.readFile(filename, "utf8", function (error, data) {
+      if (error && error.code !== "ENOENT") {
+        reject(createError(filename, error));
+      } else {
+        resolve(error ? null : data);
       }
-    }
-  }
+    });
+  });
+}
+/**
+ * @param {string} filename
+ * @returns {null | string}
+ */
 
-  var ignorer = ignore().add(ignoreText);
+
+getFileContentOrNull.sync = function (filename) {
+  try {
+    return fs.readFileSync(filename, "utf8");
+  } catch (error) {
+    if (error && error.code === "ENOENT") {
+      return null;
+    }
+
+    throw createError(filename, error);
+  }
+};
+
+function createError(filename, error) {
+  return new Error(`Unable to read ${filename}: ${error.message}`);
+}
+
+var getFileContentOrNull_1 = getFileContentOrNull;
+
+/**
+ * @param {undefined | string} ignorePath
+ * @param {undefined | boolean} withNodeModules
+ */
+
+
+function createIgnorer(ignorePath, withNodeModules) {
+  return (!ignorePath ? Promise.resolve(null) : getFileContentOrNull_1(path.resolve(ignorePath))).then(function (ignoreContent) {
+    return _createIgnorer(ignoreContent, withNodeModules);
+  });
+}
+/**
+ * @param {undefined | string} ignorePath
+ * @param {undefined | boolean} withNodeModules
+ */
+
+
+createIgnorer.sync = function (ignorePath, withNodeModules) {
+  var ignoreContent = !ignorePath ? null : getFileContentOrNull_1.sync(path.resolve(ignorePath));
+  return _createIgnorer(ignoreContent, withNodeModules);
+};
+/**
+ * @param {null | string} ignoreContent
+ * @param {undefined | boolean} withNodeModules
+ */
+
+
+function _createIgnorer(ignoreContent, withNodeModules) {
+  var ignorer = ignore().add(ignoreContent || "");
 
   if (!withNodeModules) {
     ignorer.add("node_modules");
@@ -10803,8 +10865,14 @@ function createIgnorer(ignorePath, withNodeModules) {
 var createIgnorer_1 = createIgnorer;
 
 /**
+ * @typedef {{ ignorePath?: string, withNodeModules?: boolean, plugins: object }} FileInfoOptions
+ * @typedef {{ ignored: boolean, inferredParser: string | null }} FileInfoResult
+ */
+
+/**
  * @param {string} filePath
- * @param {{ ignorePath?: string, withNodeModules?: boolean, plugins: object }} opts
+ * @param {FileInfoOptions} opts
+ * @returns {Promise<FileInfoResult>}
  *
  * Please note that prettier.getFileInfo() expects opts.plugins to be an array of paths,
  * not an object. A transformation from this array to an object is automatically done
@@ -10812,25 +10880,32 @@ var createIgnorer_1 = createIgnorer;
  */
 
 
-function _getFileInfo(filePath, opts) {
-  var ignored = false;
-  var ignorer = createIgnorer_1(opts.ignorePath, opts.withNodeModules);
-  ignored = ignorer.ignores(filePath);
-  var inferredParser = options.inferParser(filePath, opts.plugins) || null;
+function getFileInfo(filePath, opts) {
+  return createIgnorer_1(opts.ignorePath, opts.withNodeModules).then(function (ignorer) {
+    return _getFileInfo(ignorer, filePath, opts.plugins);
+  });
+}
+/**
+ * @param {string} filePath
+ * @param {FileInfoOptions} opts
+ * @returns {FileInfoResult}
+ */
+
+
+getFileInfo.sync = function (filePath, opts) {
+  var ignorer = createIgnorer_1.sync(opts.ignorePath, opts.withNodeModules);
+  return _getFileInfo(ignorer, filePath, opts.plugins);
+};
+
+function _getFileInfo(ignorer, filePath, plugins) {
+  var ignored = ignorer.ignores(filePath);
+  var inferredParser = options.inferParser(filePath, plugins) || null;
   return {
     ignored,
     inferredParser
   };
-} // the method has been implemented as asynchronous to avoid possible breaking changes in future
-
-
-function getFileInfo(filePath, opts) {
-  return Promise.resolve().then(function () {
-    return _getFileInfo(filePath, opts);
-  });
 }
 
-getFileInfo.sync = _getFileInfo;
 var getFileInfo_1 = getFileInfo;
 
 var lodash_uniqby = createCommonjsModule(function (module, exports) {
@@ -18686,7 +18761,7 @@ function handleTypeAliasComments(enclosingNode, followingNode, comment) {
 }
 
 function handleVariableDeclaratorComments(enclosingNode, followingNode, comment) {
-  if (enclosingNode && enclosingNode.type === "VariableDeclarator" && followingNode && (followingNode.type === "ObjectExpression" || followingNode.type === "ArrayExpression")) {
+  if (enclosingNode && (enclosingNode.type === "VariableDeclarator" || enclosingNode.type === "AssignmentExpression") && followingNode && (followingNode.type === "ObjectExpression" || followingNode.type === "ArrayExpression" || followingNode.type === "TemplateLiteral" || followingNode.type === "TaggedTemplateExpression")) {
     addLeadingComment$2(followingNode, comment);
     return true;
   }
@@ -21617,7 +21692,7 @@ function printMethod(path$$1, options, print) {
 }
 
 function couldGroupArg(arg) {
-  return arg.type === "ObjectExpression" && (arg.properties.length > 0 || arg.comments) || arg.type === "ArrayExpression" && (arg.elements.length > 0 || arg.comments) || arg.type === "TSTypeAssertionExpression" || arg.type === "TSAsExpression" || arg.type === "FunctionExpression" || arg.type === "ArrowFunctionExpression" && (arg.body.type === "BlockStatement" || arg.body.type === "ArrowFunctionExpression" || arg.body.type === "ObjectExpression" || arg.body.type === "ArrayExpression" || arg.body.type === "CallExpression" || arg.body.type === "OptionalCallExpression" || isJSXNode(arg.body));
+  return arg.type === "ObjectExpression" && (arg.properties.length > 0 || arg.comments) || arg.type === "ArrayExpression" && (arg.elements.length > 0 || arg.comments) || arg.type === "TSTypeAssertionExpression" || arg.type === "TSAsExpression" || arg.type === "FunctionExpression" || arg.type === "ArrowFunctionExpression" && !arg.returnType && (arg.body.type === "BlockStatement" || arg.body.type === "ArrowFunctionExpression" || arg.body.type === "ObjectExpression" || arg.body.type === "ArrayExpression" || arg.body.type === "CallExpression" || arg.body.type === "OptionalCallExpression" || isJSXNode(arg.body));
 }
 
 function shouldGroupLastArg(args) {
@@ -21638,28 +21713,17 @@ function shouldGroupFirstArg(args) {
   return (!firstArg.comments || !firstArg.comments.length) && (firstArg.type === "FunctionExpression" || firstArg.type === "ArrowFunctionExpression" && firstArg.body.type === "BlockStatement") && !couldGroupArg(secondArg);
 }
 
-var functionCompositionFunctionNames = {
-  pipe: true,
-  // RxJS, Ramda
-  pipeP: true,
-  // Ramda
-  pipeK: true,
-  // Ramda
-  compose: true,
-  // Ramda, Redux
-  composeFlipped: true,
-  // Not from any library, but common in Haskell, so supported
-  composeP: true,
-  // Ramda
-  composeK: true,
-  // Ramda
-  flow: true,
-  // Lodash
-  flowRight: true,
-  // Lodash
-  connect: true // Redux
-
-};
+var functionCompositionFunctionNames = new Set(["pipe", // RxJS, Ramda
+"pipeP", // Ramda
+"pipeK", // Ramda
+"compose", // Ramda, Redux
+"composeFlipped", // Not from any library, but common in Haskell, so supported
+"composeP", // Ramda
+"composeK", // Ramda
+"flow", // Lodash
+"flowRight", // Lodash
+"connect" // Redux
+]);
 
 function isFunctionCompositionFunction(node) {
   switch (node.type) {
@@ -21671,13 +21735,13 @@ function isFunctionCompositionFunction(node) {
 
     case "Identifier":
       {
-        return functionCompositionFunctionNames[node.name];
+        return functionCompositionFunctionNames.has(node.name);
       }
 
     case "StringLiteral":
     case "Literal":
       {
-        return functionCompositionFunctionNames[node.value];
+        return functionCompositionFunctionNames.has(node.value);
       }
   }
 }
@@ -22371,12 +22435,13 @@ function printMemberChain(path$$1, options, print) {
   //     .map(x => x)
   //
   // In order to detect those cases, we use an heuristic: if the first
-  // node is an identifier with the name starting with a capital letter.
-  // The rationale is that they are likely to be factories.
+  // node is an identifier with the name starting with a capital
+  // letter or just a sequence of _$. The rationale is that they are
+  // likely to be factories.
 
 
   function isFactory(name) {
-    return /^[A-Z]/.test(name);
+    return /^[A-Z]|^[_$]+$/.test(name);
   } // In case the Identifier is shorter than tab width, we can keep the
   // first call in a single line, if it's an ExpressionStatement.
   //
@@ -22401,7 +22466,7 @@ function printMemberChain(path$$1, options, print) {
     }
 
     var lastNode = getLast$4(groups[0]).node;
-    return (lastNode.type === "MemberExpression" || lastNode.type === "OptionalMemberExpression") && lastNode.property.type === "Identifier" && (isFactory(lastNode.property.name) || isExpression && isShort(lastNode.property.name) || hasComputed);
+    return (lastNode.type === "MemberExpression" || lastNode.type === "OptionalMemberExpression") && lastNode.property.type === "Identifier" && (isFactory(lastNode.property.name) || hasComputed);
   }
 
   var shouldMerge = groups.length >= 2 && !groups[1][0].node.comments && shouldNotWrap(groups);
@@ -23518,6 +23583,10 @@ function genericPrint$2(path$$1, options, print) {
 
     case "Identifier":
       return JSON.stringify(node.name);
+
+    default:
+      /* istanbul ignore next */
+      throw new Error("unknown type: " + JSON.stringify(node.type));
   }
 }
 
@@ -23831,6 +23900,8 @@ function cleanCSSStrings(value) {
 
 var clean_1$2 = clean$3;
 
+var colorAdjusterFunctions = ["red", "green", "blue", "alpha", "a", "rgb", "hue", "h", "saturation", "s", "lightness", "l", "whiteness", "w", "blackness", "b", "tint", "shade", "blend", "blenda", "contrast", "hsl", "hsla", "hwb", "hwba"];
+
 function getAncestorCounter(path$$1, typeOrTypes) {
   var types = [].concat(typeOrTypes);
   var counter = -1;
@@ -24070,6 +24141,14 @@ function isMediaAndSupportsKeywords$1(node) {
   return node.value && ["not", "and", "or"].indexOf(node.value.toLowerCase()) !== -1;
 }
 
+function isColorAdjusterFuncNode$1(node) {
+  if (node.type !== "value-func") {
+    return false;
+  }
+
+  return colorAdjusterFunctions.indexOf(node.value.toLowerCase()) !== -1;
+}
+
 var utils$4 = {
   getAncestorCounter,
   getAncestorNode: getAncestorNode$1,
@@ -24113,7 +24192,8 @@ var utils$4 = {
   isRightCurlyBraceNode: isRightCurlyBraceNode$1,
   isWordNode: isWordNode$1,
   isColonNode: isColonNode$1,
-  isMediaAndSupportsKeywords: isMediaAndSupportsKeywords$1
+  isMediaAndSupportsKeywords: isMediaAndSupportsKeywords$1,
+  isColorAdjusterFuncNode: isColorAdjusterFuncNode$1
 };
 
 var printNumber$2 = util$1.printNumber;
@@ -24172,6 +24252,7 @@ var isRightCurlyBraceNode = utils$4.isRightCurlyBraceNode;
 var isWordNode = utils$4.isWordNode;
 var isColonNode = utils$4.isColonNode;
 var isMediaAndSupportsKeywords = utils$4.isMediaAndSupportsKeywords;
+var isColorAdjusterFuncNode = utils$4.isColorAdjusterFuncNode;
 
 function shouldPrintComma$1(options) {
   switch (options.trailingComma) {
@@ -24417,6 +24498,7 @@ function genericPrint$3(path$$1, options, print) {
       {
         var _parentNode2 = path$$1.getParentNode();
 
+        var parentParentNode = path$$1.getParentNode(1);
         var declAncestorProp = getPropOfDeclNode(path$$1);
         var isGridValue = declAncestorProp && _parentNode2.type === "value-value" && (declAncestorProp === "grid" || declAncestorProp.startsWith("grid-template"));
         var atRuleAncestorNode = getAncestorNode(path$$1, "css-atrule");
@@ -24507,12 +24589,15 @@ function genericPrint$3(path$$1, options, print) {
 
           if (insideValueFunctionNode(path$$1, "calc") && (isAdditionNode(iNode) || isAdditionNode(iNextNode) || isSubtractionNode(iNode) || isSubtractionNode(iNextNode)) && hasEmptyRawBefore(iNextNode)) {
             continue;
-          }
+          } // Print spaces after `+` and `-` in color adjuster functions as is (e.g. `color(red l(+ 20%))`)
+          // Adjusters with signed numbers (e.g. `color(red l(+20%))`) output as-is.
 
+
+          var isColorAdjusterNode = (isAdditionNode(iNode) || isSubtractionNode(iNode)) && i === 0 && (iNextNode.type === "value-number" || iNextNode.isHex) && parentParentNode && isColorAdjusterFuncNode(parentParentNode) && !hasEmptyRawBefore(iNextNode);
           var requireSpaceBeforeOperator = iNextNextNode && iNextNextNode.type === "value-func" || iNextNextNode && isWordNode(iNextNextNode) || iNode.type === "value-func" || isWordNode(iNode);
           var requireSpaceAfterOperator = iNextNode.type === "value-func" || isWordNode(iNextNode) || iPrevNode && iPrevNode.type === "value-func" || iPrevNode && isWordNode(iPrevNode); // Formatting `/`, `+`, `-` sign
 
-          if (!(isMultiplicationNode(iNextNode) || isMultiplicationNode(iNode)) && !insideValueFunctionNode(path$$1, "calc") && (isDivisionNode(iNextNode) && !requireSpaceBeforeOperator || isDivisionNode(iNode) && !requireSpaceAfterOperator || isAdditionNode(iNextNode) && !requireSpaceBeforeOperator || isAdditionNode(iNode) && !requireSpaceAfterOperator || isSubtractionNode(iNextNode) || isSubtractionNode(iNode)) && (hasEmptyRawBefore(iNextNode) || isMathOperator && (!iPrevNode || iPrevNode && isMathOperatorNode(iPrevNode)))) {
+          if (!(isMultiplicationNode(iNextNode) || isMultiplicationNode(iNode)) && !insideValueFunctionNode(path$$1, "calc") && !isColorAdjusterNode && (isDivisionNode(iNextNode) && !requireSpaceBeforeOperator || isDivisionNode(iNode) && !requireSpaceAfterOperator || isAdditionNode(iNextNode) && !requireSpaceBeforeOperator || isAdditionNode(iNode) && !requireSpaceAfterOperator || isSubtractionNode(iNextNode) || isSubtractionNode(iNode)) && (hasEmptyRawBefore(iNextNode) || isMathOperator && (!iPrevNode || iPrevNode && isMathOperatorNode(iPrevNode)))) {
             continue;
           } // Ignore inline comment, they already contain newline at end (i.e. `// Comment`)
           // Add `hardline` after inline comment (i.e. `// comment\n foo: bar;`)
@@ -25134,13 +25219,16 @@ function genericPrint$4(path$$1, options, print) {
         var parts = [];
         path$$1.map(function (pathChild, index) {
           parts.push(concat$9([pathChild.call(print)]));
-          parts.push(hardline$8);
 
-          if (index !== n.definitions.length - 1 && isNextLineEmpty$4(options.originalText, pathChild.getValue(), options)) {
+          if (index !== n.definitions.length - 1) {
             parts.push(hardline$8);
+
+            if (isNextLineEmpty$4(options.originalText, pathChild.getValue(), options)) {
+              parts.push(hardline$8);
+            }
           }
         }, "definitions");
-        return concat$9(parts, hardline$8);
+        return concat$9([concat$9(parts), hardline$8]);
       }
 
     case "OperationDefinition":
@@ -25445,9 +25533,9 @@ var languageGraphql = {
 
 var _require$$0$builders$6 = doc.builders;
 var hardline$10 = _require$$0$builders$6.hardline;
-var literalline$3 = _require$$0$builders$6.literalline;
+var literalline$4 = _require$$0$builders$6.literalline;
 var concat$11 = _require$$0$builders$6.concat;
-var markAsRoot$1 = _require$$0$builders$6.markAsRoot;
+var markAsRoot$2 = _require$$0$builders$6.markAsRoot;
 var mapDoc$4 = doc.utils.mapDoc;
 
 function embed$2(path$$1, print, textToDoc, options) {
@@ -25464,7 +25552,7 @@ function embed$2(path$$1, print, textToDoc, options) {
       var doc$$2 = textToDoc(node.value, {
         parser
       });
-      return markAsRoot$1(concat$11([style, node.lang, hardline$10, replaceNewlinesWithLiterallines(doc$$2), style]));
+      return markAsRoot$2(concat$11([style, node.lang, hardline$10, replaceNewlinesWithLiterallines(doc$$2), style]));
     }
   }
 
@@ -25490,7 +25578,7 @@ function embed$2(path$$1, print, textToDoc, options) {
   function replaceNewlinesWithLiterallines(doc$$2) {
     return mapDoc$4(doc$$2, function (currentDoc) {
       return typeof currentDoc === "string" && currentDoc.includes("\n") ? concat$11(currentDoc.split(/(\n)/g).map(function (v, i) {
-        return i % 2 === 0 ? v : literalline$3;
+        return i % 2 === 0 ? v : literalline$4;
       })) : currentDoc;
     });
   }
@@ -25554,6 +25642,8 @@ var _require$$0$builders$5 = doc.builders;
 var concat$10 = _require$$0$builders$5.concat;
 var join$8 = _require$$0$builders$5.join;
 var line$7 = _require$$0$builders$5.line;
+var literalline$3 = _require$$0$builders$5.literalline;
+var markAsRoot$1 = _require$$0$builders$5.markAsRoot;
 var hardline$9 = _require$$0$builders$5.hardline;
 var softline$6 = _require$$0$builders$5.softline;
 var fill$4 = _require$$0$builders$5.fill;
@@ -25686,7 +25776,9 @@ function genericPrint$5(path$$1, options, print) {
       {
         var _parentNode2 = path$$1.getParentNode();
 
-        return replaceNewlinesWithHardlines(_parentNode2.type === "root" && util$1.getLast(_parentNode2.children) === node ? node.value.trimRight() : node.value);
+        var value = _parentNode2.type === "root" && util$1.getLast(_parentNode2.children) === node ? node.value.trimRight() : node.value;
+        var isHtmlComment = /^<!--[\s\S]*-->$/.test(value);
+        return replaceNewlinesWith(value, isHtmlComment ? hardline$9 : markAsRoot$1(literalline$3));
       }
 
     case "list":
@@ -25764,10 +25856,10 @@ function genericPrint$5(path$$1, options, print) {
       return printChildren(path$$1, options, print);
 
     case "break":
-      return concat$10([/\s/.test(options.originalText[node.position.start.offset]) ? "  " : "\\", hardline$9]);
+      return /\s/.test(options.originalText[node.position.start.offset]) ? concat$10(["  ", markAsRoot$1(literalline$3)]) : concat$10(["\\", hardline$9]);
 
     case "liquidNode":
-      return replaceNewlinesWithHardlines(node.value);
+      return replaceNewlinesWith(node.value, hardline$9);
 
     case "tableRow": // handled in "table"
 
@@ -25811,8 +25903,8 @@ function getNthListSiblingIndex(node, parentNode) {
   });
 }
 
-function replaceNewlinesWithHardlines(str) {
-  return join$8(hardline$9, str.split("\n"));
+function replaceNewlinesWith(str, doc$$2) {
+  return join$8(doc$$2, str.split("\n"));
 }
 
 function getNthSiblingIndex(node, parentNode, condition) {
@@ -26083,7 +26175,8 @@ function shouldPrePrintDoubleHardline(node, data) {
   var isInTightListItem = data.parentNode.type === "listItem" && !data.parentNode.loose;
   var isPrevNodeLooseListItem = data.prevNode && data.prevNode.type === "listItem" && data.prevNode.loose;
   var isPrevNodePrettierIgnore = isPrettierIgnore(data.prevNode) === "next";
-  return isPrevNodeLooseListItem || !(isSiblingNode || isInTightListItem || isPrevNodePrettierIgnore);
+  var isBlockHtmlWithoutBlankLineBetweenPrevHtml = node.type === "html" && data.prevNode && data.prevNode.type === "html" && data.prevNode.position.end.line + 1 === node.position.start.line;
+  return isPrevNodeLooseListItem || !(isSiblingNode || isInTightListItem || isPrevNodePrettierIgnore || isBlockHtmlWithoutBlankLineBetweenPrevHtml);
 }
 
 function shouldPrePrintTripleHardline(node, data) {
@@ -33038,11 +33131,11 @@ function logFileInfoOrDie(context) {
   }));
 }
 
-function writeOutput(result, options$$2) {
+function writeOutput(context, result, options$$2) {
   // Don't use `console.log` here since it adds an extra newline at the end.
-  process.stdout.write(result.formatted);
+  process.stdout.write(context.argv["debug-check"] ? result.filepath : result.formatted);
 
-  if (options$$2.cursorOffset >= 0) {
+  if (options$$2 && options$$2.cursorOffset >= 0) {
     process.stderr.write(result.cursorOffset + "\n");
   }
 }
@@ -33053,6 +33146,10 @@ function listDifferent(context, input, options$$2, filename) {
   }
 
   try {
+    if (!options$$2.filepath && !options$$2.parser) {
+      throw new errors.UndefinedParserError("No parser and no file path given, couldn't infer a parser.");
+    }
+
     if (!prettier$2.check(input, options$$2)) {
       if (!context.argv["write"]) {
         context.logger.log(filename);
@@ -33068,6 +33165,10 @@ function listDifferent(context, input, options$$2, filename) {
 }
 
 function format$1(context, input, opt) {
+  if (!opt.parser && !opt.filepath) {
+    throw new errors.UndefinedParserError("No parser and no file path given, couldn't infer a parser.");
+  }
+
   if (context.argv["debug-print-doc"]) {
     var doc = prettier$2.__debug.printToDoc(input, opt);
 
@@ -33104,7 +33205,8 @@ function format$1(context, input, opt) {
     }
 
     return {
-      formatted: opt.filepath || "(stdin)\n"
+      formatted: pp,
+      filepath: opt.filepath || "(stdin)\n"
     };
   }
 
@@ -33189,9 +33291,9 @@ function formatStdin(context) {
   var relativeFilepath = path.relative(process.cwd(), filepath);
   thirdParty$1.getStream(process.stdin).then(function (input) {
     if (relativeFilepath && ignorer.filter([relativeFilepath]).length === 0) {
-      writeOutput({
+      writeOutput(context, {
         formatted: input
-      }, {});
+      });
       return;
     }
 
@@ -33202,7 +33304,7 @@ function formatStdin(context) {
         return;
       }
 
-      writeOutput(format$1(context, input, options$$2), options$$2);
+      writeOutput(context, format$1(context, input, options$$2), options$$2);
     } catch (error) {
       handleError(context, "stdin", error);
     }
@@ -33211,7 +33313,7 @@ function formatStdin(context) {
 
 function createIgnorerFromContextOrDie(context) {
   try {
-    return createIgnorer_1(context.argv["ignore-path"], context.argv["with-node-modules"]);
+    return createIgnorer_1.sync(context.argv["ignore-path"], context.argv["with-node-modules"]);
   } catch (e) {
     context.logger.error(e.message);
     process.exit(2);
@@ -33283,7 +33385,7 @@ function formatFiles(context) {
     }
 
     if (fileIgnored) {
-      writeOutput({
+      writeOutput(context, {
         formatted: input
       }, options$$2);
       return;
@@ -33335,13 +33437,13 @@ function formatFiles(context) {
         context.logger.log(`${chalk$2.grey(filename)} ${Date.now() - start}ms`);
       }
     } else if (context.argv["debug-check"]) {
-      if (output) {
-        context.logger.log(output);
+      if (result.filepath) {
+        context.logger.log(result.filepath);
       } else {
         process.exitCode = 2;
       }
     } else if (!context.argv["list-different"]) {
-      writeOutput(result, options$$2);
+      writeOutput(context, result, options$$2);
     }
   });
 }
