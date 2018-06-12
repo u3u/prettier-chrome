@@ -3427,9 +3427,9 @@ emotion-utils@^9.1.0:
   version "9.1.0"
   resolved "https://registry.npmjs.org/emotion-utils/-/emotion-utils-9.1.0.tgz#7484dbf18f3b1dc1de68559d1ff35a74caa998dc"
 
-emotion@^9.2.1:
-  version "9.2.1"
-  resolved "https://registry.yarnpkg.com/emotion/-/emotion-9.2.1.tgz#d2aa77b22945d9f40ea9b5ac6bdac42cec35610a"
+emotion@^9.2.3:
+  version "9.2.3"
+  resolved "https://registry.yarnpkg.com/emotion/-/emotion-9.2.3.tgz#c93b9a222df92e6281036afa02b3b5b8cfb9e049"
   dependencies:
     babel-plugin-emotion "^9.2.0"
     create-emotion "^9.2.1"
