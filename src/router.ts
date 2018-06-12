@@ -11,5 +11,9 @@ export default new Router({
       name: 'popup',
       component: Popup,
     },
+    {
+      path: '*',
+      redirect: '/popup',
+    },
   ],
 });
