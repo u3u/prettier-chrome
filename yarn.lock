@@ -1391,9 +1391,9 @@
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.13.1.tgz#5dd359398de96863a0629156f382913a06ebe013"
 
-"@vue/babel-preset-app@^3.0.0-beta.16":
-  version "3.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/@vue/babel-preset-app/-/babel-preset-app-3.0.0-beta.16.tgz#e5b4eaedfdcb842b2d3a4da9e23c1f8f81e4db01"
+"@vue/babel-preset-app@^3.0.0-rc.2":
+  version "3.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@vue/babel-preset-app/-/babel-preset-app-3.0.0-rc.2.tgz#2843a47fc1e515425b05e597d1f0226977ef0cc5"
   dependencies:
     "@babel/plugin-syntax-jsx" "7.0.0-beta.47"
     "@babel/plugin-transform-runtime" "7.0.0-beta.47"
@@ -1408,12 +1408,12 @@
   version "3.0.0-beta.16"
   resolved "https://registry.yarnpkg.com/@vue/cli-overlay/-/cli-overlay-3.0.0-beta.16.tgz#e5f57e46b40e952f9cc6780b42caeba8a7174a57"
 
-"@vue/cli-plugin-babel@^3.0.0-beta.16":
-  version "3.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-babel/-/cli-plugin-babel-3.0.0-beta.16.tgz#ccf9d11425947c446f3c6f31e7a3b1e8a789696f"
+"@vue/cli-plugin-babel@^3.0.0-rc.2":
+  version "3.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-babel/-/cli-plugin-babel-3.0.0-rc.2.tgz#caea015d3951d9f8d0582779076f2a895489fc7c"
   dependencies:
     "@babel/core" "7.0.0-beta.47"
-    "@vue/babel-preset-app" "^3.0.0-beta.16"
+    "@vue/babel-preset-app" "^3.0.0-rc.2"
     babel-loader "^8.0.0-0"
 
 "@vue/cli-plugin-eslint@^3.0.0-beta.16":
