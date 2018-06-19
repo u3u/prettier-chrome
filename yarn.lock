@@ -1416,15 +1416,16 @@
     "@vue/babel-preset-app" "^3.0.0-rc.3"
     babel-loader "^8.0.0-0"
 
-"@vue/cli-plugin-eslint@^3.0.0-beta.16":
-  version "3.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-3.0.0-beta.16.tgz#9dfb37cc9506996b319860562551838bc55a635e"
+"@vue/cli-plugin-eslint@^3.0.0-rc.3":
+  version "3.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-3.0.0-rc.3.tgz#9248d44f7d44ab8523346ff75486e26a20d51e94"
   dependencies:
-    "@vue/cli-shared-utils" "^3.0.0-beta.16"
+    "@vue/cli-shared-utils" "^3.0.0-rc.3"
     babel-eslint "^8.2.3"
     eslint "^4.19.1"
     eslint-loader "^2.0.0"
     eslint-plugin-vue "^4.5.0"
+    launch-editor "^2.2.1"
 
 "@vue/cli-plugin-typescript@^3.0.0-beta.16":
   version "3.0.0-beta.16"
