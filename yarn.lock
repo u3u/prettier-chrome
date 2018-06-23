@@ -1344,10 +1344,6 @@
   version "0.6.10"
   resolved "https://registry.yarnpkg.com/@emotion/stylis/-/stylis-0.6.10.tgz#7d321e639ebc8ba23ace5990c20e94dcebb8f3dd"
 
-"@emotion/stylis@^0.6.5":
-  version "0.6.8"
-  resolved "https://registry.npmjs.org/@emotion/stylis/-/stylis-0.6.8.tgz#6ad4e8d32b19b440efa4481bbbcb98a8c12765bb"
-
 "@emotion/unitless@^0.6.2", "@emotion/unitless@^0.6.3":
   version "0.6.3"
   resolved "https://registry.npmjs.org/@emotion/unitless/-/unitless-0.6.3.tgz#65682e68a82701c70eefb38d7f941a2c0bfa90de"
@@ -2065,7 +2061,7 @@ babel-plugin-dynamic-import-node@^1.2.0:
   dependencies:
     babel-plugin-syntax-dynamic-import "^6.18.0"
 
-babel-plugin-emotion@^9.2.0, babel-plugin-emotion@^9.2.4:
+babel-plugin-emotion@^9.2.4:
   version "9.2.4"
   resolved "https://registry.yarnpkg.com/babel-plugin-emotion/-/babel-plugin-emotion-9.2.4.tgz#a4e54a8097f6ba06cbbc7a9063927afafe9fe73a"
   dependencies:
@@ -2956,13 +2952,13 @@ create-ecdh@^4.0.0:
     bn.js "^4.1.0"
     elliptic "^6.0.0"
 
-create-emotion@^9.2.1:
-  version "9.2.1"
-  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-9.2.1.tgz#1316189d53bf65cf191a59d3ac6ecb6f4e13e020"
+create-emotion@^9.2.4:
+  version "9.2.4"
+  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-9.2.4.tgz#0a4379f6bf0708c54fe26bfcd6b6bd3592e8cf23"
   dependencies:
     "@emotion/hash" "^0.6.2"
     "@emotion/memoize" "^0.6.1"
-    "@emotion/stylis" "^0.6.5"
+    "@emotion/stylis" "^0.6.10"
     "@emotion/unitless" "^0.6.2"
     csstype "^2.5.2"
     stylis "^3.5.0"
@@ -3477,12 +3473,12 @@ emotion-utils@^9.1.0:
   version "9.1.0"
   resolved "https://registry.npmjs.org/emotion-utils/-/emotion-utils-9.1.0.tgz#7484dbf18f3b1dc1de68559d1ff35a74caa998dc"
 
-emotion@^9.2.3:
-  version "9.2.3"
-  resolved "https://registry.yarnpkg.com/emotion/-/emotion-9.2.3.tgz#c93b9a222df92e6281036afa02b3b5b8cfb9e049"
+emotion@^9.2.4:
+  version "9.2.4"
+  resolved "https://registry.yarnpkg.com/emotion/-/emotion-9.2.4.tgz#0139e7cc154b2845f4b9afaa996dd4de13bb90e3"
   dependencies:
-    babel-plugin-emotion "^9.2.0"
-    create-emotion "^9.2.1"
+    babel-plugin-emotion "^9.2.4"
+    create-emotion "^9.2.4"
 
 encodeurl@~1.0.2:
   version "1.0.2"
