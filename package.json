@@ -42,7 +42,7 @@
     "lint-staged": "^7.2.0",
     "prettier-eslint-check": "^1.0.1",
     "prettier-eslint-cli": "^4.7.1",
-    "rollup-plugin-typescript2": "^0.15.0",
+    "rollup-plugin-typescript2": "^0.15.1",
     "vue-emotion": "^0.4.2",
     "vue-template-compiler": "^2.5.16",
     "vue-tsx-support": "^1.2.2"
