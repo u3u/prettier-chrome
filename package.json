@@ -35,7 +35,7 @@
     "@vue/eslint-config-typescript": "^3.0.0-rc.3",
     "all-contributors-cli": "^5.2.1",
     "babel-plugin-component": "git://github.com/u3u/babel-plugin-component.git",
-    "babel-plugin-emotion": "^9.2.4",
+    "babel-plugin-emotion": "^9.2.5",
     "babel-plugin-jsx-v-model": "^2.0.3",
     "bili": "^3.1.2",
     "emotion": "^9.2.4",
