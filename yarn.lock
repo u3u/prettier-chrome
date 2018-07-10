@@ -2061,7 +2061,7 @@ babel-plugin-dynamic-import-node@^1.2.0:
   dependencies:
     babel-plugin-syntax-dynamic-import "^6.18.0"
 
-babel-plugin-emotion@^9.2.4, babel-plugin-emotion@^9.2.5:
+babel-plugin-emotion@^9.2.5:
   version "9.2.5"
   resolved "https://registry.yarnpkg.com/babel-plugin-emotion/-/babel-plugin-emotion-9.2.5.tgz#0046e03be5c16276f85380476f88c9fcbf7c9536"
   dependencies:
@@ -2952,9 +2952,9 @@ create-ecdh@^4.0.0:
     bn.js "^4.1.0"
     elliptic "^6.0.0"
 
-create-emotion@^9.2.4:
-  version "9.2.4"
-  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-9.2.4.tgz#0a4379f6bf0708c54fe26bfcd6b6bd3592e8cf23"
+create-emotion@^9.2.5:
+  version "9.2.5"
+  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-9.2.5.tgz#5db4f06d936025e43bd312453a3ee946e4d5e5db"
   dependencies:
     "@emotion/hash" "^0.6.2"
     "@emotion/memoize" "^0.6.1"
@@ -3473,12 +3473,12 @@ emotion-utils@^9.1.0:
   version "9.1.0"
   resolved "https://registry.npmjs.org/emotion-utils/-/emotion-utils-9.1.0.tgz#7484dbf18f3b1dc1de68559d1ff35a74caa998dc"
 
-emotion@^9.2.4:
-  version "9.2.4"
-  resolved "https://registry.yarnpkg.com/emotion/-/emotion-9.2.4.tgz#0139e7cc154b2845f4b9afaa996dd4de13bb90e3"
+emotion@^9.2.5:
+  version "9.2.5"
+  resolved "https://registry.yarnpkg.com/emotion/-/emotion-9.2.5.tgz#666fb151a69c25c7582ff3de06f60f8d848f74aa"
   dependencies:
-    babel-plugin-emotion "^9.2.4"
-    create-emotion "^9.2.4"
+    babel-plugin-emotion "^9.2.5"
+    create-emotion "^9.2.5"
 
 encodeurl@~1.0.2:
   version "1.0.2"
