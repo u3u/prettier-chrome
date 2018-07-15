@@ -15,7 +15,7 @@
     "upgrade:prettier": "cp -R node_modules/prettier/ public/lib/prettier/"
   },
   "dependencies": {
-    "element-ui": "^2.4.3",
+    "element-ui": "^2.4.4",
     "prettier": "^1.13.7",
     "vue": "^2.5.16",
     "vue-class-component": "^6.0.0",
