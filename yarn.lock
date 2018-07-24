@@ -1432,9 +1432,9 @@
     babel-plugin-dynamic-import-node "^2.0.0"
     babel-plugin-transform-vue-jsx "^4.0.1"
 
-"@vue/cli-overlay@^3.0.0-rc.4":
-  version "3.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@vue/cli-overlay/-/cli-overlay-3.0.0-rc.4.tgz#59fab2d5294f6b8e637635e27cefb82604adfa5e"
+"@vue/cli-overlay@^3.0.0-rc.5":
+  version "3.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/@vue/cli-overlay/-/cli-overlay-3.0.0-rc.5.tgz#0a61adb1b6af9a2fce75b97cc83c54ee5227f629"
 
 "@vue/cli-plugin-babel@^3.0.0-rc.5":
   version "3.0.0-rc.5"
@@ -1467,13 +1467,13 @@
     tslint "^5.10.0"
     typescript "~2.9.0"
 
-"@vue/cli-service@^3.0.0-rc.4":
-  version "3.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.0.0-rc.4.tgz#d69e92ea2e6fc4ecc41e4effb263be8625865a0f"
+"@vue/cli-service@^3.0.0-rc.5":
+  version "3.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.0.0-rc.5.tgz#ed931795d7efebcd4afe794fc845874ddfacce63"
   dependencies:
     "@intervolga/optimize-cssnano-plugin" "^1.0.5"
-    "@vue/cli-overlay" "^3.0.0-rc.4"
-    "@vue/cli-shared-utils" "^3.0.0-rc.4"
+    "@vue/cli-overlay" "^3.0.0-rc.5"
+    "@vue/cli-shared-utils" "^3.0.0-rc.5"
     "@vue/preload-webpack-plugin" "^1.0.0"
     "@vue/web-component-wrapper" "^1.2.0"
     acorn "^5.7.1"
