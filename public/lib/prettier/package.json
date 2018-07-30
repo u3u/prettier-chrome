@@ -1,6 +1,6 @@
 {
   "name": "prettier",
-  "version": "1.13.5",
+  "version": "1.14.0",
   "description": "Prettier is an opinionated code formatter",
   "bin": "./bin-prettier.js",
   "repository": "prettier/prettier",
@@ -10,6 +10,9 @@
   "main": "./index.js",
   "engines": {
     "node": ">=4"
+  },
+  "resolutions": {
+    "@babel/code-frame": "7.0.0-beta.46"
   },
   "scripts": {
     "prepublishOnly": "node -e \"assert.equal(require('.').version, require('..').version)\""

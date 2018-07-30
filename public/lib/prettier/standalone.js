@@ -5,7 +5,7 @@
 }(this, (function () { 'use strict';
 
 var name = "prettier";
-var version$1 = "1.13.5";
+var version$1 = "1.14.0";
 var description = "Prettier is an opinionated code formatter";
 var bin = {
   "prettier": "./bin/prettier.js"
@@ -19,7 +19,7 @@ var engines = {
   "node": ">=6"
 };
 var dependencies = {
-  "@babel/code-frame": "7.0.0-beta.49",
+  "@babel/code-frame": "7.0.0-beta.46",
   "@babel/parser": "7.0.0-beta.49",
   "@glimmer/syntax": "0.30.3",
   "camelcase": "4.1.0",
@@ -36,38 +36,44 @@ var dependencies = {
   "esutils": "2.0.2",
   "find-parent-dir": "0.3.0",
   "find-project-root": "1.1.1",
-  "flow-parser": "0.73.0",
+  "flow-parser": "0.75.0",
   "get-stream": "3.0.0",
   "globby": "6.1.0",
   "graphql": "0.13.2",
   "html-tag-names": "1.1.2",
   "ignore": "3.3.7",
-  "jest-docblock": "22.2.2",
+  "jest-docblock": "23.2.0",
   "json-stable-stringify": "1.0.1",
   "leven": "2.1.0",
+  "linguist-languages": "6.2.1-dev.20180706",
   "lodash.uniqby": "4.7.0",
   "mem": "1.1.0",
   "minimatch": "3.0.4",
   "minimist": "1.2.0",
+  "normalize-path": "3.0.0",
   "parse5": "3.0.3",
   "postcss-less": "1.1.5",
   "postcss-media-query-parser": "0.2.3",
-  "postcss-scss": "1.0.5",
+  "postcss-scss": "1.0.6",
   "postcss-selector-parser": "2.2.3",
   "postcss-values-parser": "1.5.0",
   "remark-parse": "5.0.0",
   "resolve": "1.5.0",
   "semver": "5.4.1",
   "string-width": "2.1.1",
-  "typescript": "2.9.0-dev.20180421",
-  "typescript-eslint-parser": "16.0.0",
+  "typescript": "3.0.0-dev.20180626",
+  "typescript-eslint-parser": "17.0.0",
   "unicode-regex": "1.0.1",
-  "unified": "6.1.6"
+  "unified": "6.1.6",
+  "yaml": "1.0.0-rc.7",
+  "yaml-unist-parser": "1.0.0-rc.2"
 };
 var devDependencies = {
   "@babel/cli": "7.0.0-beta.49",
   "@babel/core": "7.0.0-beta.49",
   "@babel/preset-env": "7.0.0-beta.49",
+  "babel-loader": "8.0.0-beta.3",
+  "benchmark": "2.1.4",
   "builtin-modules": "2.0.0",
   "codecov": "2.2.0",
   "cross-env": "5.0.5",
@@ -77,12 +83,16 @@ var devDependencies = {
   "eslint-plugin-import": "2.9.0",
   "eslint-plugin-prettier": "2.6.0",
   "eslint-plugin-react": "7.7.0",
-  "jest": "21.1.0",
+  "execa": "0.10.0",
+  "jest": "23.3.0",
+  "jest-junit": "5.0.0",
+  "jest-watch-typeahead": "0.1.0",
   "mkdirp": "0.5.1",
-  "prettier": "1.13.4",
+  "prettier": "1.13.7",
   "prettylint": "1.0.0",
   "rimraf": "2.6.2",
   "rollup": "0.47.6",
+  "rollup-plugin-alias": "1.4.0",
   "rollup-plugin-babel": "4.0.0-beta.4",
   "rollup-plugin-commonjs": "8.2.6",
   "rollup-plugin-json": "2.1.1",
@@ -92,10 +102,13 @@ var devDependencies = {
   "rollup-plugin-replace": "1.2.1",
   "rollup-plugin-uglify": "3.0.0",
   "shelljs": "0.8.1",
-  "snapshot-diff": "0.2.2",
+  "snapshot-diff": "0.4.0",
   "strip-ansi": "4.0.0",
   "tempy": "0.2.1",
-  "webpack": "2.6.1"
+  "webpack": "3.12.0"
+};
+var resolutions = {
+  "@babel/code-frame": "7.0.0-beta.46"
 };
 var scripts = {
   "prepublishOnly": "echo \"Error: must publish from dist/\" && exit 1",
@@ -103,6 +116,9 @@ var scripts = {
   "test": "jest",
   "test:dist": "node ./scripts/test-dist.js",
   "test-integration": "jest tests_integration",
+  "perf-repeat": "yarn && yarn build && cross-env NODE_ENV=production node ./dist/bin-prettier.js --debug-repeat ${PERF_REPEAT:-1000} --loglevel debug ${PERF_FILE:-./index.js} > /dev/null",
+  "perf-repeat-inspect": "yarn && yarn build && cross-env NODE_ENV=production node --inspect-brk ./dist/bin-prettier.js --debug-repeat ${PERF_REPEAT:-1000} --loglevel debug ${PERF_FILE:-./index.js} > /dev/null",
+  "perf-benchmark": "yarn && yarn build && cross-env NODE_ENV=production node ./dist/bin-prettier.js --debug-benchmark --loglevel debug ${PERF_FILE:-./index.js} > /dev/null",
   "lint": "cross-env EFF_NO_LINK_RULES=true eslint . --format node_modules/eslint-friendly-formatter",
   "lint-docs": "prettylint {.,docs,website,website/blog}/*.md",
   "build": "node ./scripts/build/build.js",
@@ -122,6 +138,7 @@ var _package = {
   engines: engines,
   dependencies: dependencies,
   devDependencies: devDependencies,
+  resolutions: resolutions,
   scripts: scripts
 };
 
@@ -138,6 +155,7 @@ var _package$1 = Object.freeze({
 	engines: engines,
 	dependencies: dependencies,
 	devDependencies: devDependencies,
+	resolutions: resolutions,
 	scripts: scripts,
 	default: _package
 });
@@ -2050,6 +2068,43 @@ var lib = createCommonjsModule(function (module, exports) {
 });
 unwrapExports(lib);
 
+/*!
+ * normalize-path <https://github.com/jonschlinkert/normalize-path>
+ *
+ * Copyright (c) 2014-2018, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+var normalizePath = function normalizePath(path, stripTrailing) {
+  if (typeof path !== 'string') {
+    throw new TypeError('expected path to be a string');
+  }
+
+  if (path === '\\' || path === '/') return '/';
+  var len = path.length;
+  if (len <= 1) return path; // ensure that win32 namespaces has two leading slashes, so that the path is
+  // handled properly by the win32 version of path.parse() after being normalized
+  // https://msdn.microsoft.com/library/windows/desktop/aa365247(v=vs.85).aspx#namespaces
+
+  var prefix = '';
+
+  if (len > 4 && path[3] === '\\') {
+    var ch = path[2];
+
+    if ((ch === '?' || ch === '.') && path.slice(0, 2) === '\\\\') {
+      path = path.slice(2);
+      prefix = '//';
+    }
+  }
+
+  var segs = path.split(/[/\\]+/);
+
+  if (stripTrailing !== false && segs[segs.length - 1] === '') {
+    segs.pop();
+  }
+
+  return prefix + segs.join('/');
+};
+
 var ConfigError =
 /*#__PURE__*/
 function (_Error) {
@@ -3737,6 +3792,10 @@ var options$2 = {
       value: "vue",
       since: "1.10.0",
       description: "Vue"
+    }, {
+      value: "yaml",
+      since: "1.14.0",
+      description: "YAML"
     }]
   },
   plugins: {
@@ -3872,7 +3931,9 @@ function getSupportInfo$2(version, opts) {
   }, opts);
 
   if (!version) {
-    version = currentVersion;
+    // pre-release version is smaller than the normal version in semver,
+    // we need to treat it as the normal one so as to test new features.
+    version = currentVersion.split("-", 1)[0];
   }
 
   var plugins = opts.plugins;
@@ -3925,7 +3986,7 @@ function getSupportInfo$2(version, opts) {
       });
     }
 
-    if (usePostCssParser && language.group === "CSS") {
+    if (usePostCssParser && (language.name === "CSS" || language.group === "CSS")) {
       return Object.assign({}, language, {
         parsers: ["postcss"]
       });
@@ -4255,6 +4316,12 @@ var optionsNormalizer = {
   normalizeApiOptions: normalizeApiOptions,
   normalizeCliOptions: normalizeCliOptions
 };
+
+var _shim_path = {};
+
+var _shim_path$1 = Object.freeze({
+	default: _shim_path
+});
 
 var getLast = function getLast(arr) {
   return arr.length > 0 ? arr[arr.length - 1] : null;
@@ -6106,6 +6173,7 @@ var ansiStyles = createCommonjsModule(function (module) {
   };
 
   function assembleStyles() {
+    var codes = new Map();
     var styles = {
       modifier: {
         reset: [0, 0],
@@ -6159,21 +6227,39 @@ var ansiStyles = createCommonjsModule(function (module) {
     }; // Fix humans
 
     styles.color.grey = styles.color.gray;
-    Object.keys(styles).forEach(function (groupName) {
+
+    var _arr = Object.keys(styles);
+
+    for (var _i = 0; _i < _arr.length; _i++) {
+      var groupName = _arr[_i];
       var group = styles[groupName];
-      Object.keys(group).forEach(function (styleName) {
+
+      var _arr3 = Object.keys(group);
+
+      for (var _i3 = 0; _i3 < _arr3.length; _i3++) {
+        var styleName = _arr3[_i3];
         var style = group[styleName];
         styles[styleName] = {
           open: "\x1B[".concat(style[0], "m"),
           close: "\x1B[".concat(style[1], "m")
         };
         group[styleName] = styles[styleName];
-      });
+        codes.set(style[0], style[1]);
+      }
+
       Object.defineProperty(styles, groupName, {
         value: group,
         enumerable: false
       });
-    });
+      Object.defineProperty(styles, 'codes', {
+        value: codes,
+        enumerable: false
+      });
+    }
+
+    var ansi2ansi = function ansi2ansi(n) {
+      return n;
+    };
 
     var rgb2rgb = function rgb2rgb(r, g, b) {
       return [r, g, b];
@@ -6181,27 +6267,39 @@ var ansiStyles = createCommonjsModule(function (module) {
 
     styles.color.close = "\x1B[39m";
     styles.bgColor.close = "\x1B[49m";
-    styles.color.ansi = {};
-    styles.color.ansi256 = {};
+    styles.color.ansi = {
+      ansi: wrapAnsi16(ansi2ansi, 0)
+    };
+    styles.color.ansi256 = {
+      ansi256: wrapAnsi256(ansi2ansi, 0)
+    };
     styles.color.ansi16m = {
       rgb: wrapAnsi16m(rgb2rgb, 0)
     };
-    styles.bgColor.ansi = {};
-    styles.bgColor.ansi256 = {};
+    styles.bgColor.ansi = {
+      ansi: wrapAnsi16(ansi2ansi, 10)
+    };
+    styles.bgColor.ansi256 = {
+      ansi256: wrapAnsi256(ansi2ansi, 10)
+    };
     styles.bgColor.ansi16m = {
       rgb: wrapAnsi16m(rgb2rgb, 10)
     };
 
-    var _arr = Object.keys(colorConvert);
+    var _arr2 = Object.keys(colorConvert);
 
-    for (var _i = 0; _i < _arr.length; _i++) {
-      var key = _arr[_i];
+    for (var _i2 = 0; _i2 < _arr2.length; _i2++) {
+      var key = _arr2[_i2];
 
       if (_typeof(colorConvert[key]) !== 'object') {
         continue;
       }
 
       var suite = colorConvert[key];
+
+      if (key === 'ansi16') {
+        key = 'ansi';
+      }
 
       if ('ansi16' in suite) {
         styles.color.ansi[key] = wrapAnsi16(suite.ansi16, 0);
@@ -6220,7 +6318,8 @@ var ansiStyles = createCommonjsModule(function (module) {
     }
 
     return styles;
-  }
+  } // Make the export immutable
+
 
   Object.defineProperty(module, 'exports', {
     enumerable: true,
@@ -6228,131 +6327,149 @@ var ansiStyles = createCommonjsModule(function (module) {
   });
 });
 
-var hasFlag = function hasFlag(flag, argv$$1) {
-  argv$$1 = argv$$1 || process.argv;
-  var terminatorPos = argv$$1.indexOf('--');
-  var prefix = /^-{1,2}/.test(flag) ? '' : '--';
-  var pos = argv$$1.indexOf(prefix + flag);
-  return pos !== -1 && (terminatorPos === -1 ? true : pos < terminatorPos);
+var os = {
+  EOL: "\n"
 };
 
-var os$3 = {};
-
-
-var os$5 = Object.freeze({
-	default: os$3,
-	__moduleExports: os$3
+var os$1 = Object.freeze({
+	default: os
 });
 
-var os$2 = ( os$5 && os$3 ) || os$5;
-
-var supportsColor = createCommonjsModule(function (module) {
+var hasFlag = createCommonjsModule(function (module) {
   'use strict';
 
-  var env$$1 = process.env;
-
-  var support = function support(level) {
-    if (level === 0) {
-      return false;
-    }
-
-    return {
-      level: level,
-      hasBasic: true,
-      has256: level >= 2,
-      has16m: level >= 3
-    };
+  module.exports = function (flag, argv$$1) {
+    argv$$1 = argv$$1 || process.argv;
+    var prefix = flag.startsWith('-') ? '' : flag.length === 1 ? '-' : '--';
+    var pos = argv$$1.indexOf(prefix + flag);
+    var terminatorPos = argv$$1.indexOf('--');
+    return pos !== -1 && (terminatorPos === -1 ? true : pos < terminatorPos);
   };
+});
 
-  var supportLevel = function () {
-    if (hasFlag('no-color') || hasFlag('no-colors') || hasFlag('color=false')) {
-      return 0;
-    }
+var require$$1$1 = ( os$1 && os ) || os$1;
 
-    if (hasFlag('color=16m') || hasFlag('color=full') || hasFlag('color=truecolor')) {
-      return 3;
-    }
+var env$1 = process.env;
+var forceColor;
 
-    if (hasFlag('color=256')) {
-      return 2;
-    }
+if (hasFlag('no-color') || hasFlag('no-colors') || hasFlag('color=false')) {
+  forceColor = false;
+} else if (hasFlag('color') || hasFlag('colors') || hasFlag('color=true') || hasFlag('color=always')) {
+  forceColor = true;
+}
 
-    if (hasFlag('color') || hasFlag('colors') || hasFlag('color=true') || hasFlag('color=always')) {
-      return 1;
-    }
+if ('FORCE_COLOR' in env$1) {
+  forceColor = env$1.FORCE_COLOR.length === 0 || parseInt(env$1.FORCE_COLOR, 10) !== 0;
+}
 
-    if (process.stdout && !process.stdout.isTTY) {
-      return 0;
-    }
-
-    if (process.platform === 'win32') {
-      // Node.js 7.5.0 is the first version of Node.js to include a patch to
-      // libuv that enables 256 color output on Windows. Anything earlier and it
-      // won't work. However, here we target Node.js 8 at minimum as it is an LTS
-      // release, and Node.js 7 is not. Windows 10 build 10586 is the first Windows
-      // release that supports 256 colors.
-      var osRelease = os$2.release().split('.');
-
-      if (Number(process.version.split('.')[0]) >= 8 && Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
-        return 2;
-      }
-
-      return 1;
-    }
-
-    if ('CI' in env$$1) {
-      if ('TRAVIS' in env$$1 || env$$1.CI === 'Travis' || 'CIRCLECI' in env$$1) {
-        return 1;
-      }
-
-      return 0;
-    }
-
-    if ('TEAMCITY_VERSION' in env$$1) {
-      return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env$$1.TEAMCITY_VERSION) ? 1 : 0;
-    }
-
-    if ('TERM_PROGRAM' in env$$1) {
-      var version = parseInt((env$$1.TERM_PROGRAM_VERSION || '').split('.')[0], 10);
-
-      switch (env$$1.TERM_PROGRAM) {
-        case 'iTerm.app':
-          return version >= 3 ? 3 : 2;
-
-        case 'Hyper':
-          return 3;
-
-        case 'Apple_Terminal':
-          return 2;
-        // No default
-      }
-    }
-
-    if (/^(screen|xterm)-256(?:color)?/.test(env$$1.TERM)) {
-      return 2;
-    }
-
-    if (/^screen|^xterm|^vt100|color|ansi|cygwin|linux/i.test(env$$1.TERM)) {
-      return 1;
-    }
-
-    if ('COLORTERM' in env$$1) {
-      return 1;
-    }
-
-    if (env$$1.TERM === 'dumb') {
-      return 0;
-    }
-
-    return 0;
-  }();
-
-  if ('FORCE_COLOR' in env$$1) {
-    supportLevel = parseInt(env$$1.FORCE_COLOR, 10) === 0 ? 0 : supportLevel || 1;
+function translateLevel(level) {
+  if (level === 0) {
+    return false;
   }
 
-  module.exports = process && support(supportLevel);
-});
+  return {
+    level: level,
+    hasBasic: true,
+    has256: level >= 2,
+    has16m: level >= 3
+  };
+}
+
+function supportsColor(stream) {
+  if (forceColor === false) {
+    return 0;
+  }
+
+  if (hasFlag('color=16m') || hasFlag('color=full') || hasFlag('color=truecolor')) {
+    return 3;
+  }
+
+  if (hasFlag('color=256')) {
+    return 2;
+  }
+
+  if (stream && !stream.isTTY && forceColor !== true) {
+    return 0;
+  }
+
+  var min = forceColor ? 1 : 0;
+
+  if (process.platform === 'win32') {
+    // Node.js 7.5.0 is the first version of Node.js to include a patch to
+    // libuv that enables 256 color output on Windows. Anything earlier and it
+    // won't work. However, here we target Node.js 8 at minimum as it is an LTS
+    // release, and Node.js 7 is not. Windows 10 build 10586 is the first Windows
+    // release that supports 256 colors. Windows 10 build 14931 is the first release
+    // that supports 16m/TrueColor.
+    var osRelease = require$$1$1.release().split('.');
+
+    if (Number(process.versions.node.split('.')[0]) >= 8 && Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
+      return Number(osRelease[2]) >= 14931 ? 3 : 2;
+    }
+
+    return 1;
+  }
+
+  if ('CI' in env$1) {
+    if (['TRAVIS', 'CIRCLECI', 'APPVEYOR', 'GITLAB_CI'].some(function (sign) {
+      return sign in env$1;
+    }) || env$1.CI_NAME === 'codeship') {
+      return 1;
+    }
+
+    return min;
+  }
+
+  if ('TEAMCITY_VERSION' in env$1) {
+    return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env$1.TEAMCITY_VERSION) ? 1 : 0;
+  }
+
+  if (env$1.COLORTERM === 'truecolor') {
+    return 3;
+  }
+
+  if ('TERM_PROGRAM' in env$1) {
+    var version = parseInt((env$1.TERM_PROGRAM_VERSION || '').split('.')[0], 10);
+
+    switch (env$1.TERM_PROGRAM) {
+      case 'iTerm.app':
+        return version >= 3 ? 3 : 2;
+
+      case 'Apple_Terminal':
+        return 2;
+      // No default
+    }
+  }
+
+  if (/-256(color)?$/i.test(env$1.TERM)) {
+    return 2;
+  }
+
+  if (/^screen|^xterm|^vt100|^rxvt|color|ansi|cygwin|linux/i.test(env$1.TERM)) {
+    return 1;
+  }
+
+  if ('COLORTERM' in env$1) {
+    return 1;
+  }
+
+  if (env$1.TERM === 'dumb') {
+    return min;
+  }
+
+  return min;
+}
+
+function getSupportLevel(stream) {
+  var level = supportsColor(stream);
+  return translateLevel(level);
+}
+
+var supportsColor_1 = {
+  supportsColor: getSupportLevel,
+  stdout: getSupportLevel(process.stdout),
+  stderr: getSupportLevel(process.stderr)
+};
 
 var templates = createCommonjsModule(function (module) {
   'use strict';
@@ -6543,6 +6660,7 @@ var templates = createCommonjsModule(function (module) {
 var chalk = createCommonjsModule(function (module) {
   'use strict';
 
+  var stdoutColor = supportsColor_1.stdout;
   var isSimpleWindowsTerm = process.platform === 'win32' && !(process.env.TERM || '').toLowerCase().startsWith('xterm'); // `supportsColor.level` → `ansiStyles.color[name]` mapping
 
   var levelMapping = ['ansi', 'ansi', 'ansi256', 'ansi16m']; // `color-convert` models to exclude from the Chalk API due to conflicts and such
@@ -6553,7 +6671,7 @@ var chalk = createCommonjsModule(function (module) {
   function applyOptions(obj, options) {
     options = options || {}; // Detect level if not set manually
 
-    var scLevel = supportsColor ? supportsColor.level : 0;
+    var scLevel = stdoutColor ? stdoutColor.level : 0;
     obj.level = options.level === undefined ? scLevel : options.level;
     obj.enabled = 'enabled' in options ? options.enabled : obj.level > 0;
   }
@@ -6797,7 +6915,7 @@ var chalk = createCommonjsModule(function (module) {
   Object.defineProperties(Chalk.prototype, styles);
   module.exports = Chalk(); // eslint-disable-line new-cap
 
-  module.exports.supportsColor = supportsColor;
+  module.exports.supportsColor = stdoutColor;
   module.exports.default = module.exports; // For TypeScript
 });
 
@@ -6812,7 +6930,7 @@ var lib$2 = createCommonjsModule(function (module, exports) {
   exports.default = highlight;
 
   function _jsTokens() {
-    var data = _interopRequireWildcard$$1(jsTokens);
+    var data = _interopRequireWildcard(jsTokens);
 
     _jsTokens = function _jsTokens() {
       return data;
@@ -6822,7 +6940,7 @@ var lib$2 = createCommonjsModule(function (module, exports) {
   }
 
   function _esutils() {
-    var data = _interopRequireDefault$$1(utils);
+    var data = _interopRequireDefault(utils);
 
     _esutils = function _esutils() {
       return data;
@@ -6832,7 +6950,7 @@ var lib$2 = createCommonjsModule(function (module, exports) {
   }
 
   function _chalk() {
-    var data = _interopRequireDefault$$1(chalk);
+    var data = _interopRequireDefault(chalk);
 
     _chalk = function _chalk() {
       return data;
@@ -6841,13 +6959,13 @@ var lib$2 = createCommonjsModule(function (module, exports) {
     return data;
   }
 
-  function _interopRequireDefault$$1(obj) {
+  function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
       default: obj
     };
   }
 
-  function _interopRequireWildcard$$1(obj) {
+  function _interopRequireWildcard(obj) {
     if (obj && obj.__esModule) {
       return obj;
     } else {
@@ -6892,9 +7010,8 @@ var lib$2 = createCommonjsModule(function (module, exports) {
 
   function getTokenType(match) {
     var _match$slice = match.slice(-2),
-        _match$slice2 = _slicedToArray(_match$slice, 2),
-        offset = _match$slice2[0],
-        text = _match$slice2[1];
+        offset = _match$slice[0],
+        text = _match$slice[1];
 
     var token = (0, _jsTokens().matchToToken)(match);
 
@@ -6959,8 +7076,10 @@ var lib$2 = createCommonjsModule(function (module, exports) {
     return chalk$$1;
   }
 
-  function highlight(code) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  function highlight(code, options) {
+    if (options === void 0) {
+      options = {};
+    }
 
     if (shouldHighlight(options)) {
       var chalk$$1 = getChalk(options);
@@ -7030,7 +7149,7 @@ var lib$1 = createCommonjsModule(function (module, exports) {
   var NEWLINE = /\r\n|[\n\r\u2028\u2029]/;
 
   function getMarkerLines(loc, source, opts) {
-    var startLoc = Object.assign({
+    var startLoc = Object.assign({}, {
       column: 0,
       line: -1
     }, loc.start);
@@ -7095,8 +7214,11 @@ var lib$1 = createCommonjsModule(function (module, exports) {
     };
   }
 
-  function codeFrameColumns(rawLines, loc) {
-    var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  function codeFrameColumns(rawLines, loc, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
     var highlighted = (opts.highlightCode || opts.forceColor) && (0, _highlight().shouldHighlight)(opts);
     var chalk = (0, _highlight().getChalk)(opts);
     var defs = getDefs(chalk);
@@ -7117,8 +7239,8 @@ var lib$1 = createCommonjsModule(function (module, exports) {
     var numberMaxWidth = String(end).length;
     var frame = lines.slice(start, end).map(function (line, index) {
       var number = start + 1 + index;
-      var paddedNumber = " ".concat(number).slice(-numberMaxWidth);
-      var gutter = " ".concat(paddedNumber, " | ");
+      var paddedNumber = (" " + number).slice(-numberMaxWidth);
+      var gutter = " " + paddedNumber + " | ";
       var hasMarker = markerLines[number];
       var lastMarkerLine = !markerLines[number + 1];
 
@@ -7137,12 +7259,12 @@ var lib$1 = createCommonjsModule(function (module, exports) {
 
         return [maybeHighlight(defs.marker, ">"), maybeHighlight(defs.gutter, gutter), line, markerLine].join("");
       } else {
-        return " ".concat(maybeHighlight(defs.gutter, gutter)).concat(line);
+        return " " + maybeHighlight(defs.gutter, gutter) + line;
       }
     }).join("\n");
 
     if (opts.message && !hasColumns) {
-      frame = "".concat(" ".repeat(numberMaxWidth + 1)).concat(opts.message, "\n").concat(frame);
+      frame = "" + " ".repeat(numberMaxWidth + 1) + opts.message + "\n" + frame;
     }
 
     if (highlighted) {
@@ -7152,8 +7274,10 @@ var lib$1 = createCommonjsModule(function (module, exports) {
     }
   }
 
-  function _default(rawLines, lineNumber, colNumber) {
-    var opts = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  function _default(rawLines, lineNumber, colNumber, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
 
     if (!deprecationWarningShown) {
       deprecationWarningShown = true;
@@ -7180,15 +7304,7 @@ var lib$1 = createCommonjsModule(function (module, exports) {
 });
 unwrapExports(lib$1);
 
-var path$5 = {};
-
-
-var path$7 = Object.freeze({
-	default: path$5,
-	__moduleExports: path$5
-});
-
-var path$4 = ( path$7 && path$5 ) || path$7;
+var path = ( _shim_path$1 && _shim_path ) || _shim_path$1;
 
 var ConfigError$1 = errors.ConfigError;
 var locStart = loc.locStart;
@@ -7274,7 +7390,7 @@ function resolveParser$1(opts, parsers) {
 
     try {
       return {
-        parse: eval("require")(path$4.resolve(process.cwd(), opts.parser)),
+        parse: require(path.resolve(process.cwd(), opts.parser)),
         astFormat: "estree",
         locStart: locStart,
         locEnd: locEnd
@@ -7332,22 +7448,13 @@ var parser = {
   resolveParser: resolveParser$1
 };
 
-var path$9 = {};
-
-
-var path$11 = Object.freeze({
-	default: path$9,
-	__moduleExports: path$9
-});
-
-var path$8 = ( path$11 && path$9 ) || path$11;
-
 var UndefinedParserError = errors.UndefinedParserError;
 var getSupportInfo$1 = support.getSupportInfo;
 var resolveParser = parser.resolveParser;
 var hiddenDefaults = {
   astFormat: "estree",
   printer: {},
+  originalText: undefined,
   locStart: null,
   locEnd: null
 }; // Copy options and fill in default values.
@@ -7429,12 +7536,14 @@ function getPlugin(options) {
 }
 
 function inferParser(filepath, plugins) {
-  var extension = path$8.extname(filepath);
-  var filename = path$8.basename(filepath).toLowerCase();
+  var filepathParts = normalizePath(filepath).split("/");
+  var filename = filepathParts[filepathParts.length - 1].toLowerCase();
   var language = getSupportInfo$1(null, {
     plugins: plugins
   }).languages.find(function (language) {
-    return language.since !== null && (language.extensions && language.extensions.indexOf(extension) > -1 || language.filenames && language.filenames.find(function (name) {
+    return language.since !== null && (language.extensions && language.extensions.some(function (extension) {
+      return filename.endsWith(extension);
+    }) || language.filenames && language.filenames.find(function (name) {
       return name.toLowerCase() === filename;
     }));
   });
@@ -7489,29 +7598,19 @@ function massageAST(ast, options, parent) {
 
 var massageAst = massageAST;
 
-var assert = {
-  ok: function ok() {},
-  strictEqual: function strictEqual() {}
-};
+function assert() {}
 
-function assertDoc(val) {
-  /* istanbul ignore if */
-  if (!(typeof val === "string" || val != null && typeof val.type === "string")) {
-    throw new Error("Value " + JSON.stringify(val) + " is not a valid document");
-  }
-}
+assert.ok = function () {};
+
+assert.strictEqual = function () {};
+
+
+
+var assert$2 = Object.freeze({
+	default: assert
+});
 
 function concat$1(parts) {
-  if (process.env.NODE_ENV !== "production") {
-    parts.forEach(assertDoc);
-  } // We cannot do this until we change `printJSXElement` to not
-  // access the internals of a document directly.
-  // if(parts.length === 1) {
-  //   // If it's a single document, no need to concat it.
-  //   return parts[0];
-  // }
-
-
   return {
     type: "concat",
     parts: parts
@@ -7519,10 +7618,6 @@ function concat$1(parts) {
 }
 
 function indent$1(contents) {
-  if (process.env.NODE_ENV !== "production") {
-    assertDoc(contents);
-  }
-
   return {
     type: "indent",
     contents: contents
@@ -7530,10 +7625,6 @@ function indent$1(contents) {
 }
 
 function align(n, contents) {
-  if (process.env.NODE_ENV !== "production") {
-    assertDoc(contents);
-  }
-
   return {
     type: "align",
     contents: contents,
@@ -7544,12 +7635,9 @@ function align(n, contents) {
 function group(contents, opts) {
   opts = opts || {};
 
-  if (process.env.NODE_ENV !== "production") {
-    assertDoc(contents);
-  }
-
   return {
     type: "group",
+    id: opts.id,
     contents: contents,
     break: !!opts.shouldBreak,
     expandedStates: opts.expandedStates
@@ -7577,39 +7665,24 @@ function conditionalGroup(states, opts) {
 }
 
 function fill(parts) {
-  if (process.env.NODE_ENV !== "production") {
-    parts.forEach(assertDoc);
-  }
-
   return {
     type: "fill",
     parts: parts
   };
 }
 
-function ifBreak(breakContents, flatContents) {
-  if (process.env.NODE_ENV !== "production") {
-    if (breakContents) {
-      assertDoc(breakContents);
-    }
-
-    if (flatContents) {
-      assertDoc(flatContents);
-    }
-  }
+function ifBreak(breakContents, flatContents, opts) {
+  opts = opts || {};
 
   return {
     type: "if-break",
     breakContents: breakContents,
-    flatContents: flatContents
+    flatContents: flatContents,
+    groupId: opts.groupId
   };
 }
 
 function lineSuffix$1(contents) {
-  if (process.env.NODE_ENV !== "production") {
-    assertDoc(contents);
-  }
-
   return {
     type: "line-suffix",
     contents: contents
@@ -7942,7 +8015,9 @@ var lib$5 = function lib(categories, flag) {
   return utils$2.build_regex(utils$2.normalize_ranges(ranges), flag);
 };
 
-var emojiRegex = emojiRegex$1();
+var emojiRegex = emojiRegex$1(); // eslint-disable-next-line no-control-regex
+
+var notAsciiRegex = /[^\x20-\x7F]/;
 var cjkPattern = lib$3().source; // http://spec.commonmark.org/0.25/#ascii-punctuation-character
 
 var asciiPunctuationCharRange = escapeStringRegexp("!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"); // http://spec.commonmark.org/0.25/#punctuation-character
@@ -8559,9 +8634,14 @@ function splitText(text, options) {
   }
 }
 
-function getStringWidth(text) {
+function getStringWidth$1(text) {
   if (!text) {
     return 0;
+  } // shortcut to avoid needless string `RegExp`s, replacements, and allocations within `string-width`
+
+
+  if (!notAsciiRegex.test(text)) {
+    return text.length;
   } // emojis are considered 2-char width for consistency
   // see https://github.com/sindresorhus/string-width/issues/11
   // for the reason why not implemented in `string-width`
@@ -8579,6 +8659,24 @@ function hasNodeIgnoreComment(node) {
   return node && node.comments && node.comments.length > 0 && node.comments.some(function (comment) {
     return comment.value.trim() === "prettier-ignore";
   });
+}
+
+function matchAncestorTypes(path, types, index) {
+  index = index || 0;
+  types = types.slice();
+
+  while (types.length) {
+    var parent = path.getParentNode(index);
+    var type = types.shift();
+
+    if (!parent || parent.type !== type) {
+      return false;
+    }
+
+    index++;
+  }
+
+  return true;
 }
 
 function addCommentHelper(node, comment) {
@@ -8611,10 +8709,26 @@ function addTrailingComment$1(node, comment) {
   addCommentHelper(node, comment);
 }
 
+function isWithinParentArrayProperty(path, propertyName) {
+  var node = path.getValue();
+  var parent = path.getParentNode();
+
+  if (parent == null) {
+    return false;
+  }
+
+  if (!Array.isArray(parent[propertyName])) {
+    return false;
+  }
+
+  var key = path.getName();
+  return parent[propertyName][key] === node;
+}
+
 var util = {
   punctuationRegex: punctuationRegex,
   punctuationCharRange: punctuationCharRange,
-  getStringWidth: getStringWidth,
+  getStringWidth: getStringWidth$1,
   splitText: splitText,
   getMaxContinuousCount: getMaxContinuousCount,
   getPrecedence: getPrecedence,
@@ -8645,14 +8759,20 @@ var util = {
   hasIgnoreComment: hasIgnoreComment,
   hasNodeIgnoreComment: hasNodeIgnoreComment,
   makeString: makeString,
+  matchAncestorTypes: matchAncestorTypes,
   addLeadingComment: addLeadingComment$1,
   addDanglingComment: addDanglingComment$1,
-  addTrailingComment: addTrailingComment$1
+  addTrailingComment: addTrailingComment$1,
+  isWithinParentArrayProperty: isWithinParentArrayProperty
 };
 
+var getStringWidth = util.getStringWidth;
 var concat$2 = docBuilders.concat;
 var fill$1 = docBuilders.fill;
 var cursor$2 = docBuilders.cursor;
+/** @type {{[groupId: PropertyKey]: MODE}} */
+
+var groupModeMap;
 var MODE_BREAK = 1;
 var MODE_FLAT = 2;
 
@@ -8810,7 +8930,7 @@ function fits(next, restCommands, width, options, mustBeFlat) {
     var doc = x[2];
 
     if (typeof doc === "string") {
-      width -= util.getStringWidth(doc);
+      width -= getStringWidth(doc);
     } else {
       switch (doc.type) {
         case "concat":
@@ -8834,6 +8954,11 @@ function fits(next, restCommands, width, options, mustBeFlat) {
           }
 
           cmds.push([ind, doc.break ? MODE_BREAK : mode, doc.contents]);
+
+          if (doc.id) {
+            groupModeMap[doc.id] = cmds[cmds.length - 1][1];
+          }
+
           break;
 
         case "fill":
@@ -8844,19 +8969,23 @@ function fits(next, restCommands, width, options, mustBeFlat) {
           break;
 
         case "if-break":
-          if (mode === MODE_BREAK) {
-            if (doc.breakContents) {
-              cmds.push([ind, mode, doc.breakContents]);
-            }
-          }
+          {
+            var groupMode = doc.groupId ? groupModeMap[doc.groupId] : mode;
 
-          if (mode === MODE_FLAT) {
-            if (doc.flatContents) {
-              cmds.push([ind, mode, doc.flatContents]);
+            if (groupMode === MODE_BREAK) {
+              if (doc.breakContents) {
+                cmds.push([ind, mode, doc.breakContents]);
+              }
             }
-          }
 
-          break;
+            if (groupMode === MODE_FLAT) {
+              if (doc.flatContents) {
+                cmds.push([ind, mode, doc.flatContents]);
+              }
+            }
+
+            break;
+          }
 
         case "line":
           switch (mode) {
@@ -8885,6 +9014,7 @@ function fits(next, restCommands, width, options, mustBeFlat) {
 }
 
 function printDocToString(doc, options) {
+  groupModeMap = {};
   var width = options.printWidth;
   var newLine = options.newLine || "\n";
   var pos = 0; // cmds is basically a stack. We've turned a recursive call into a
@@ -8904,7 +9034,7 @@ function printDocToString(doc, options) {
 
     if (typeof _doc === "string") {
       out.push(_doc);
-      pos += util.getStringWidth(_doc);
+      pos += getStringWidth(_doc);
     } else {
       switch (_doc.type) {
         case "cursor":
@@ -8981,6 +9111,10 @@ function printDocToString(doc, options) {
 
                 break;
               }
+          }
+
+          if (_doc.id) {
+            groupModeMap[_doc.id] = cmds[cmds.length - 1][1];
           }
 
           break;
@@ -9075,19 +9209,23 @@ function printDocToString(doc, options) {
           }
 
         case "if-break":
-          if (mode === MODE_BREAK) {
-            if (_doc.breakContents) {
-              cmds.push([ind, mode, _doc.breakContents]);
-            }
-          }
+          {
+            var groupMode = _doc.groupId ? groupModeMap[_doc.groupId] : mode;
 
-          if (mode === MODE_FLAT) {
-            if (_doc.flatContents) {
-              cmds.push([ind, mode, _doc.flatContents]);
+            if (groupMode === MODE_BREAK) {
+              if (_doc.breakContents) {
+                cmds.push([ind, mode, _doc.breakContents]);
+              }
             }
-          }
 
-          break;
+            if (groupMode === MODE_FLAT) {
+              if (_doc.flatContents) {
+                cmds.push([ind, mode, _doc.flatContents]);
+              }
+            }
+
+            break;
+          }
 
         case "line-suffix":
           lineSuffix.push([ind, mode, _doc.contents]);
@@ -9190,46 +9328,62 @@ var docPrinter = {
   printDocToString: printDocToString
 };
 
+var traverseDocOnExitStackMarker = {};
+
 function traverseDoc(doc, onEnter, onExit, shouldTraverseConditionalGroups) {
-  function traverseDocRec(doc) {
+  var docsStack = [doc];
+
+  while (docsStack.length !== 0) {
+    var _doc = docsStack.pop();
+
+    if (_doc === traverseDocOnExitStackMarker) {
+      onExit(docsStack.pop());
+      continue;
+    }
+
     var shouldRecurse = true;
 
     if (onEnter) {
-      if (onEnter(doc) === false) {
+      if (onEnter(_doc) === false) {
         shouldRecurse = false;
       }
     }
 
+    if (onExit) {
+      docsStack.push(_doc);
+      docsStack.push(traverseDocOnExitStackMarker);
+    }
+
     if (shouldRecurse) {
-      if (doc.type === "concat" || doc.type === "fill") {
-        for (var i = 0; i < doc.parts.length; i++) {
-          traverseDocRec(doc.parts[i]);
+      // When there are multiple parts to process,
+      // the parts need to be pushed onto the stack in reverse order,
+      // so that they are processed in the original order
+      // when the stack is popped.
+      if (_doc.type === "concat" || _doc.type === "fill") {
+        for (var ic = _doc.parts.length, i = ic - 1; i >= 0; --i) {
+          docsStack.push(_doc.parts[i]);
         }
-      } else if (doc.type === "if-break") {
-        if (doc.breakContents) {
-          traverseDocRec(doc.breakContents);
+      } else if (_doc.type === "if-break") {
+        if (_doc.flatContents) {
+          docsStack.push(_doc.flatContents);
         }
 
-        if (doc.flatContents) {
-          traverseDocRec(doc.flatContents);
+        if (_doc.breakContents) {
+          docsStack.push(_doc.breakContents);
         }
-      } else if (doc.type === "group" && doc.expandedStates) {
+      } else if (_doc.type === "group" && _doc.expandedStates) {
         if (shouldTraverseConditionalGroups) {
-          doc.expandedStates.forEach(traverseDocRec);
+          for (var _ic = _doc.expandedStates.length, _i = _ic - 1; _i >= 0; --_i) {
+            docsStack.push(_doc.expandedStates[_i]);
+          }
         } else {
-          traverseDocRec(doc.contents);
+          docsStack.push(_doc.contents);
         }
-      } else if (doc.contents) {
-        traverseDocRec(doc.contents);
+      } else if (_doc.contents) {
+        docsStack.push(_doc.contents);
       }
     }
-
-    if (onExit) {
-      onExit(doc);
-    }
   }
-
-  traverseDocRec(doc);
 }
 
 function mapDoc(doc, cb) {
@@ -9260,7 +9414,8 @@ function mapDoc(doc, cb) {
 function findInDoc(doc, fn, defaultValue) {
   var result = defaultValue;
   var hasStopped = false;
-  traverseDoc(doc, function (doc) {
+
+  function findInDocOnEnterFn(doc) {
     var maybeResult = fn(doc);
 
     if (maybeResult !== undefined) {
@@ -9271,7 +9426,9 @@ function findInDoc(doc, fn, defaultValue) {
     if (hasStopped) {
       return false;
     }
-  });
+  }
+
+  traverseDoc(doc, findInDocOnEnterFn);
   return result;
 }
 
@@ -9279,32 +9436,36 @@ function isEmpty(n) {
   return typeof n === "string" && n.length === 0;
 }
 
-function isLineNext(doc) {
-  return findInDoc(doc, function (doc) {
-    if (typeof doc === "string") {
-      return false;
-    }
+function isLineNextFn(doc) {
+  if (typeof doc === "string") {
+    return false;
+  }
 
-    if (doc.type === "line") {
-      return true;
-    }
-  }, false);
+  if (doc.type === "line") {
+    return true;
+  }
+}
+
+function isLineNext(doc) {
+  return findInDoc(doc, isLineNextFn, false);
+}
+
+function willBreakFn(doc) {
+  if (doc.type === "group" && doc.break) {
+    return true;
+  }
+
+  if (doc.type === "line" && doc.hard) {
+    return true;
+  }
+
+  if (doc.type === "break-parent") {
+    return true;
+  }
 }
 
 function willBreak(doc) {
-  return findInDoc(doc, function (doc) {
-    if (doc.type === "group" && doc.break) {
-      return true;
-    }
-
-    if (doc.type === "line" && doc.hard) {
-      return true;
-    }
-
-    if (doc.type === "break-parent") {
-      return true;
-    }
-  }, false);
+  return findInDoc(doc, willBreakFn, false);
 }
 
 function breakParentGroup(groupStack) {
@@ -9321,9 +9482,10 @@ function breakParentGroup(groupStack) {
 }
 
 function propagateBreaks(doc) {
-  var alreadyVisited = new Map();
+  var alreadyVisitedSet = new Set();
   var groupStack = [];
-  traverseDoc(doc, function (doc) {
+
+  function propagateBreaksOnEnterFn(doc) {
     if (doc.type === "break-parent") {
       breakParentGroup(groupStack);
     }
@@ -9331,13 +9493,15 @@ function propagateBreaks(doc) {
     if (doc.type === "group") {
       groupStack.push(doc);
 
-      if (alreadyVisited.has(doc)) {
+      if (alreadyVisitedSet.has(doc)) {
         return false;
       }
 
-      alreadyVisited.set(doc, true);
+      alreadyVisitedSet.add(doc);
     }
-  }, function (doc) {
+  }
+
+  function propagateBreaksOnExitFn(doc) {
     if (doc.type === "group") {
       var group = groupStack.pop();
 
@@ -9345,25 +9509,29 @@ function propagateBreaks(doc) {
         breakParentGroup(groupStack);
       }
     }
-  },
+  }
+
+  traverseDoc(doc, propagateBreaksOnEnterFn, propagateBreaksOnExitFn,
   /* shouldTraverseConditionalGroups */
   true);
 }
 
-function removeLines(doc) {
+function removeLinesFn(doc) {
   // Force this doc into flat mode by statically converting all
   // lines into spaces (or soft lines into nothing). Hard lines
   // should still output because there's too great of a chance
   // of breaking existing assumptions otherwise.
-  return mapDoc(doc, function (d) {
-    if (d.type === "line" && !d.hard) {
-      return d.soft ? "" : " ";
-    } else if (d.type === "if-break") {
-      return d.flatContents || "";
-    }
+  if (doc.type === "line" && !doc.hard) {
+    return doc.soft ? "" : " ";
+  } else if (doc.type === "if-break") {
+    return doc.flatContents || "";
+  }
 
-    return d;
-  });
+  return doc;
+}
+
+function removeLines(doc) {
+  return mapDoc(doc, removeLinesFn);
 }
 
 function stripTrailingHardline(doc) {
@@ -9509,6 +9677,10 @@ function isNextLineEmpty$1(text, node, options) {
   return util.isNextLineEmpty(text, node, options.locEnd);
 }
 
+function isPreviousLineEmpty$2(text, node, options) {
+  return util.isPreviousLineEmpty(text, node, options.locStart);
+}
+
 function getNextNonSpaceNonCommentCharacterIndex$1(text, node, options) {
   return util.getNextNonSpaceNonCommentCharacterIndex(text, node, options.locEnd);
 }
@@ -9516,6 +9688,7 @@ function getNextNonSpaceNonCommentCharacterIndex$1(text, node, options) {
 var utilShared = {
   isNextLineEmpty: isNextLineEmpty$1,
   isNextLineEmptyAfterIndex: util.isNextLineEmptyAfterIndex,
+  isPreviousLineEmpty: isPreviousLineEmpty$2,
   getNextNonSpaceNonCommentCharacterIndex: getNextNonSpaceNonCommentCharacterIndex$1,
   mapDoc: mapDoc$1,
   // TODO: remove in 2.0, we already exposed it in docUtils
@@ -9524,6 +9697,8 @@ var utilShared = {
   addDanglingComment: util.addDanglingComment,
   addTrailingComment: util.addTrailingComment
 };
+
+var assert$3 = ( assert$2 && assert ) || assert$2;
 
 var _require$$0$builders = doc.builders;
 var concat = _require$$0$builders.concat;
@@ -9546,9 +9721,9 @@ function getSortedChildNodes(node, options, resultArray) {
     return;
   }
 
-  var printer = options.printer;
-  var locStart = options.locStart;
-  var locEnd = options.locEnd;
+  var printer = options.printer,
+      locStart = options.locStart,
+      locEnd = options.locEnd;
 
   if (resultArray) {
     if (node && printer.canAttachComment && printer.canAttachComment(node)) {
@@ -9603,8 +9778,8 @@ function getSortedChildNodes(node, options, resultArray) {
 
 
 function decorateComment(node, comment, options) {
-  var locStart = options.locStart;
-  var locEnd = options.locEnd;
+  var locStart = options.locStart,
+      locEnd = options.locEnd;
   var childNodes = getSortedChildNodes(node, options);
   var precedingNode;
   var followingNode; // Time to dust off the old binary search robes and wizard hat.
@@ -9678,8 +9853,8 @@ function attach(comments, ast, text, options) {
   }
 
   var tiesToBreak = [];
-  var locStart = options.locStart;
-  var locEnd = options.locEnd;
+  var locStart = options.locStart,
+      locEnd = options.locEnd;
   comments.forEach(function (comment, i) {
     if ((options.parser === "json" || options.parser === "json5") && locStart(comment) - locStart(ast) <= 0) {
       addLeadingComment(ast, comment);
@@ -9687,9 +9862,9 @@ function attach(comments, ast, text, options) {
     }
 
     decorateComment(ast, comment, options);
-    var precedingNode = comment.precedingNode;
-    var enclosingNode = comment.enclosingNode;
-    var followingNode = comment.followingNode;
+    var precedingNode = comment.precedingNode,
+        enclosingNode = comment.enclosingNode,
+        followingNode = comment.followingNode;
     var pluginHandleOwnLineComment = options.printer.handleComments && options.printer.handleComments.ownLine ? options.printer.handleComments.ownLine : function () {
       return false;
     };
@@ -9787,8 +9962,9 @@ function breakTies(tiesToBreak, text, options) {
     return;
   }
 
-  var precedingNode = tiesToBreak[0].precedingNode;
-  var followingNode = tiesToBreak[0].followingNode;
+  var _tiesToBreak$ = tiesToBreak[0],
+      precedingNode = _tiesToBreak$.precedingNode,
+      followingNode = _tiesToBreak$.followingNode;
   var gapEndPos = options.locStart(followingNode); // Iterate backwards through tiesToBreak, examining the gaps
   // between the tied comments. In order to qualify as leading, a
   // comment must be separated from followingNode by an unbroken series of
@@ -9799,8 +9975,8 @@ function breakTies(tiesToBreak, text, options) {
 
   for (indexOfFirstLeadingComment = tieCount; indexOfFirstLeadingComment > 0; --indexOfFirstLeadingComment) {
     var comment = tiesToBreak[indexOfFirstLeadingComment - 1];
-    assert.strictEqual(comment.precedingNode, precedingNode);
-    assert.strictEqual(comment.followingNode, followingNode);
+    assert$3.strictEqual(comment.precedingNode, precedingNode);
+    assert$3.strictEqual(comment.followingNode, followingNode);
     var gap = text.slice(options.locEnd(comment), gapEndPos).trim();
 
     if (gap === "" || /^\(+$/.test(gap)) {
@@ -9966,8 +10142,8 @@ function printComments(path, print, options, needsSemi) {
   var trailingParts = [needsSemi ? ";" : "", printed];
   path.each(function (commentPath) {
     var comment = commentPath.getValue();
-    var leading = comment.leading;
-    var trailing = comment.trailing;
+    var leading = comment.leading,
+        trailing = comment.trailing;
 
     if (leading) {
       var contents = printLeadingComment(commentPath, print, options);
@@ -9997,7 +10173,7 @@ var comments = {
 };
 
 function FastPath(value) {
-  assert.ok(this instanceof FastPath);
+  assert$3.ok(this instanceof FastPath);
   this.stack = [value];
 } // The name of the current property is always the penultimate element of
 // this.stack, and always a String.
@@ -10222,7 +10398,7 @@ function printAstToDoc(ast, options, addAlignmentSize) {
 }
 
 function genericPrint(path, options, printPath, args) {
-  assert.ok(path instanceof fastPath);
+  assert$3.ok(path instanceof fastPath);
   var node = path.getValue();
   var printer = options.printer; // Escape hatch
 
@@ -10406,6 +10582,9 @@ function isSourceElement(opts, node) {
 
     case "graphql":
       return graphqlSourceElements.indexOf(node.kind) > -1;
+
+    case "vue":
+      return node.tag !== "root";
   }
 
   return false;
@@ -10439,8 +10618,8 @@ function calculateRange(text, opts, ast) {
   }
 
   var siblingAncestors = findSiblingAncestors(startNodeAndParents, endNodeAndParents, opts);
-  var startNode = siblingAncestors.startNode;
-  var endNode = siblingAncestors.endNode;
+  var startNode = siblingAncestors.startNode,
+      endNode = siblingAncestors.endNode;
   var rangeStart = Math.min(opts.locStart(startNode, opts.locStart), opts.locStart(endNode, opts.locStart));
   var rangeEnd = Math.max(opts.locEnd(startNode, opts.locEnd), opts.locEnd(endNode, opts.locEnd));
   return {
@@ -10501,7 +10680,7 @@ function attachComments(text, ast, opts) {
   }
 
   ast.tokens = [];
-  opts.originalText = text.trimRight();
+  opts.originalText = opts.parser === "yaml" ? text : text.trimRight();
   return astComments;
 }
 
@@ -10699,7 +10878,7 @@ function format(text, opts) {
 var core = {
   formatWithCursor: function formatWithCursor(text, opts) {
     opts = normalizeOptions(opts);
-    return format(text, normalizeOptions(opts));
+    return format(text, opts);
   },
   parse: function parse(text, opts, massage) {
     opts = normalizeOptions(opts);
@@ -11150,7 +11329,12 @@ var embed_1 = embed;
 function clean(ast, newObj, parent) {
   ["range", "raw", "comments", "leadingComments", "trailingComments", "extra", "start", "end", "flags"].forEach(function (name) {
     delete newObj[name];
-  }); // We remove extra `;` and add them when needed
+  });
+
+  if (ast.type === "BigIntLiteral") {
+    newObj.value = newObj.value.toLowerCase();
+  } // We remove extra `;` and add them when needed
+
 
   if (ast.type === "EmptyStatement") {
     return null;
@@ -11298,20 +11482,10 @@ var detectNewline = createCommonjsModule(function (module) {
   };
 });
 
-var os$8 = {};
-
-
-var os$10 = Object.freeze({
-	default: os$8,
-	__moduleExports: os$8
-});
-
-var require$$1$4 = ( os$10 && os$8 ) || os$10;
-
 var build = createCommonjsModule(function (module, exports) {
   'use strict';
 
-  Object.defineProperty(exports, "__esModule", {
+  Object.defineProperty(exports, '__esModule', {
     value: true
   });
   exports.extract = extract;
@@ -11329,7 +11503,7 @@ var build = createCommonjsModule(function (module, exports) {
   var _os;
 
   function _load_os() {
-    return _os = require$$1$4;
+    return _os = require$$1$1;
   }
 
   function _interopRequireDefault(obj) {
@@ -11338,21 +11512,19 @@ var build = createCommonjsModule(function (module, exports) {
     };
   }
   /**
-                     * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
-                     *
-                     * This source code is licensed under the MIT license found in the
-                     * LICENSE file in the root directory of this source tree.
-                     *
-                     * 
-                     */
+   * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   *
+   *
+   */
 
 
   var commentEndRe = /\*\/$/;
   var commentStartRe = /^\/\*\*/;
   var docblockRe = /^\s*(\/\*\*?(.|\r?\n)*?\*\/)/;
   var lineCommentRe = /(^|\s+)\/\/([^\r\n]*)/g;
-  var ltrimRe = /^\s*/;
-  var rtrimRe = /\s*$/;
   var ltrimNewlineRe = /^(\r?\n)+/;
   var multilineRe = /(?:^|\r?\n) *(@[^\r\n]*?) *\r?\n *(?![^@\r\n]*\/\/[^]*)([^@\r\n\s][^@\r\n]+?) *\r?\n/g;
   var propertyRe = /(?:^|\r?\n) *@(\S+) *([^\r\n]*)/g;
@@ -11360,7 +11532,7 @@ var build = createCommonjsModule(function (module, exports) {
 
   function extract(contents) {
     var match = contents.match(docblockRe);
-    return match ? match[0].replace(ltrimRe, '') || '' : '';
+    return match ? match[0].trimLeft() : '';
   }
 
   function strip(contents) {
@@ -11384,9 +11556,9 @@ var build = createCommonjsModule(function (module, exports) {
       docblock = docblock.replace(multilineRe, "".concat(line, "$1 $2").concat(line));
     }
 
-    docblock = docblock.replace(ltrimNewlineRe, '').replace(rtrimRe, '');
+    docblock = docblock.replace(ltrimNewlineRe, '').trimRight();
     var result = Object.create(null);
-    var comments = docblock.replace(propertyRe, '').replace(ltrimNewlineRe, '').replace(rtrimRe, '');
+    var comments = docblock.replace(propertyRe, '').replace(ltrimNewlineRe, '').trimRight();
     var match;
 
     while (match = propertyRe.exec(docblock)) {
@@ -11481,9 +11653,9 @@ var addTrailingComment$2 = utilShared.addTrailingComment;
 var addDanglingComment$2 = utilShared.addDanglingComment;
 
 function handleOwnLineComment(comment, text, options, ast, isLastComment) {
-  var precedingNode = comment.precedingNode;
-  var enclosingNode = comment.enclosingNode;
-  var followingNode = comment.followingNode;
+  var precedingNode = comment.precedingNode,
+      enclosingNode = comment.enclosingNode,
+      followingNode = comment.followingNode;
 
   if (handleLastFunctionArgComments(text, precedingNode, enclosingNode, followingNode, comment, options) || handleMemberExpressionComments(enclosingNode, followingNode, comment) || handleIfStatementComments(text, precedingNode, enclosingNode, followingNode, comment, options) || handleTryStatementComments(enclosingNode, followingNode, comment) || handleClassComments(enclosingNode, precedingNode, followingNode, comment) || handleImportSpecifierComments(enclosingNode, comment) || handleForComments(enclosingNode, precedingNode, comment) || handleUnionTypeComments(precedingNode, enclosingNode, followingNode, comment) || handleOnlyComments(enclosingNode, ast, comment, isLastComment) || handleImportDeclarationComments(text, enclosingNode, precedingNode, comment, options) || handleAssignmentPatternComments(enclosingNode, comment) || handleMethodNameComments(text, enclosingNode, precedingNode, comment, options)) {
     return true;
@@ -11493,9 +11665,9 @@ function handleOwnLineComment(comment, text, options, ast, isLastComment) {
 }
 
 function handleEndOfLineComment(comment, text, options, ast, isLastComment) {
-  var precedingNode = comment.precedingNode;
-  var enclosingNode = comment.enclosingNode;
-  var followingNode = comment.followingNode;
+  var precedingNode = comment.precedingNode,
+      enclosingNode = comment.enclosingNode,
+      followingNode = comment.followingNode;
 
   if (handleLastFunctionArgComments(text, precedingNode, enclosingNode, followingNode, comment, options) || handleConditionalExpressionComments(enclosingNode, precedingNode, followingNode, comment, text, options) || handleImportSpecifierComments(enclosingNode, comment) || handleIfStatementComments(text, precedingNode, enclosingNode, followingNode, comment, options) || handleClassComments(enclosingNode, precedingNode, followingNode, comment) || handleLabeledStatementComments(enclosingNode, comment) || handleCallExpressionComments(precedingNode, enclosingNode, comment) || handlePropertyComments(enclosingNode, comment) || handleOnlyComments(enclosingNode, ast, comment, isLastComment) || handleTypeAliasComments(enclosingNode, followingNode, comment) || handleVariableDeclaratorComments(enclosingNode, followingNode, comment)) {
     return true;
@@ -11505,9 +11677,9 @@ function handleEndOfLineComment(comment, text, options, ast, isLastComment) {
 }
 
 function handleRemainingComment(comment, text, options, ast, isLastComment) {
-  var precedingNode = comment.precedingNode;
-  var enclosingNode = comment.enclosingNode;
-  var followingNode = comment.followingNode;
+  var precedingNode = comment.precedingNode,
+      enclosingNode = comment.enclosingNode,
+      followingNode = comment.followingNode;
 
   if (handleIfStatementComments(text, precedingNode, enclosingNode, followingNode, comment, options) || handleObjectPropertyAssignment(enclosingNode, precedingNode, comment) || handleCommentInEmptyParens(text, enclosingNode, comment, options) || handleMethodNameComments(text, enclosingNode, precedingNode, comment, options) || handleOnlyComments(enclosingNode, ast, comment, isLastComment) || handleCommentAfterArrowParams(text, enclosingNode, comment, options) || handleFunctionNameComments(text, enclosingNode, precedingNode, comment, options) || handleTSMappedTypeComments(text, enclosingNode, precedingNode, followingNode, comment) || handleBreakAndContinueStatementComments(enclosingNode, comment)) {
     return true;
@@ -11908,12 +12080,22 @@ var comments$3 = {
   isBlockComment: isBlockComment
 };
 
-function hasClosureCompilerTypeCastComment(text, node, locEnd) {
+function hasClosureCompilerTypeCastComment(text, path, locStart, locEnd) {
   // https://github.com/google/closure-compiler/wiki/Annotating-Types#type-casts
   // Syntax example: var x = /** @type {string} */ (fruit);
-  return node.comments && node.comments.some(function (comment) {
-    return comment.leading && comments$3.isBlockComment(comment) && comment.value.match(/^\*\s*@type\s*{[^}]+}\s*$/) && util.getNextNonSpaceNonCommentCharacter(text, comment, locEnd) === "(";
-  });
+  var n = path.getValue();
+  return util.getNextNonSpaceNonCommentCharacter(text, n, locEnd) === ")" && (hasTypeCastComment(n) || hasAncestorTypeCastComment(0)); // for sub-item: /** @type {array} */ (numberOrString).map(x => x);
+
+  function hasAncestorTypeCastComment(index) {
+    var ancestor = path.getParentNode(index);
+    return ancestor && util.getNextNonSpaceNonCommentCharacter(text, ancestor, locEnd) !== ")" && /^[\s(]*$/.test(text.slice(locStart(ancestor), locStart(n))) ? hasTypeCastComment(ancestor) || hasAncestorTypeCastComment(index + 1) : false;
+  }
+
+  function hasTypeCastComment(node) {
+    return node.comments && node.comments.some(function (comment) {
+      return comment.leading && comments$3.isBlockComment(comment) && comment.value.match(/^\*\s*@type\s*{[^}]+}\s*$/) && util.getNextNonSpaceNonCommentCharacter(text, comment, locEnd) === "(";
+    });
+  }
 }
 
 function needsParens(path, options) {
@@ -11939,7 +12121,7 @@ function needsParens(path, options) {
   // parentheses.
 
 
-  if (hasClosureCompilerTypeCastComment(options.originalText, node, options.locEnd)) {
+  if (hasClosureCompilerTypeCastComment(options.originalText, path, options.locStart, options.locEnd)) {
     return true;
   } // Identifiers never need parentheses.
 
@@ -12072,7 +12254,6 @@ function needsParens(path, options) {
         case "UnaryExpression":
         case "SpreadElement":
         case "SpreadProperty":
-        case "ExperimentalSpreadProperty":
         case "BindExpression":
         case "AwaitExpression":
         case "TSAsExpression":
@@ -12110,7 +12291,7 @@ function needsParens(path, options) {
             }
 
             if (pp === np && name === "right") {
-              assert.strictEqual(parent.right, node);
+              assert$3.strictEqual(parent.right, node);
               return true;
             }
 
@@ -12192,9 +12373,9 @@ function needsParens(path, options) {
         case "LogicalExpression":
         case "SpreadElement":
         case "SpreadProperty":
-        case "ExperimentalSpreadProperty":
         case "TSAsExpression":
         case "TSNonNullExpression":
+        case "BindExpression":
           return true;
 
         case "MemberExpression":
@@ -12275,7 +12456,6 @@ function needsParens(path, options) {
         case "UnaryExpression":
         case "SpreadElement":
         case "SpreadProperty":
-        case "ExperimentalSpreadProperty":
         case "BinaryExpression":
         case "LogicalExpression":
         case "ExportDefaultDeclaration":
@@ -12369,7 +12549,7 @@ var getNextNonSpaceNonCommentCharacter$1 = util.getNextNonSpaceNonCommentCharact
 var hasNewline$2 = util.hasNewline;
 var hasNewlineInRange$1 = util.hasNewlineInRange;
 var getLast$4 = util.getLast;
-var getStringWidth$1 = util.getStringWidth;
+var getStringWidth$2 = util.getStringWidth;
 var printString$1 = util.printString;
 var printNumber$1 = util.printNumber;
 var hasIgnoreComment$1 = util.hasIgnoreComment;
@@ -12378,6 +12558,8 @@ var hasNodeIgnoreComment$1 = util.hasNodeIgnoreComment;
 var getPenultimate$1 = util.getPenultimate;
 var startsWithNoLookaheadToken$1 = util.startsWithNoLookaheadToken;
 var getIndentSize$1 = util.getIndentSize;
+var matchAncestorTypes$1 = util.matchAncestorTypes;
+var isWithinParentArrayProperty$1 = util.isWithinParentArrayProperty;
 var isNextLineEmpty$2 = utilShared.isNextLineEmpty;
 var isNextLineEmptyAfterIndex$1 = utilShared.isNextLineEmptyAfterIndex;
 var getNextNonSpaceNonCommentCharacterIndex$2 = utilShared.getNextNonSpaceNonCommentCharacterIndex;
@@ -12445,7 +12627,7 @@ function genericPrint$1(path, options, printPath, args) {
   if (node.decorators && node.decorators.length > 0 && // If the parent node is an export declaration, it will be
   // responsible for printing node.decorators.
   !getParentExportDeclaration$1(path)) {
-    var separator = hardline$3;
+    var separator = node.decorators.length === 1 && isWithinParentArrayProperty$1(path, "params") ? line$3 : hardline$3;
     path.each(function (decoratorPath) {
       var decorator = decoratorPath.getValue();
 
@@ -12453,10 +12635,6 @@ function genericPrint$1(path, options, printPath, args) {
         decorator = decorator.expression;
       } else {
         decorator = decorator.callee;
-      }
-
-      if (node.decorators.length === 1 && node.type !== "ClassDeclaration" && node.type !== "MethodDefinition" && node.type !== "ClassMethod" && (decorator.type === "Identifier" || decorator.type === "MemberExpression" || decorator.type === "OptionalMemberExpression" || (decorator.type === "CallExpression" || decorator.type === "OptionalCallExpression") && (decorator.arguments.length === 0 || decorator.arguments.length === 1 && (isStringLiteral(decorator.arguments[0]) || decorator.arguments[0].type === "Identifier" || decorator.arguments[0].type === "MemberExpression" || decorator.arguments[0].type === "OptionalMemberExpression")))) {
-        separator = line$3;
       }
 
       decorators.push(printPath(decoratorPath), separator);
@@ -12797,8 +12975,6 @@ function printPathNoParens(path, options, print, args) {
     case "SpreadElement":
     case "SpreadElementPattern":
     case "RestProperty":
-    case "ExperimentalRestProperty":
-    case "ExperimentalSpreadProperty":
     case "SpreadProperty":
     case "SpreadPropertyPattern":
     case "RestElement":
@@ -13188,7 +13364,7 @@ function printPathNoParens(path, options, print, args) {
           return result;
         });
         var lastElem = getLast$4(n[propertiesField]);
-        var canHaveTrailingSeparator = !(lastElem && (lastElem.type === "RestProperty" || lastElem.type === "RestElement" || lastElem.type === "ExperimentalRestProperty" || hasNodeIgnoreComment$1(lastElem)));
+        var canHaveTrailingSeparator = !(lastElem && (lastElem.type === "RestProperty" || lastElem.type === "RestElement" || hasNodeIgnoreComment$1(lastElem)));
         var content;
 
         if (props.length === 0 && !n.typeAnnotation) {
@@ -13325,6 +13501,9 @@ function printPathNoParens(path, options, print, args) {
     case "NumericLiteral":
       // Babel 6 Literal split
       return printNumber$1(n.extra.raw);
+
+    case "BigIntLiteral":
+      return concat$4([printNumber$1(n.extra.rawValue), "n"]);
 
     case "BooleanLiteral": // Babel 6 Literal split
 
@@ -13765,6 +13944,7 @@ function printPathNoParens(path, options, print, args) {
           parts.push(printPropertyKey(path, options, print));
         }
 
+        parts.push(printOptionalToken(path));
         parts.push(printTypeAnnotation(path, options, print));
 
         if (n.value) {
@@ -13870,12 +14050,12 @@ function printPathNoParens(path, options, print, args) {
               return !row.hasLineBreak;
             }).forEach(function (row) {
               row.cells.forEach(function (cell, index) {
-                maxColumnWidths[index] = Math.max(maxColumnWidths[index], getStringWidth$1(cell));
+                maxColumnWidths[index] = Math.max(maxColumnWidths[index], getStringWidth$2(cell));
               });
             });
             parts.push("`", indent$2(concat$4([hardline$3, join$2(hardline$3, table.map(function (row) {
               return join$2(" | ", row.cells.map(function (cell, index) {
-                return row.hasLineBreak ? cell : cell + " ".repeat(maxColumnWidths[index] - getStringWidth$1(cell));
+                return row.hasLineBreak ? cell : cell + " ".repeat(maxColumnWidths[index] - getStringWidth$2(cell));
               }));
             }))])), hardline$3, "`");
             return concat$4(parts);
@@ -14076,6 +14256,12 @@ function printPathNoParens(path, options, print, args) {
         return group$1(concat$4(parts));
       }
 
+    case "TSRestType":
+      return concat$4(["...", path.call(print, "typeAnnotation")]);
+
+    case "TSOptionalType":
+      return concat$4([path.call(print, "typeAnnotation"), "?"]);
+
     case "FunctionTypeParam":
       return concat$4([path.call(print, "name"), printOptionalToken(path), n.name ? ": " : "", path.call(print, "typeAnnotation")]);
 
@@ -14084,7 +14270,6 @@ function printPathNoParens(path, options, print, args) {
 
     case "DeclareInterface":
     case "InterfaceDeclaration":
-    case "InterfaceType":
     case "InterfaceTypeAnnotation":
       {
         if (n.type === "DeclareInterface" || isNodeStartingWithDeclare(n, options)) {
@@ -14246,7 +14431,7 @@ function printPathNoParens(path, options, print, args) {
       return nodeStr(n, options);
 
     case "NumberLiteralTypeAnnotation":
-      assert.strictEqual(_typeof(n.value), "number");
+      assert$3.strictEqual(_typeof(n.value), "number");
 
       if (n.extra != null) {
         return printNumber$1(n.extra.raw);
@@ -14388,6 +14573,9 @@ function printPathNoParens(path, options, print, args) {
     case "TSUndefinedKeyword":
       return "undefined";
 
+    case "TSUnknownKeyword":
+      return "unknown";
+
     case "TSVoidKeyword":
       return "void";
 
@@ -14489,7 +14677,7 @@ function printPathNoParens(path, options, print, args) {
 
     case "TSLastTypeNode":
       // TSImportType
-      return concat$4([!n.isTypeOf ? "" : "typeof ", "import(", path.call(print, "argument"), ")", !n.qualifier ? "" : concat$4([".", path.call(print, "qualifier")])]);
+      return concat$4([!n.isTypeOf ? "" : "typeof ", "import(", path.call(print, "argument"), ")", !n.qualifier ? "" : concat$4([".", path.call(print, "qualifier")]), printTypeParameters(path, options, print, "typeParameters")]);
 
     case "TSLiteralType":
       return path.call(print, "literal");
@@ -14778,7 +14966,7 @@ function printMethod(path, options, print) {
       parts.push("*");
     }
   } else {
-    assert.ok(kind === "get" || kind === "set");
+    assert$3.ok(kind === "get" || kind === "set");
     parts.push(kind, " ");
   }
 
@@ -14820,7 +15008,7 @@ function shouldGroupFirstArg(args) {
 
   var firstArg = args[0];
   var secondArg = args[1];
-  return (!firstArg.comments || !firstArg.comments.length) && (firstArg.type === "FunctionExpression" || firstArg.type === "ArrowFunctionExpression" && firstArg.body.type === "BlockStatement") && !couldGroupArg(secondArg);
+  return (!firstArg.comments || !firstArg.comments.length) && (firstArg.type === "FunctionExpression" || firstArg.type === "ArrowFunctionExpression" && firstArg.body.type === "BlockStatement") && secondArg.type !== "FunctionExpression" && secondArg.type !== "ArrowFunctionExpression" && !couldGroupArg(secondArg);
 }
 
 var functionCompositionFunctionNames = new Set(["pipe", // RxJS, Ramda
@@ -14835,12 +15023,28 @@ var functionCompositionFunctionNames = new Set(["pipe", // RxJS, Ramda
 "connect" // Redux
 ]);
 
+function isThisExpression(node) {
+  switch (node.type) {
+    case "OptionalMemberExpression":
+    case "MemberExpression":
+      {
+        return isThisExpression(node.object);
+      }
+
+    case "ThisExpression":
+    case "Super":
+      {
+        return true;
+      }
+  }
+}
+
 function isFunctionCompositionFunction(node) {
   switch (node.type) {
     case "OptionalMemberExpression":
     case "MemberExpression":
       {
-        return isFunctionCompositionFunction(node.property);
+        return !isThisExpression(node.object) && isFunctionCompositionFunction(node.property);
       }
 
     case "Identifier":
@@ -15203,7 +15407,7 @@ function printFlowDeclaration(path, parts) {
   var parentExportDecl = getParentExportDeclaration$1(path);
 
   if (parentExportDecl) {
-    assert.strictEqual(parentExportDecl.type, "DeclareExportDeclaration");
+    assert$3.strictEqual(parentExportDecl.type, "DeclareExportDeclaration");
   } else {
     // If the parent node has type DeclareExportDeclaration, then it
     // will be responsible for printing the "declare" token. Otherwise
@@ -15774,6 +15978,30 @@ function getConditionalChainContents(node) {
 
 function isJSXWhitespaceExpression(node) {
   return node.type === "JSXExpressionContainer" && isLiteral(node.expression) && node.expression.value === " " && !node.expression.comments;
+}
+
+function separatorNoWhitespace(isFacebookTranslationTag, child) {
+  if (isFacebookTranslationTag) {
+    return "";
+  }
+
+  if (child.length === 1) {
+    return softline$1;
+  }
+
+  return hardline$3;
+}
+
+function separatorWithWhitespace(isFacebookTranslationTag, child) {
+  if (isFacebookTranslationTag) {
+    return hardline$3;
+  }
+
+  if (child.length === 1) {
+    return softline$1;
+  }
+
+  return hardline$3;
 } // JSX Children are strange, mostly for two reasons:
 // 1. JSX reads newlines into string values, instead of skipping them like JS
 // 2. up to one whitespace between elements within a line is significant,
@@ -15788,7 +16016,7 @@ function isJSXWhitespaceExpression(node) {
 // To ensure this we add dummy `""` content elements as needed.
 
 
-function printJSXChildren(path, options, print, jsxWhitespace) {
+function printJSXChildren(path, options, print, jsxWhitespace, isFacebookTranslationTag) {
   var n = path.getValue();
   var children = []; // using `map` instead of `each` because it provides `i`
 
@@ -15806,7 +16034,7 @@ function printJSXChildren(path, options, print, jsxWhitespace) {
           words.shift();
 
           if (/\n/.test(words[0])) {
-            children.push(hardline$3);
+            children.push(separatorWithWhitespace(isFacebookTranslationTag, words[1]));
           } else {
             children.push(jsxWhitespace);
           }
@@ -15836,21 +16064,12 @@ function printJSXChildren(path, options, print, jsxWhitespace) {
 
         if (endWhitespace !== undefined) {
           if (/\n/.test(endWhitespace)) {
-            children.push(hardline$3);
+            children.push(separatorWithWhitespace(isFacebookTranslationTag, getLast$4(children)));
           } else {
             children.push(jsxWhitespace);
           }
         } else {
-          // Ideally this would be a `hardline` to allow a break between
-          // tags and text.
-          // Unfortunately Facebook have a custom translation pipeline
-          // (https://github.com/prettier/prettier/issues/1581#issuecomment-300975032)
-          // that uses the JSX syntax, but does not follow the React whitespace
-          // rules.
-          // Ensuring that we never have a break between tags and text in JSX
-          // will allow Facebook to adopt Prettier without too much of an
-          // adverse effect on formatting algorithm.
-          children.push("");
+          children.push(separatorNoWhitespace(isFacebookTranslationTag, getLast$4(children)));
         }
       } else if (/\n/.test(text)) {
         // Keep (up to one) blank line between tags/expressions/text.
@@ -15867,13 +16086,11 @@ function printJSXChildren(path, options, print, jsxWhitespace) {
       var printedChild = print(childPath);
       children.push(printedChild);
       var next = n.children[i + 1];
-      var directlyFollowedByMeaningfulText = next && isMeaningfulJSXText(next) && !/^[ \n\r\t]/.test(rawText(next));
+      var directlyFollowedByMeaningfulText = next && isMeaningfulJSXText(next);
 
       if (directlyFollowedByMeaningfulText) {
-        // Potentially this could be a hardline as well.
-        // See the comment above about the Facebook translation pipeline as
-        // to why this is an empty string.
-        children.push("");
+        var firstWord = rawText(next).trim().split(matchJsxWhitespaceRegex)[0];
+        children.push(separatorNoWhitespace(isFacebookTranslationTag, firstWord));
       } else {
         children.push(hardline$3);
       }
@@ -15935,7 +16152,8 @@ function printJSXElement(path, options, print) {
   var forcedBreak = willBreak$1(openingLines) || containsTag || containsMultipleAttributes || containsMultipleExpressions;
   var rawJsxWhitespace = options.singleQuote ? "{' '}" : '{" "}';
   var jsxWhitespace = ifBreak$1(concat$4([rawJsxWhitespace, softline$1]), " ");
-  var children = printJSXChildren(path, options, print, jsxWhitespace);
+  var isFacebookTranslationTag = n.openingElement && n.openingElement.name && n.openingElement.name.name === "fbt";
+  var children = printJSXChildren(path, options, print, jsxWhitespace, isFacebookTranslationTag);
   var containsText = n.children.filter(function (child) {
     return isMeaningfulJSXText(child);
   }).length > 0; // We can end up we multiple whitespace elements with empty string
@@ -16041,7 +16259,10 @@ function maybeWrapJSXElementInParens(path, elem) {
     return elem;
   }
 
-  return group$1(concat$4([ifBreak$1("("), indent$2(concat$4([softline$1, elem])), softline$1, ifBreak$1(")")]));
+  var shouldBreak = matchAncestorTypes$1(path, ["ArrowFunctionExpression", "CallExpression", "JSXExpressionContainer"]);
+  return group$1(concat$4([ifBreak$1("("), indent$2(concat$4([softline$1, elem])), softline$1, ifBreak$1(")")]), {
+    shouldBreak: shouldBreak
+  });
 }
 
 function isBinaryish(node) {
@@ -16134,7 +16355,8 @@ function printAssignmentRight(leftNode, rightNode, printedRight, options) {
     return indent$2(concat$4([hardline$3, printedRight]));
   }
 
-  var canBreak = isBinaryish(rightNode) && !shouldInlineLogicalExpression(rightNode) || rightNode.type === "ConditionalExpression" && isBinaryish(rightNode.test) && !shouldInlineLogicalExpression(rightNode.test) || rightNode.type === "StringLiteralTypeAnnotation" || (leftNode.type === "Identifier" || isStringLiteral(leftNode) || leftNode.type === "MemberExpression") && (isStringLiteral(rightNode) || isMemberExpressionChain(rightNode));
+  var canBreak = isBinaryish(rightNode) && !shouldInlineLogicalExpression(rightNode) || rightNode.type === "ConditionalExpression" && isBinaryish(rightNode.test) && !shouldInlineLogicalExpression(rightNode.test) || rightNode.type === "StringLiteralTypeAnnotation" || (leftNode.type === "Identifier" || isStringLiteral(leftNode) || leftNode.type === "MemberExpression") && (isStringLiteral(rightNode) || isMemberExpressionChain(rightNode)) && // do not put values on a separate line from the key in json
+  options.parser !== "json" && options.parser !== "json5";
 
   if (canBreak) {
     return indent$2(concat$4([line$3, printedRight]));
@@ -16743,6 +16965,40 @@ var commonOptions = {
     type: "boolean",
     default: false,
     description: "Use single quotes instead of double quotes."
+  },
+  proseWrap: {
+    since: "1.8.2",
+    category: CATEGORY_COMMON,
+    type: "choice",
+    default: [{
+      since: "1.8.2",
+      value: true
+    }, {
+      since: "1.9.0",
+      value: "preserve"
+    }],
+    description: "How to wrap prose.",
+    choices: [{
+      since: "1.9.0",
+      value: "always",
+      description: "Wrap prose if it exceeds the print width."
+    }, {
+      since: "1.9.0",
+      value: "never",
+      description: "Do not wrap prose."
+    }, {
+      since: "1.9.0",
+      value: "preserve",
+      description: "Wrap prose as-is."
+    }, {
+      value: false,
+      deprecated: "1.9.0",
+      redirect: "never"
+    }, {
+      value: true,
+      deprecated: "1.9.0",
+      redirect: "always"
+    }]
   }
 };
 
@@ -16813,89 +17069,310 @@ var options$3 = {
   }
 };
 
-// https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
+var languageExtend = function languageExtend() {
+  var _arguments = arguments;
+  var main = arguments[0];
 
+  var _loop = function _loop(i) {
+    var arg = _arguments[i];
+    Object.keys(arg).forEach(function (key) {
+      var newKey = key === "languageId" ? "linguistLanguageId" : key;
+      var value = arg[key];
 
-var languages = [{
-  name: "JavaScript",
+      if (Array.isArray(main[newKey])) {
+        main[newKey] = main[newKey].concat(value);
+      } else {
+        main[newKey] = value;
+      }
+    });
+  };
+
+  for (var i = 1; i < arguments.length; i++) {
+    _loop(i);
+  }
+
+  return main;
+};
+
+var name$1 = "JavaScript";
+var type = "programming";
+var tmScope = "source.js";
+var aceMode = "javascript";
+var codemirrorMode = "javascript";
+var codemirrorMimeType = "text/javascript";
+var color = "#f1e05a";
+var aliases = ["js", "node"];
+var extensions = [".js", "._js", ".bones", ".es", ".es6", ".frag", ".gs", ".jake", ".jsb", ".jscad", ".jsfl", ".jsm", ".jss", ".mjs", ".njs", ".pac", ".sjs", ".ssjs", ".xsjs", ".xsjslib"];
+var filenames = ["Jakefile"];
+var interpreters = ["node"];
+var languageId = 183;
+var javascript = {
+  name: name$1,
+  type: type,
+  tmScope: tmScope,
+  aceMode: aceMode,
+  codemirrorMode: codemirrorMode,
+  codemirrorMimeType: codemirrorMimeType,
+  color: color,
+  aliases: aliases,
+  extensions: extensions,
+  filenames: filenames,
+  interpreters: interpreters,
+  languageId: languageId
+};
+
+var javascript$1 = Object.freeze({
+	name: name$1,
+	type: type,
+	tmScope: tmScope,
+	aceMode: aceMode,
+	codemirrorMode: codemirrorMode,
+	codemirrorMimeType: codemirrorMimeType,
+	color: color,
+	aliases: aliases,
+	extensions: extensions,
+	filenames: filenames,
+	interpreters: interpreters,
+	languageId: languageId,
+	default: javascript
+});
+
+var name$2 = "JSX";
+var type$1 = "programming";
+var group$2 = "JavaScript";
+var extensions$1 = [".jsx"];
+var tmScope$1 = "source.js.jsx";
+var aceMode$1 = "javascript";
+var codemirrorMode$1 = "jsx";
+var codemirrorMimeType$1 = "text/jsx";
+var languageId$1 = 178;
+var jsx = {
+  name: name$2,
+  type: type$1,
+  group: group$2,
+  extensions: extensions$1,
+  tmScope: tmScope$1,
+  aceMode: aceMode$1,
+  codemirrorMode: codemirrorMode$1,
+  codemirrorMimeType: codemirrorMimeType$1,
+  languageId: languageId$1
+};
+
+var jsx$1 = Object.freeze({
+	name: name$2,
+	type: type$1,
+	group: group$2,
+	extensions: extensions$1,
+	tmScope: tmScope$1,
+	aceMode: aceMode$1,
+	codemirrorMode: codemirrorMode$1,
+	codemirrorMimeType: codemirrorMimeType$1,
+	languageId: languageId$1,
+	default: jsx
+});
+
+var name$3 = "TypeScript";
+var type$2 = "programming";
+var color$1 = "#2b7489";
+var aliases$1 = ["ts"];
+var extensions$2 = [".ts", ".tsx"];
+var tmScope$2 = "source.ts";
+var aceMode$2 = "typescript";
+var codemirrorMode$2 = "javascript";
+var codemirrorMimeType$2 = "application/typescript";
+var languageId$2 = 378;
+var typescript = {
+  name: name$3,
+  type: type$2,
+  color: color$1,
+  aliases: aliases$1,
+  extensions: extensions$2,
+  tmScope: tmScope$2,
+  aceMode: aceMode$2,
+  codemirrorMode: codemirrorMode$2,
+  codemirrorMimeType: codemirrorMimeType$2,
+  languageId: languageId$2
+};
+
+var typescript$1 = Object.freeze({
+	name: name$3,
+	type: type$2,
+	color: color$1,
+	aliases: aliases$1,
+	extensions: extensions$2,
+	tmScope: tmScope$2,
+	aceMode: aceMode$2,
+	codemirrorMode: codemirrorMode$2,
+	codemirrorMimeType: codemirrorMimeType$2,
+	languageId: languageId$2,
+	default: typescript
+});
+
+var name$4 = "JSON";
+var type$3 = "data";
+var tmScope$3 = "source.json";
+var group$3 = "JavaScript";
+var aceMode$3 = "json";
+var codemirrorMode$3 = "javascript";
+var codemirrorMimeType$3 = "application/json";
+var searchable = false;
+var extensions$3 = [".json", ".avsc", ".geojson", ".gltf", ".JSON-tmLanguage", ".jsonl", ".tfstate", ".tfstate.backup", ".topojson", ".webapp", ".webmanifest"];
+var filenames$1 = [".arcconfig", ".htmlhintrc", ".tern-config", ".tern-project", "composer.lock", "mcmod.info"];
+var languageId$3 = 174;
+var json$2 = {
+  name: name$4,
+  type: type$3,
+  tmScope: tmScope$3,
+  group: group$3,
+  aceMode: aceMode$3,
+  codemirrorMode: codemirrorMode$3,
+  codemirrorMimeType: codemirrorMimeType$3,
+  searchable: searchable,
+  extensions: extensions$3,
+  filenames: filenames$1,
+  languageId: languageId$3
+};
+
+var json$3 = Object.freeze({
+	name: name$4,
+	type: type$3,
+	tmScope: tmScope$3,
+	group: group$3,
+	aceMode: aceMode$3,
+	codemirrorMode: codemirrorMode$3,
+	codemirrorMimeType: codemirrorMimeType$3,
+	searchable: searchable,
+	extensions: extensions$3,
+	filenames: filenames$1,
+	languageId: languageId$3,
+	default: json$2
+});
+
+var name$5 = "JSON with Comments";
+var type$4 = "data";
+var group$4 = "JSON";
+var tmScope$4 = "source.js";
+var aceMode$4 = "javascript";
+var codemirrorMode$4 = "javascript";
+var codemirrorMimeType$4 = "text/javascript";
+var aliases$2 = ["jsonc"];
+var extensions$4 = [".sublime-build", ".sublime-commands", ".sublime-completions", ".sublime-keymap", ".sublime-macro", ".sublime-menu", ".sublime-mousemap", ".sublime-project", ".sublime-settings", ".sublime-theme", ".sublime-workspace", ".sublime_metrics", ".sublime_session"];
+var filenames$2 = [".babelrc", ".eslintrc.json", ".jscsrc", ".jshintrc", ".jslintrc", "tsconfig.json"];
+var languageId$4 = 423;
+var jsonWithComments = {
+  name: name$5,
+  type: type$4,
+  group: group$4,
+  tmScope: tmScope$4,
+  aceMode: aceMode$4,
+  codemirrorMode: codemirrorMode$4,
+  codemirrorMimeType: codemirrorMimeType$4,
+  aliases: aliases$2,
+  extensions: extensions$4,
+  filenames: filenames$2,
+  languageId: languageId$4
+};
+
+var jsonWithComments$1 = Object.freeze({
+	name: name$5,
+	type: type$4,
+	group: group$4,
+	tmScope: tmScope$4,
+	aceMode: aceMode$4,
+	codemirrorMode: codemirrorMode$4,
+	codemirrorMimeType: codemirrorMimeType$4,
+	aliases: aliases$2,
+	extensions: extensions$4,
+	filenames: filenames$2,
+	languageId: languageId$4,
+	default: jsonWithComments
+});
+
+var name$6 = "JSON5";
+var type$5 = "data";
+var extensions$5 = [".json5"];
+var tmScope$5 = "source.js";
+var aceMode$5 = "javascript";
+var codemirrorMode$5 = "javascript";
+var codemirrorMimeType$5 = "application/json";
+var languageId$5 = 175;
+var json5 = {
+  name: name$6,
+  type: type$5,
+  extensions: extensions$5,
+  tmScope: tmScope$5,
+  aceMode: aceMode$5,
+  codemirrorMode: codemirrorMode$5,
+  codemirrorMimeType: codemirrorMimeType$5,
+  languageId: languageId$5
+};
+
+var json5$1 = Object.freeze({
+	name: name$6,
+	type: type$5,
+	extensions: extensions$5,
+	tmScope: tmScope$5,
+	aceMode: aceMode$5,
+	codemirrorMode: codemirrorMode$5,
+	codemirrorMimeType: codemirrorMimeType$5,
+	languageId: languageId$5,
+	default: json5
+});
+
+var require$$0$10 = ( javascript$1 && javascript ) || javascript$1;
+
+var require$$1$6 = ( jsx$1 && jsx ) || jsx$1;
+
+var require$$2$6 = ( typescript$1 && typescript ) || typescript$1;
+
+var require$$3$1 = ( json$3 && json$2 ) || json$3;
+
+var require$$4 = ( jsonWithComments$1 && jsonWithComments ) || jsonWithComments$1;
+
+var require$$5 = ( json5$1 && json5 ) || json5$1;
+
+var languages = [languageExtend({}, require$$0$10, {
   since: "0.0.0",
   parsers: ["babylon", "flow"],
-  group: "JavaScript",
-  tmScope: "source.js",
-  aceMode: "javascript",
-  codemirrorMode: "javascript",
-  codemirrorMimeType: "text/javascript",
-  aliases: ["js", "node"],
-  extensions: [".js", "._js", ".bones", ".es", ".es6", ".frag", ".gs", ".jake", ".jsb", ".jscad", ".jsfl", ".jsm", ".jss", ".mjs", ".njs", ".pac", ".sjs", ".ssjs", ".xsjs", ".xsjslib"],
-  filenames: ["Jakefile"],
-  linguistLanguageId: 183,
   vscodeLanguageIds: ["javascript"]
-}, {
-  name: "JSX",
+}), {
+  name: "Flow",
   since: "0.0.0",
   parsers: ["babylon", "flow"],
-  group: "JavaScript",
-  extensions: [".jsx"],
-  tmScope: "source.js.jsx",
-  aceMode: "javascript",
-  codemirrorMode: "jsx",
-  codemirrorMimeType: "text/jsx",
-  liguistLanguageId: 178,
+  extensions: [".js.flow"]
+}, languageExtend({}, require$$1$6, {
+  since: "0.0.0",
+  parsers: ["babylon", "flow"],
   vscodeLanguageIds: ["javascriptreact"]
-}, {
-  name: "TypeScript",
+}), languageExtend({}, require$$2$6, {
   since: "1.4.0",
   parsers: ["typescript-eslint"],
-  group: "JavaScript",
-  aliases: ["ts"],
-  extensions: [".ts", ".tsx"],
-  tmScope: "source.ts",
-  aceMode: "typescript",
-  codemirrorMode: "javascript",
-  codemirrorMimeType: "application/typescript",
-  liguistLanguageId: 378,
   vscodeLanguageIds: ["typescript", "typescriptreact"]
-}, {
+}), Object.assign(languageExtend({}, require$$3$1, {
   name: "JSON.stringify",
   since: "1.13.0",
   parsers: ["json-stringify"],
-  group: "JavaScript",
-  tmScope: "source.json",
-  aceMode: "json",
-  codemirrorMode: "javascript",
-  codemirrorMimeType: "application/json",
+  vscodeLanguageIds: ["json"]
+}), // overwrite
+{
   extensions: [],
   // .json file defaults to json instead of json-stringify
-  filenames: ["package.json", "package-lock.json", "composer.json"],
-  linguistLanguageId: 174,
-  vscodeLanguageIds: ["json"]
-}, {
-  name: "JSON",
+  filenames: ["package.json", "package-lock.json", "composer.json"]
+}), languageExtend({}, require$$3$1, {
   since: "1.5.0",
   parsers: ["json"],
-  group: "JavaScript",
-  tmScope: "source.json",
-  aceMode: "json",
-  codemirrorMode: "javascript",
-  codemirrorMimeType: "application/json",
-  extensions: [".json", ".geojson", ".JSON-tmLanguage", ".topojson"],
-  filenames: [".arcconfig", ".jshintrc", ".eslintrc", ".prettierrc", "composer.lock", "mcmod.info"],
-  linguistLanguageId: 174,
-  vscodeLanguageIds: ["json", "jsonc"]
-}, {
-  name: "JSON5",
+  filenames: [".prettierrc"],
+  vscodeLanguageIds: ["json"]
+}), languageExtend({}, require$$4, {
+  since: "1.5.0",
+  parsers: ["json"],
+  filenames: [".eslintrc"],
+  vscodeLanguageIds: ["jsonc"]
+}), languageExtend({}, require$$5, {
   since: "1.13.0",
   parsers: ["json5"],
-  group: "JavaScript",
-  tmScope: "source.json",
-  aceMode: "json",
-  codemirrorMode: "javascript",
-  codemirrorMimeType: "application/json",
-  extensions: [".json5"],
-  filenames: [".babelrc"],
-  linguistLanguageId: 175,
   vscodeLanguageIds: ["json5"]
-}];
+})];
 var printers = {
   estree: printerEstree,
   "estree-json": printerEstreeJson
@@ -16914,10 +17391,30 @@ var htmlTagNames = Object.freeze({
 
 var htmlTagNames$1 = ( htmlTagNames && index$5 ) || htmlTagNames;
 
-function clean$3(ast, newObj) {
-  ["raws", "sourceIndex", "source", "before", "after", "trailingComma"].forEach(function (name) {
+function clean$3(ast, newObj, parent) {
+  ["raw", // front-matter
+  "raws", "sourceIndex", "source", "before", "after", "trailingComma"].forEach(function (name) {
     delete newObj[name];
   });
+
+  if (ast.type === "yaml") {
+    delete newObj.value;
+  } // --insert-pragma
+
+
+  if (ast.type === "css-comment" && parent.type === "css-root" && parent.nodes.length !== 0 && ( // first non-front-matter comment
+  parent.nodes[0] === ast || (parent.nodes[0].type === "yaml" || parent.nodes[0].type === "toml") && parent.nodes[1] === ast)) {
+    /**
+     * something
+     *
+     * @format
+     */
+    delete newObj.text; // standalone pragma
+
+    if (/^\*\s*@(format|prettier)\s*$/.test(ast.text)) {
+      return null;
+    }
+  }
 
   if (ast.type === "media-query" || ast.type === "media-query-list" || ast.type === "media-feature-expression") {
     delete newObj.value;
@@ -17009,6 +17506,85 @@ function cleanCSSStrings(value) {
 }
 
 var clean_1$2 = clean$3;
+
+var _require$$0$builders$3 = doc.builders;
+var hardline$7 = _require$$0$builders$3.hardline;
+var literalline$3 = _require$$0$builders$3.literalline;
+var concat$8 = _require$$0$builders$3.concat;
+var markAsRoot$1 = _require$$0$builders$3.markAsRoot;
+var mapDoc$3 = doc.utils.mapDoc;
+
+function embed$2(path, print, textToDoc
+/*, options */
+) {
+  var node = path.getValue();
+
+  if (node.type === "yaml") {
+    return markAsRoot$1(concat$8(["---", hardline$7, node.value.trim() ? replaceNewlinesWithLiterallines(textToDoc(node.value, {
+      parser: "yaml"
+    })) : "", "---", hardline$7]));
+  }
+
+  return null;
+
+  function replaceNewlinesWithLiterallines(doc$$2) {
+    return mapDoc$3(doc$$2, function (currentDoc) {
+      return typeof currentDoc === "string" && currentDoc.includes("\n") ? concat$8(currentDoc.split(/(\n)/g).map(function (v, i) {
+        return i % 2 === 0 ? v : literalline$3;
+      })) : currentDoc;
+    });
+  }
+}
+
+var embed_1$2 = embed$2;
+
+var DELIMITER_MAP = {
+  "---": "yaml",
+  "+++": "toml"
+};
+
+function parse$3(text) {
+  var delimiterRegex = Object.keys(DELIMITER_MAP).map(escapeStringRegexp).join("|");
+  var match = text.match(new RegExp("^(".concat(delimiterRegex, ")\\n(?:([\\s\\S]*?)\\n)?\\1(\\n|$)")));
+
+  if (match === null) {
+    return {
+      frontMatter: null,
+      content: text
+    };
+  }
+
+  var raw = match[0].trimRight();
+  var delimiter = match[1];
+  var value = match[2];
+  return {
+    frontMatter: {
+      type: DELIMITER_MAP[delimiter],
+      value: value,
+      raw: raw
+    },
+    content: text.slice(raw.length)
+  };
+}
+
+var frontMatter = parse$3;
+
+function hasPragma$1(text) {
+  return pragma.hasPragma(frontMatter(text).content);
+}
+
+function insertPragma$3(text) {
+  var _parseFrontMatter = frontMatter(text),
+      frontMatter$$1 = _parseFrontMatter.frontMatter,
+      content = _parseFrontMatter.content;
+
+  return (frontMatter$$1 ? frontMatter$$1.raw + "\n\n" : "") + pragma.insertPragma(content);
+}
+
+var pragma$2 = {
+  hasPragma: hasPragma$1,
+  insertPragma: insertPragma$3
+};
 
 var colorAdjusterFunctions = ["red", "green", "blue", "alpha", "a", "rgb", "hue", "h", "saturation", "s", "lightness", "l", "whiteness", "w", "blackness", "b", "tint", "shade", "blend", "blenda", "contrast", "hsl", "hsla", "hwb", "hwba"];
 
@@ -17306,22 +17882,23 @@ var utils$4 = {
   isColorAdjusterFuncNode: isColorAdjusterFuncNode$1
 };
 
+var insertPragma$2 = pragma$2.insertPragma;
 var printNumber$2 = util.printNumber;
 var printString$2 = util.printString;
 var hasIgnoreComment$2 = util.hasIgnoreComment;
 var hasNewline$3 = util.hasNewline;
 var isNextLineEmpty$3 = utilShared.isNextLineEmpty;
-var _require$$2$builders = doc.builders;
-var concat$7 = _require$$2$builders.concat;
-var join$5 = _require$$2$builders.join;
-var line$4 = _require$$2$builders.line;
-var hardline$6 = _require$$2$builders.hardline;
-var softline$3 = _require$$2$builders.softline;
-var group$2 = _require$$2$builders.group;
-var fill$3 = _require$$2$builders.fill;
-var indent$5 = _require$$2$builders.indent;
-var dedent$3 = _require$$2$builders.dedent;
-var ifBreak$2 = _require$$2$builders.ifBreak;
+var _require$$3$builders = doc.builders;
+var concat$7 = _require$$3$builders.concat;
+var join$5 = _require$$3$builders.join;
+var line$4 = _require$$3$builders.line;
+var hardline$6 = _require$$3$builders.hardline;
+var softline$3 = _require$$3$builders.softline;
+var group$5 = _require$$3$builders.group;
+var fill$3 = _require$$3$builders.fill;
+var indent$5 = _require$$3$builders.indent;
+var dedent$3 = _require$$3$builders.dedent;
+var ifBreak$2 = _require$$3$builders.ifBreak;
 var removeLines$2 = doc.utils.removeLines;
 var getAncestorNode = utils$4.getAncestorNode;
 var getPropOfDeclNode = utils$4.getPropOfDeclNode;
@@ -17389,8 +17966,9 @@ function genericPrint$3(path, options, print) {
   }
 
   switch (node.type) {
-    case "front-matter":
-      return concat$7([node.value, hardline$6]);
+    case "yaml":
+    case "toml":
+      return concat$7([node.raw, hardline$6]);
 
     case "css-root":
       {
@@ -17439,7 +18017,7 @@ function genericPrint$3(path, options, print) {
         return concat$7(["@", // If a Less file ends up being parsed with the SCSS parser, Less
         // variable declarations will be parsed as at-rules with names ending
         // with a colon, so keep the original case then.
-        isDetachedRulesetCallNode(node) || node.name.endsWith(":") ? node.name : maybeToLowerCase(node.name), node.params ? concat$7([isDetachedRulesetCallNode(node) ? "" : " ", path.call(print, "params")]) : "", node.selector ? indent$5(concat$7([" ", path.call(print, "selector")])) : "", node.value ? group$2(concat$7([" ", path.call(print, "value"), isSCSSControlDirectiveNode(node) ? hasParensAroundNode(node) ? " " : line$4 : ""])) : node.name === "else" ? " " : "", node.nodes ? concat$7([isSCSSControlDirectiveNode(node) ? "" : " ", "{", indent$5(concat$7([node.nodes.length > 0 ? softline$3 : "", printNodeSequence(path, options, print)])), softline$3, "}"]) : ";"]);
+        isDetachedRulesetCallNode(node) || node.name.endsWith(":") ? node.name : maybeToLowerCase(node.name), node.params ? concat$7([isDetachedRulesetCallNode(node) ? "" : " ", path.call(print, "params")]) : "", node.selector ? indent$5(concat$7([" ", path.call(print, "selector")])) : "", node.value ? group$5(concat$7([" ", path.call(print, "value"), isSCSSControlDirectiveNode(node) ? hasParensAroundNode(node) ? " " : line$4 : ""])) : node.name === "else" ? " " : "", node.nodes ? concat$7([isSCSSControlDirectiveNode(node) ? "" : " ", "{", indent$5(concat$7([node.nodes.length > 0 ? softline$3 : "", printNodeSequence(path, options, print)])), softline$3, "}"]) : ";"]);
       }
     // postcss-media-query-parser
 
@@ -17455,7 +18033,7 @@ function genericPrint$3(path, options, print) {
 
           parts.push(childPath.call(print));
         }, "nodes");
-        return group$2(indent$5(join$5(line$4, parts)));
+        return group$5(indent$5(join$5(line$4, parts)));
       }
 
     case "media-query":
@@ -17510,12 +18088,12 @@ function genericPrint$3(path, options, print) {
 
     case "selector-root":
       {
-        return group$2(concat$7([insideAtRuleNode(path, "custom-selector") ? concat$7([getAncestorNode(path, "css-atrule").customSelector, line$4]) : "", join$5(concat$7([",", insideAtRuleNode(path, ["extend", "custom-selector", "nest"]) ? line$4 : hardline$6]), path.map(print, "nodes"))]));
+        return group$5(concat$7([insideAtRuleNode(path, "custom-selector") ? concat$7([getAncestorNode(path, "css-atrule").customSelector, line$4]) : "", join$5(concat$7([",", insideAtRuleNode(path, ["extend", "custom-selector", "nest"]) ? line$4 : hardline$6]), path.map(print, "nodes"))]));
       }
 
     case "selector-selector":
       {
-        return group$2(indent$5(concat$7(path.map(print, "nodes"))));
+        return group$5(indent$5(concat$7(path.map(print, "nodes"))));
       }
 
     case "selector-comment":
@@ -17568,7 +18146,7 @@ function genericPrint$3(path, options, print) {
 
     case "selector-universal":
       {
-        return concat$7([node.namespace ? concat$7([node.namespace === true ? "" : node.namespace.trim(), "|"]) : "", adjustNumbers(node.value)]);
+        return concat$7([node.namespace ? concat$7([node.namespace === true ? "" : node.namespace.trim(), "|"]) : "", node.value]);
       }
 
     case "selector-pseudo":
@@ -17768,7 +18346,7 @@ function genericPrint$3(path, options, print) {
         }
 
         if (isControlDirective) {
-          return group$2(indent$5(concat$7(_parts)));
+          return group$5(indent$5(concat$7(_parts)));
         } // Indent is not needed for import url when url is very long
         // and node has two groups
         // when type is value-comma_group
@@ -17776,10 +18354,10 @@ function genericPrint$3(path, options, print) {
 
 
         if (insideURLFunctionInImportAtRuleNode(path)) {
-          return group$2(fill$3(_parts));
+          return group$5(fill$3(_parts));
         }
 
-        return group$2(indent$5(fill$3(_parts)));
+        return group$5(indent$5(fill$3(_parts)));
       }
 
     case "value-paren_group":
@@ -17803,17 +18381,17 @@ function genericPrint$3(path, options, print) {
             res.push(_printed[_i]);
           }
 
-          return group$2(indent$5(fill$3(res)));
+          return group$5(indent$5(fill$3(res)));
         }
 
         var isSCSSMapItem = isSCSSMapItemNode(path);
-        return group$2(concat$7([node.open ? path.call(print, "open") : "", indent$5(concat$7([softline$3, join$5(concat$7([",", line$4]), path.map(function (childPath) {
+        return group$5(concat$7([node.open ? path.call(print, "open") : "", indent$5(concat$7([softline$3, join$5(concat$7([",", line$4]), path.map(function (childPath) {
           var node = childPath.getValue();
           var printed = print(childPath); // Key/Value pair in open paren already indented
 
           if (isKeyValuePairNode(node) && node.type === "value-comma_group" && node.groups && node.groups[2] && node.groups[2].type === "value-paren_group") {
-            printed.contents.contents.parts[1] = group$2(printed.contents.contents.parts[1]);
-            return group$2(dedent$3(printed));
+            printed.contents.contents.parts[1] = group$5(printed.contents.contents.parts[1]);
+            return group$5(dedent$3(printed));
           }
 
           return printed;
@@ -17905,12 +18483,12 @@ function printNodeSequence(path, options, print) {
     if (i !== node.nodes.length - 1) {
       if (node.nodes[i + 1].type === "css-comment" && !hasNewline$3(options.originalText, options.locStart(node.nodes[i + 1]), {
         backwards: true
-      }) || node.nodes[i + 1].type === "css-atrule" && node.nodes[i + 1].name === "else" && node.nodes[i].type !== "css-comment") {
+      }) && node.nodes[i].type !== "yaml" && node.nodes[i].type !== "toml" || node.nodes[i + 1].type === "css-atrule" && node.nodes[i + 1].name === "else" && node.nodes[i].type !== "css-comment") {
         parts.push(" ");
       } else {
         parts.push(hardline$6);
 
-        if (isNextLineEmpty$3(options.originalText, pathChild.getValue(), options)) {
+        if (isNextLineEmpty$3(options.originalText, pathChild.getValue(), options) && node.nodes[i].type !== "yaml" && node.nodes[i].type !== "toml") {
           parts.push(hardline$6);
         }
       }
@@ -17951,6 +18529,8 @@ function printCssNumber(rawNumber) {
 
 var printerPostcss = {
   print: genericPrint$3,
+  embed: embed_1$2,
+  insertPragma: insertPragma$2,
   hasPrettierIgnore: hasIgnoreComment$2,
   massageAstNode: clean_1$2
 };
@@ -17959,46 +18539,162 @@ var options$6 = {
   singleQuote: commonOptions.singleQuote
 };
 
-// https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
+var name$7 = "CSS";
+var type$6 = "markup";
+var tmScope$6 = "source.css";
+var aceMode$6 = "css";
+var codemirrorMode$6 = "css";
+var codemirrorMimeType$6 = "text/css";
+var color$2 = "#563d7c";
+var extensions$6 = [".css"];
+var languageId$6 = 50;
+var css$2 = {
+  name: name$7,
+  type: type$6,
+  tmScope: tmScope$6,
+  aceMode: aceMode$6,
+  codemirrorMode: codemirrorMode$6,
+  codemirrorMimeType: codemirrorMimeType$6,
+  color: color$2,
+  extensions: extensions$6,
+  languageId: languageId$6
+};
 
+var css$3 = Object.freeze({
+	name: name$7,
+	type: type$6,
+	tmScope: tmScope$6,
+	aceMode: aceMode$6,
+	codemirrorMode: codemirrorMode$6,
+	codemirrorMimeType: codemirrorMimeType$6,
+	color: color$2,
+	extensions: extensions$6,
+	languageId: languageId$6,
+	default: css$2
+});
 
-var languages$1 = [{
-  name: "CSS",
+var name$8 = "PostCSS";
+var type$7 = "markup";
+var tmScope$7 = "source.postcss";
+var group$6 = "CSS";
+var extensions$7 = [".pcss"];
+var aceMode$7 = "text";
+var languageId$7 = 262764437;
+var postcss = {
+  name: name$8,
+  type: type$7,
+  tmScope: tmScope$7,
+  group: group$6,
+  extensions: extensions$7,
+  aceMode: aceMode$7,
+  languageId: languageId$7
+};
+
+var postcss$1 = Object.freeze({
+	name: name$8,
+	type: type$7,
+	tmScope: tmScope$7,
+	group: group$6,
+	extensions: extensions$7,
+	aceMode: aceMode$7,
+	languageId: languageId$7,
+	default: postcss
+});
+
+var name$9 = "Less";
+var type$8 = "markup";
+var group$7 = "CSS";
+var extensions$8 = [".less"];
+var tmScope$8 = "source.css.less";
+var aceMode$8 = "less";
+var codemirrorMode$7 = "css";
+var codemirrorMimeType$7 = "text/css";
+var languageId$8 = 198;
+var less = {
+  name: name$9,
+  type: type$8,
+  group: group$7,
+  extensions: extensions$8,
+  tmScope: tmScope$8,
+  aceMode: aceMode$8,
+  codemirrorMode: codemirrorMode$7,
+  codemirrorMimeType: codemirrorMimeType$7,
+  languageId: languageId$8
+};
+
+var less$1 = Object.freeze({
+	name: name$9,
+	type: type$8,
+	group: group$7,
+	extensions: extensions$8,
+	tmScope: tmScope$8,
+	aceMode: aceMode$8,
+	codemirrorMode: codemirrorMode$7,
+	codemirrorMimeType: codemirrorMimeType$7,
+	languageId: languageId$8,
+	default: less
+});
+
+var name$10 = "SCSS";
+var type$9 = "markup";
+var tmScope$9 = "source.scss";
+var group$8 = "CSS";
+var aceMode$9 = "scss";
+var codemirrorMode$8 = "css";
+var codemirrorMimeType$8 = "text/x-scss";
+var extensions$9 = [".scss"];
+var languageId$9 = 329;
+var scss = {
+  name: name$10,
+  type: type$9,
+  tmScope: tmScope$9,
+  group: group$8,
+  aceMode: aceMode$9,
+  codemirrorMode: codemirrorMode$8,
+  codemirrorMimeType: codemirrorMimeType$8,
+  extensions: extensions$9,
+  languageId: languageId$9
+};
+
+var scss$1 = Object.freeze({
+	name: name$10,
+	type: type$9,
+	tmScope: tmScope$9,
+	group: group$8,
+	aceMode: aceMode$9,
+	codemirrorMode: codemirrorMode$8,
+	codemirrorMimeType: codemirrorMimeType$8,
+	extensions: extensions$9,
+	languageId: languageId$9,
+	default: scss
+});
+
+var require$$0$12 = ( css$3 && css$2 ) || css$3;
+
+var require$$1$7 = ( postcss$1 && postcss ) || postcss$1;
+
+var require$$2$7 = ( less$1 && less ) || less$1;
+
+var require$$3$2 = ( scss$1 && scss ) || scss$1;
+
+var languages$1 = [languageExtend({}, require$$0$12, {
   since: "1.4.0",
   parsers: ["css"],
-  group: "CSS",
-  tmScope: "source.css",
-  aceMode: "css",
-  codemirrorMode: "css",
-  codemirrorMimeType: "text/css",
-  extensions: [".css", ".pcss", ".postcss"],
-  liguistLanguageId: 50,
-  vscodeLanguageIds: ["css", "postcss"]
-}, {
-  name: "Less",
+  vscodeLanguageIds: ["css"]
+}), languageExtend({}, require$$1$7, {
+  since: "1.4.0",
+  parsers: ["css"],
+  extensions: [".postcss"],
+  vscodeLanguageIds: ["postcss"]
+}), languageExtend({}, require$$2$7, {
   since: "1.4.0",
   parsers: ["less"],
-  group: "CSS",
-  extensions: [".less"],
-  tmScope: "source.css.less",
-  aceMode: "less",
-  codemirrorMode: "css",
-  codemirrorMimeType: "text/css",
-  liguistLanguageId: 198,
   vscodeLanguageIds: ["less"]
-}, {
-  name: "SCSS",
+}), languageExtend({}, require$$3$2, {
   since: "1.4.0",
   parsers: ["scss"],
-  group: "CSS",
-  tmScope: "source.scss",
-  aceMode: "scss",
-  codemirrorMode: "css",
-  codemirrorMimeType: "text/x-scss",
-  extensions: [".scss"],
-  liguistLanguageId: 329,
   vscodeLanguageIds: ["scss"]
-}];
+})];
 var printers$1 = {
   postcss: printerPostcss
 };
@@ -18008,17 +18704,31 @@ var languageCss = {
   printers: printers$1
 };
 
-var _require$$0$builders$3 = doc.builders;
-var concat$8 = _require$$0$builders$3.concat;
-var join$6 = _require$$0$builders$3.join;
-var hardline$7 = _require$$0$builders$3.hardline;
-var line$5 = _require$$0$builders$3.line;
-var softline$4 = _require$$0$builders$3.softline;
-var group$3 = _require$$0$builders$3.group;
-var indent$6 = _require$$0$builders$3.indent;
-var ifBreak$3 = _require$$0$builders$3.ifBreak;
+function hasPragma$2(text) {
+  return /^\s*#[^\n\S]*@(format|prettier)\s*(\n|$)/.test(text);
+}
+
+function insertPragma$5(text) {
+  return "# @format\n\n" + text;
+}
+
+var pragma$4 = {
+  hasPragma: hasPragma$2,
+  insertPragma: insertPragma$5
+};
+
+var _require$$0$builders$4 = doc.builders;
+var concat$9 = _require$$0$builders$4.concat;
+var join$6 = _require$$0$builders$4.join;
+var hardline$8 = _require$$0$builders$4.hardline;
+var line$5 = _require$$0$builders$4.line;
+var softline$4 = _require$$0$builders$4.softline;
+var group$9 = _require$$0$builders$4.group;
+var indent$6 = _require$$0$builders$4.indent;
+var ifBreak$3 = _require$$0$builders$4.ifBreak;
 var hasIgnoreComment$3 = util.hasIgnoreComment;
 var isNextLineEmpty$4 = utilShared.isNextLineEmpty;
+var insertPragma$4 = pragma$4.insertPragma;
 
 function genericPrint$4(path, options, print) {
   var n = path.getValue();
@@ -18036,41 +18746,41 @@ function genericPrint$4(path, options, print) {
       {
         var parts = [];
         path.map(function (pathChild, index) {
-          parts.push(concat$8([pathChild.call(print)]));
+          parts.push(concat$9([pathChild.call(print)]));
 
           if (index !== n.definitions.length - 1) {
-            parts.push(hardline$7);
+            parts.push(hardline$8);
 
             if (isNextLineEmpty$4(options.originalText, pathChild.getValue(), options)) {
-              parts.push(hardline$7);
+              parts.push(hardline$8);
             }
           }
         }, "definitions");
-        return concat$8([concat$8(parts), hardline$7]);
+        return concat$9([concat$9(parts), hardline$8]);
       }
 
     case "OperationDefinition":
       {
         var hasOperation = options.originalText[options.locStart(n)] !== "{";
         var hasName = !!n.name;
-        return concat$8([hasOperation ? n.operation : "", hasOperation && hasName ? concat$8([" ", path.call(print, "name")]) : "", n.variableDefinitions && n.variableDefinitions.length ? group$3(concat$8(["(", indent$6(concat$8([softline$4, join$6(concat$8([ifBreak$3("", ", "), softline$4]), path.map(print, "variableDefinitions"))])), softline$4, ")"])) : "", printDirectives(path, print, n), n.selectionSet ? !hasOperation && !hasName ? "" : " " : "", path.call(print, "selectionSet")]);
+        return concat$9([hasOperation ? n.operation : "", hasOperation && hasName ? concat$9([" ", path.call(print, "name")]) : "", n.variableDefinitions && n.variableDefinitions.length ? group$9(concat$9(["(", indent$6(concat$9([softline$4, join$6(concat$9([ifBreak$3("", ", "), softline$4]), path.map(print, "variableDefinitions"))])), softline$4, ")"])) : "", printDirectives(path, print, n), n.selectionSet ? !hasOperation && !hasName ? "" : " " : "", path.call(print, "selectionSet")]);
       }
 
     case "FragmentDefinition":
       {
-        return concat$8(["fragment ", path.call(print, "name"), " on ", path.call(print, "typeCondition"), printDirectives(path, print, n), " ", path.call(print, "selectionSet")]);
+        return concat$9(["fragment ", path.call(print, "name"), " on ", path.call(print, "typeCondition"), printDirectives(path, print, n), " ", path.call(print, "selectionSet")]);
       }
 
     case "SelectionSet":
       {
-        return concat$8(["{", indent$6(concat$8([hardline$7, join$6(hardline$7, path.call(function (selectionsPath) {
+        return concat$9(["{", indent$6(concat$9([hardline$8, join$6(hardline$8, path.call(function (selectionsPath) {
           return printSequence(selectionsPath, options, print);
-        }, "selections"))])), hardline$7, "}"]);
+        }, "selections"))])), hardline$8, "}"]);
       }
 
     case "Field":
       {
-        return group$3(concat$8([n.alias ? concat$8([path.call(print, "alias"), ": "]) : "", path.call(print, "name"), n.arguments.length > 0 ? group$3(concat$8(["(", indent$6(concat$8([softline$4, join$6(concat$8([ifBreak$3("", ", "), softline$4]), path.call(function (argsPath) {
+        return group$9(concat$9([n.alias ? concat$9([path.call(print, "alias"), ": "]) : "", path.call(print, "name"), n.arguments.length > 0 ? group$9(concat$9(["(", indent$6(concat$9([softline$4, join$6(concat$9([ifBreak$3("", ", "), softline$4]), path.call(function (argsPath) {
           return printSequence(argsPath, options, print);
         }, "arguments"))])), softline$4, ")"])) : "", printDirectives(path, print, n), n.selectionSet ? " " : "", path.call(print, "selectionSet")]));
       }
@@ -18083,10 +18793,10 @@ function genericPrint$4(path, options, print) {
     case "StringValue":
       {
         if (n.block) {
-          return concat$8(['"""', hardline$7, join$6(hardline$7, n.value.replace(/"""/g, "\\$&").split("\n")), hardline$7, '"""']);
+          return concat$9(['"""', hardline$8, join$6(hardline$8, n.value.replace(/"""/g, "\\$&").split("\n")), hardline$8, '"""']);
         }
 
-        return concat$8(['"', n.value.replace(/["\\]/g, "\\$&"), '"']);
+        return concat$9(['"', n.value.replace(/["\\]/g, "\\$&").replace(/\n/g, "\\n"), '"']);
       }
 
     case "IntValue":
@@ -18108,28 +18818,28 @@ function genericPrint$4(path, options, print) {
 
     case "Variable":
       {
-        return concat$8(["$", path.call(print, "name")]);
+        return concat$9(["$", path.call(print, "name")]);
       }
 
     case "ListValue":
       {
-        return group$3(concat$8(["[", indent$6(concat$8([softline$4, join$6(concat$8([ifBreak$3("", ", "), softline$4]), path.map(print, "values"))])), softline$4, "]"]));
+        return group$9(concat$9(["[", indent$6(concat$9([softline$4, join$6(concat$9([ifBreak$3("", ", "), softline$4]), path.map(print, "values"))])), softline$4, "]"]));
       }
 
     case "ObjectValue":
       {
-        return group$3(concat$8(["{", options.bracketSpacing && n.fields.length > 0 ? " " : "", indent$6(concat$8([softline$4, join$6(concat$8([ifBreak$3("", ", "), softline$4]), path.map(print, "fields"))])), softline$4, ifBreak$3("", options.bracketSpacing && n.fields.length > 0 ? " " : ""), "}"]));
+        return group$9(concat$9(["{", options.bracketSpacing && n.fields.length > 0 ? " " : "", indent$6(concat$9([softline$4, join$6(concat$9([ifBreak$3("", ", "), softline$4]), path.map(print, "fields"))])), softline$4, ifBreak$3("", options.bracketSpacing && n.fields.length > 0 ? " " : ""), "}"]));
       }
 
     case "ObjectField":
     case "Argument":
       {
-        return concat$8([path.call(print, "name"), ": ", path.call(print, "value")]);
+        return concat$9([path.call(print, "name"), ": ", path.call(print, "value")]);
       }
 
     case "Directive":
       {
-        return concat$8(["@", path.call(print, "name"), n.arguments.length > 0 ? group$3(concat$8(["(", indent$6(concat$8([softline$4, join$6(concat$8([ifBreak$3("", ", "), softline$4]), path.call(function (argsPath) {
+        return concat$9(["@", path.call(print, "name"), n.arguments.length > 0 ? group$9(concat$9(["(", indent$6(concat$9([softline$4, join$6(concat$9([ifBreak$3("", ", "), softline$4]), path.call(function (argsPath) {
           return printSequence(argsPath, options, print);
         }, "arguments"))])), softline$4, ")"])) : ""]);
       }
@@ -18141,112 +18851,112 @@ function genericPrint$4(path, options, print) {
 
     case "VariableDefinition":
       {
-        return concat$8([path.call(print, "variable"), ": ", path.call(print, "type"), n.defaultValue ? concat$8([" = ", path.call(print, "defaultValue")]) : ""]);
+        return concat$9([path.call(print, "variable"), ": ", path.call(print, "type"), n.defaultValue ? concat$9([" = ", path.call(print, "defaultValue")]) : ""]);
       }
 
     case "TypeExtensionDefinition":
       {
-        return concat$8(["extend ", path.call(print, "definition")]);
+        return concat$9(["extend ", path.call(print, "definition")]);
       }
 
     case "ObjectTypeExtension":
     case "ObjectTypeDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? hardline$7 : "", n.kind === "ObjectTypeExtension" ? "extend " : "", "type ", path.call(print, "name"), n.interfaces.length > 0 ? concat$8([" implements ", join$6(determineInterfaceSeparator(options.originalText.substr(options.locStart(n), options.locEnd(n))), path.map(print, "interfaces"))]) : "", printDirectives(path, print, n), n.fields.length > 0 ? concat$8([" {", indent$6(concat$8([hardline$7, join$6(hardline$7, path.call(function (fieldsPath) {
+        return concat$9([path.call(print, "description"), n.description ? hardline$8 : "", n.kind === "ObjectTypeExtension" ? "extend " : "", "type ", path.call(print, "name"), n.interfaces.length > 0 ? concat$9([" implements ", join$6(determineInterfaceSeparator(options.originalText.substr(options.locStart(n), options.locEnd(n))), path.map(print, "interfaces"))]) : "", printDirectives(path, print, n), n.fields.length > 0 ? concat$9([" {", indent$6(concat$9([hardline$8, join$6(hardline$8, path.call(function (fieldsPath) {
           return printSequence(fieldsPath, options, print);
-        }, "fields"))])), hardline$7, "}"]) : ""]);
+        }, "fields"))])), hardline$8, "}"]) : ""]);
       }
 
     case "FieldDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? hardline$7 : "", path.call(print, "name"), n.arguments.length > 0 ? group$3(concat$8(["(", indent$6(concat$8([softline$4, join$6(concat$8([ifBreak$3("", ", "), softline$4]), path.call(function (argsPath) {
+        return concat$9([path.call(print, "description"), n.description ? hardline$8 : "", path.call(print, "name"), n.arguments.length > 0 ? group$9(concat$9(["(", indent$6(concat$9([softline$4, join$6(concat$9([ifBreak$3("", ", "), softline$4]), path.call(function (argsPath) {
           return printSequence(argsPath, options, print);
         }, "arguments"))])), softline$4, ")"])) : "", ": ", path.call(print, "type"), printDirectives(path, print, n)]);
       }
 
     case "DirectiveDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? hardline$7 : "", "directive ", "@", path.call(print, "name"), n.arguments.length > 0 ? group$3(concat$8(["(", indent$6(concat$8([softline$4, join$6(concat$8([ifBreak$3("", ", "), softline$4]), path.call(function (argsPath) {
+        return concat$9([path.call(print, "description"), n.description ? hardline$8 : "", "directive ", "@", path.call(print, "name"), n.arguments.length > 0 ? group$9(concat$9(["(", indent$6(concat$9([softline$4, join$6(concat$9([ifBreak$3("", ", "), softline$4]), path.call(function (argsPath) {
           return printSequence(argsPath, options, print);
-        }, "arguments"))])), softline$4, ")"])) : "", concat$8([" on ", join$6(" | ", path.map(print, "locations"))])]);
+        }, "arguments"))])), softline$4, ")"])) : "", concat$9([" on ", join$6(" | ", path.map(print, "locations"))])]);
       }
 
     case "EnumTypeExtension":
     case "EnumTypeDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? hardline$7 : "", n.kind === "EnumTypeExtension" ? "extend " : "", "enum ", path.call(print, "name"), printDirectives(path, print, n), n.values.length > 0 ? concat$8([" {", indent$6(concat$8([hardline$7, join$6(hardline$7, path.call(function (valuesPath) {
+        return concat$9([path.call(print, "description"), n.description ? hardline$8 : "", n.kind === "EnumTypeExtension" ? "extend " : "", "enum ", path.call(print, "name"), printDirectives(path, print, n), n.values.length > 0 ? concat$9([" {", indent$6(concat$9([hardline$8, join$6(hardline$8, path.call(function (valuesPath) {
           return printSequence(valuesPath, options, print);
-        }, "values"))])), hardline$7, "}"]) : ""]);
+        }, "values"))])), hardline$8, "}"]) : ""]);
       }
 
     case "EnumValueDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? hardline$7 : "", path.call(print, "name"), printDirectives(path, print, n)]);
+        return concat$9([path.call(print, "description"), n.description ? hardline$8 : "", path.call(print, "name"), printDirectives(path, print, n)]);
       }
 
     case "InputValueDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? n.description.block ? hardline$7 : line$5 : "", path.call(print, "name"), ": ", path.call(print, "type"), n.defaultValue ? concat$8([" = ", path.call(print, "defaultValue")]) : "", printDirectives(path, print, n)]);
+        return concat$9([path.call(print, "description"), n.description ? n.description.block ? hardline$8 : line$5 : "", path.call(print, "name"), ": ", path.call(print, "type"), n.defaultValue ? concat$9([" = ", path.call(print, "defaultValue")]) : "", printDirectives(path, print, n)]);
       }
 
     case "InputObjectTypeExtension":
     case "InputObjectTypeDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? hardline$7 : "", n.kind === "InputObjectTypeExtension" ? "extend " : "", "input ", path.call(print, "name"), printDirectives(path, print, n), n.fields.length > 0 ? concat$8([" {", indent$6(concat$8([hardline$7, join$6(hardline$7, path.call(function (fieldsPath) {
+        return concat$9([path.call(print, "description"), n.description ? hardline$8 : "", n.kind === "InputObjectTypeExtension" ? "extend " : "", "input ", path.call(print, "name"), printDirectives(path, print, n), n.fields.length > 0 ? concat$9([" {", indent$6(concat$9([hardline$8, join$6(hardline$8, path.call(function (fieldsPath) {
           return printSequence(fieldsPath, options, print);
-        }, "fields"))])), hardline$7, "}"]) : ""]);
+        }, "fields"))])), hardline$8, "}"]) : ""]);
       }
 
     case "SchemaDefinition":
       {
-        return concat$8(["schema", printDirectives(path, print, n), " {", n.operationTypes.length > 0 ? indent$6(concat$8([hardline$7, join$6(hardline$7, path.call(function (opsPath) {
+        return concat$9(["schema", printDirectives(path, print, n), " {", n.operationTypes.length > 0 ? indent$6(concat$9([hardline$8, join$6(hardline$8, path.call(function (opsPath) {
           return printSequence(opsPath, options, print);
-        }, "operationTypes"))])) : "", hardline$7, "}"]);
+        }, "operationTypes"))])) : "", hardline$8, "}"]);
       }
 
     case "OperationTypeDefinition":
       {
-        return concat$8([path.call(print, "operation"), ": ", path.call(print, "type")]);
+        return concat$9([path.call(print, "operation"), ": ", path.call(print, "type")]);
       }
 
     case "InterfaceTypeExtension":
     case "InterfaceTypeDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? hardline$7 : "", n.kind === "InterfaceTypeExtension" ? "extend " : "", "interface ", path.call(print, "name"), printDirectives(path, print, n), n.fields.length > 0 ? concat$8([" {", indent$6(concat$8([hardline$7, join$6(hardline$7, path.call(function (fieldsPath) {
+        return concat$9([path.call(print, "description"), n.description ? hardline$8 : "", n.kind === "InterfaceTypeExtension" ? "extend " : "", "interface ", path.call(print, "name"), printDirectives(path, print, n), n.fields.length > 0 ? concat$9([" {", indent$6(concat$9([hardline$8, join$6(hardline$8, path.call(function (fieldsPath) {
           return printSequence(fieldsPath, options, print);
-        }, "fields"))])), hardline$7, "}"]) : ""]);
+        }, "fields"))])), hardline$8, "}"]) : ""]);
       }
 
     case "FragmentSpread":
       {
-        return concat$8(["...", path.call(print, "name"), printDirectives(path, print, n)]);
+        return concat$9(["...", path.call(print, "name"), printDirectives(path, print, n)]);
       }
 
     case "InlineFragment":
       {
-        return concat$8(["...", n.typeCondition ? concat$8([" on ", path.call(print, "typeCondition")]) : "", printDirectives(path, print, n), " ", path.call(print, "selectionSet")]);
+        return concat$9(["...", n.typeCondition ? concat$9([" on ", path.call(print, "typeCondition")]) : "", printDirectives(path, print, n), " ", path.call(print, "selectionSet")]);
       }
 
     case "UnionTypeExtension":
     case "UnionTypeDefinition":
       {
-        return group$3(concat$8([path.call(print, "description"), n.description ? hardline$7 : "", group$3(concat$8([n.kind === "UnionTypeExtension" ? "extend " : "", "union ", path.call(print, "name"), printDirectives(path, print, n), n.types.length > 0 ? concat$8([" =", ifBreak$3("", " "), indent$6(concat$8([ifBreak$3(concat$8([line$5, "  "])), join$6(concat$8([line$5, "| "]), path.map(print, "types"))]))]) : ""]))]));
+        return group$9(concat$9([path.call(print, "description"), n.description ? hardline$8 : "", group$9(concat$9([n.kind === "UnionTypeExtension" ? "extend " : "", "union ", path.call(print, "name"), printDirectives(path, print, n), n.types.length > 0 ? concat$9([" =", ifBreak$3("", " "), indent$6(concat$9([ifBreak$3(concat$9([line$5, "  "])), join$6(concat$9([line$5, "| "]), path.map(print, "types"))]))]) : ""]))]));
       }
 
     case "ScalarTypeExtension":
     case "ScalarTypeDefinition":
       {
-        return concat$8([path.call(print, "description"), n.description ? hardline$7 : "", n.kind === "ScalarTypeExtension" ? "extend " : "", "scalar ", path.call(print, "name"), printDirectives(path, print, n)]);
+        return concat$9([path.call(print, "description"), n.description ? hardline$8 : "", n.kind === "ScalarTypeExtension" ? "extend " : "", "scalar ", path.call(print, "name"), printDirectives(path, print, n)]);
       }
 
     case "NonNullType":
       {
-        return concat$8([path.call(print, "type"), "!"]);
+        return concat$9([path.call(print, "type"), "!"]);
       }
 
     case "ListType":
       {
-        return concat$8(["[", path.call(print, "type"), "]"]);
+        return concat$9(["[", path.call(print, "type"), "]"]);
       }
 
     default:
@@ -18260,7 +18970,7 @@ function printDirectives(path, print, n) {
     return "";
   }
 
-  return concat$8([" ", group$3(indent$6(concat$8([softline$4, join$6(concat$8([ifBreak$3("", " "), softline$4]), path.map(print, "directives"))])))]);
+  return concat$9([" ", group$9(indent$6(concat$9([softline$4, join$6(concat$9([ifBreak$3("", " "), softline$4]), path.map(print, "directives"))])))]);
 }
 
 function printSequence(sequencePath, options, print) {
@@ -18269,7 +18979,7 @@ function printSequence(sequencePath, options, print) {
     var printed = print(path);
 
     if (isNextLineEmpty$4(options.originalText, path.getValue(), options) && i < count - 1) {
-      return concat$8([printed, hardline$7]);
+      return concat$9([printed, hardline$8]);
     }
 
     return printed;
@@ -18283,13 +18993,11 @@ function canAttachComment$1(node) {
 function printComment$2(commentPath) {
   var comment = commentPath.getValue();
 
-  switch (comment.kind) {
-    case "Comment":
-      return "#" + comment.value.trimRight();
-
-    default:
-      throw new Error("Not a comment: " + JSON.stringify(comment));
+  if (comment.kind === "Comment") {
+    return "#" + comment.value.trimRight();
   }
+
+  throw new Error("Not a comment: " + JSON.stringify(comment));
 }
 
 function determineInterfaceSeparator(originalSource) {
@@ -18319,6 +19027,7 @@ var printerGraphql = {
   print: genericPrint$4,
   massageAstNode: clean$5,
   hasPrettierIgnore: hasIgnoreComment$3,
+  insertPragma: insertPragma$4,
   printComment: printComment$2,
   canAttachComment: canAttachComment$1
 };
@@ -18327,19 +19036,38 @@ var options$9 = {
   bracketSpacing: commonOptions.bracketSpacing
 };
 
-// https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
+var name$11 = "GraphQL";
+var type$10 = "data";
+var extensions$10 = [".graphql", ".gql"];
+var tmScope$10 = "source.graphql";
+var aceMode$10 = "text";
+var languageId$10 = 139;
+var graphql = {
+  name: name$11,
+  type: type$10,
+  extensions: extensions$10,
+  tmScope: tmScope$10,
+  aceMode: aceMode$10,
+  languageId: languageId$10
+};
 
+var graphql$1 = Object.freeze({
+	name: name$11,
+	type: type$10,
+	extensions: extensions$10,
+	tmScope: tmScope$10,
+	aceMode: aceMode$10,
+	languageId: languageId$10,
+	default: graphql
+});
 
-var languages$2 = [{
-  name: "GraphQL",
+var require$$0$13 = ( graphql$1 && graphql ) || graphql$1;
+
+var languages$2 = [languageExtend({}, require$$0$13, {
   since: "1.5.0",
   parsers: ["graphql"],
-  extensions: [".graphql", ".gql"],
-  tmScope: "source.graphql",
-  aceMode: "text",
-  liguistLanguageId: 139,
   vscodeLanguageIds: ["graphql"]
-}];
+})];
 var printers$2 = {
   graphql: printerGraphql
 };
@@ -18349,19 +19077,20 @@ var languageGraphql = {
   printers: printers$2
 };
 
-var _require$$0$builders$5 = doc.builders;
-var hardline$9 = _require$$0$builders$5.hardline;
-var literalline$4 = _require$$0$builders$5.literalline;
-var concat$10 = _require$$0$builders$5.concat;
-var markAsRoot$2 = _require$$0$builders$5.markAsRoot;
-var mapDoc$4 = doc.utils.mapDoc;
+var _require$$0$builders$6 = doc.builders;
+var hardline$10 = _require$$0$builders$6.hardline;
+var literalline$5 = _require$$0$builders$6.literalline;
+var concat$11 = _require$$0$builders$6.concat;
+var markAsRoot$3 = _require$$0$builders$6.markAsRoot;
+var mapDoc$5 = doc.utils.mapDoc;
 
-function embed$2(path, print, textToDoc, options) {
+function embed$4(path, print, textToDoc, options) {
   var node = path.getValue();
 
   if (node.type === "code" && node.lang !== null) {
     // only look for the first string so as to support [markdown-preview-enhanced](https://shd101wyy.github.io/markdown-preview-enhanced/#/code-chunk)
-    var lang = node.lang.split(/\s/, 1)[0];
+    var langMatch = node.lang.match(/^[A-Za-z0-9_-]+/);
+    var lang = langMatch ? langMatch[0] : "";
     var parser = getParserName(lang);
 
     if (parser) {
@@ -18370,8 +19099,14 @@ function embed$2(path, print, textToDoc, options) {
       var doc$$2 = textToDoc(node.value, {
         parser: parser
       });
-      return markAsRoot$2(concat$10([style, node.lang, hardline$9, replaceNewlinesWithLiterallines(doc$$2), style]));
+      return markAsRoot$3(concat$11([style, node.lang, hardline$10, replaceNewlinesWithLiterallines(doc$$2), style]));
     }
+  }
+
+  if (node.type === "yaml") {
+    return markAsRoot$3(concat$11(["---", hardline$10, node.value.trim() ? replaceNewlinesWithLiterallines(textToDoc(node.value, {
+      parser: "yaml"
+    })) : "", "---"]));
   }
 
   return null;
@@ -18381,7 +19116,7 @@ function embed$2(path, print, textToDoc, options) {
       plugins: options.plugins
     });
     var language = supportInfo.languages.find(function (language) {
-      return language.name.toLowerCase() === lang || language.extensions && language.extensions.find(function (ext) {
+      return language.name.toLowerCase() === lang || language.aliases && language.aliases.indexOf(lang) !== -1 || language.extensions && language.extensions.find(function (ext) {
         return ext.substring(1) === lang;
       });
     });
@@ -18394,44 +19129,17 @@ function embed$2(path, print, textToDoc, options) {
   }
 
   function replaceNewlinesWithLiterallines(doc$$2) {
-    return mapDoc$4(doc$$2, function (currentDoc) {
-      return typeof currentDoc === "string" && currentDoc.includes("\n") ? concat$10(currentDoc.split(/(\n)/g).map(function (v, i) {
-        return i % 2 === 0 ? v : literalline$4;
+    return mapDoc$5(doc$$2, function (currentDoc) {
+      return typeof currentDoc === "string" && currentDoc.includes("\n") ? concat$11(currentDoc.split(/(\n)/g).map(function (v, i) {
+        return i % 2 === 0 ? v : literalline$5;
       })) : currentDoc;
     });
   }
 }
 
-var embed_1$2 = embed$2;
+var embed_1$4 = embed$4;
 
-function parse$3(text) {
-  var delimiter;
-
-  if (text.indexOf("---") === 0) {
-    delimiter = "---";
-  } else if (text.indexOf("+++") === 0) {
-    delimiter = "+++";
-  }
-
-  var end = -1;
-
-  if (!delimiter || (end = text.indexOf("\n".concat(delimiter), 3)) === -1) {
-    return {
-      frontMatter: null,
-      content: text
-    };
-  }
-
-  end = end + 4;
-  return {
-    frontMatter: text.slice(0, end),
-    content: text.slice(end)
-  };
-}
-
-var frontMatter = parse$3;
-
-var pragma$2 = createCommonjsModule(function (module) {
+var pragma$6 = createCommonjsModule(function (module) {
   "use strict";
 
   var pragmas = ["format", "prettier"];
@@ -18451,25 +19159,44 @@ var pragma$2 = createCommonjsModule(function (module) {
     insertPragma: function insertPragma(text) {
       var extracted = frontMatter(text);
       var pragma = "<!-- @".concat(pragmas[0], " -->");
-      return extracted.frontMatter ? "".concat(extracted.frontMatter, "\n\n").concat(pragma, "\n\n").concat(extracted.content) : "".concat(pragma, "\n\n").concat(extracted.content);
+      return extracted.frontMatter ? "".concat(extracted.frontMatter.raw, "\n\n").concat(pragma, "\n\n").concat(extracted.content) : "".concat(pragma, "\n\n").concat(extracted.content);
     }
   };
 });
 
-var _require$$0$builders$4 = doc.builders;
-var concat$9 = _require$$0$builders$4.concat;
-var join$7 = _require$$0$builders$4.join;
-var line$6 = _require$$0$builders$4.line;
-var literalline$3 = _require$$0$builders$4.literalline;
-var markAsRoot$1 = _require$$0$builders$4.markAsRoot;
-var hardline$8 = _require$$0$builders$4.hardline;
-var softline$5 = _require$$0$builders$4.softline;
-var fill$4 = _require$$0$builders$4.fill;
-var align$2 = _require$$0$builders$4.align;
-var indent$7 = _require$$0$builders$4.indent;
-var group$4 = _require$$0$builders$4.group;
-var mapDoc$3 = doc.utils.mapDoc;
+function getOrderedListItemInfo$1(orderListItem, originalText) {
+  var _originalText$slice$m = originalText.slice(orderListItem.position.start.offset, orderListItem.position.end.offset).match(/^\s*(\d+)(\.|\))(\s*)/),
+      _originalText$slice$m2 = _slicedToArray(_originalText$slice$m, 4),
+      numberText = _originalText$slice$m2[1],
+      marker = _originalText$slice$m2[2],
+      leadingSpaces = _originalText$slice$m2[3];
+
+  return {
+    numberText: numberText,
+    marker: marker,
+    leadingSpaces: leadingSpaces
+  };
+}
+
+var utils$6 = {
+  getOrderedListItemInfo: getOrderedListItemInfo$1
+};
+
+var _require$$0$builders$5 = doc.builders;
+var concat$10 = _require$$0$builders$5.concat;
+var join$7 = _require$$0$builders$5.join;
+var line$6 = _require$$0$builders$5.line;
+var literalline$4 = _require$$0$builders$5.literalline;
+var markAsRoot$2 = _require$$0$builders$5.markAsRoot;
+var hardline$9 = _require$$0$builders$5.hardline;
+var softline$5 = _require$$0$builders$5.softline;
+var fill$4 = _require$$0$builders$5.fill;
+var align$2 = _require$$0$builders$5.align;
+var indent$7 = _require$$0$builders$5.indent;
+var group$10 = _require$$0$builders$5.group;
+var mapDoc$4 = doc.utils.mapDoc;
 var printDocToString$2 = doc.printer.printDocToString;
+var getOrderedListItemInfo = utils$6.getOrderedListItemInfo;
 var SINGLE_LINE_NODE_TYPES = ["heading", "tableCell", "link"];
 var SIBLING_NODE_TYPES = ["listItem", "definition", "footnoteDefinition"];
 var INLINE_NODE_TYPES = ["liquidNode", "inlineCode", "emphasis", "strong", "delete", "link", "linkReference", "image", "imageReference", "footnote", "footnoteReference", "sentence", "whitespace", "word", "break"];
@@ -18479,7 +19206,7 @@ function genericPrint$5(path, options, print) {
   var node = path.getValue();
 
   if (shouldRemainTheSameContent(path)) {
-    return concat$9(util.splitText(options.originalText.slice(node.position.start.offset, node.position.end.offset), options).map(function (node) {
+    return concat$10(util.splitText(options.originalText.slice(node.position.start.offset, node.position.end.offset), options).map(function (node) {
       return node.type === "word" ? node.value : node.value === "" ? "" : printLine(path, node.value, options);
     }));
   }
@@ -18490,7 +19217,7 @@ function genericPrint$5(path, options, print) {
         return "";
       }
 
-      return concat$9([normalizeDoc(printRoot(path, options, print)), hardline$8]);
+      return concat$10([normalizeDoc(printRoot(path, options, print)), hardline$9]);
 
     case "paragraph":
       return printChildren(path, options, print, {
@@ -18530,14 +19257,14 @@ function genericPrint$5(path, options, print) {
         var hasPrevOrNextWord = // `1*2*3` is considered emphais but `1_2_3` is not
         prevNode && prevNode.type === "sentence" && prevNode.children.length > 0 && util.getLast(prevNode.children).type === "word" && !util.getLast(prevNode.children).hasTrailingPunctuation || _nextNode && _nextNode.type === "sentence" && _nextNode.children.length > 0 && _nextNode.children[0].type === "word" && !_nextNode.children[0].hasLeadingPunctuation;
         var style = hasPrevOrNextWord || getAncestorNode$2(path, "emphasis") ? "*" : "_";
-        return concat$9([style, printChildren(path, options, print), style]);
+        return concat$10([style, printChildren(path, options, print), style]);
       }
 
     case "strong":
-      return concat$9(["**", printChildren(path, options, print), "**"]);
+      return concat$10(["**", printChildren(path, options, print), "**"]);
 
     case "delete":
-      return concat$9(["~~", printChildren(path, options, print), "~~"]);
+      return concat$10(["~~", printChildren(path, options, print), "~~"]);
 
     case "inlineCode":
       {
@@ -18546,37 +19273,41 @@ function genericPrint$5(path, options, print) {
         var _style = backtickCount === 1 ? "``" : "`";
 
         var gap = backtickCount ? " " : "";
-        return concat$9([_style, gap, node.value, gap, _style]);
+        return concat$10([_style, gap, node.value, gap, _style]);
       }
 
     case "link":
       switch (options.originalText[node.position.start.offset]) {
         case "<":
-          return concat$9(["<", node.url, ">"]);
+          {
+            var mailto = "mailto:";
+            var url = // <hello@example.com> is parsed as { url: "mailto:hello@example.com" }
+            node.url.startsWith(mailto) && options.originalText.slice(node.position.start.offset + 1, node.position.start.offset + 1 + mailto.length) !== mailto ? node.url.slice(mailto.length) : node.url;
+            return concat$10(["<", url, ">"]);
+          }
 
         case "[":
-          return concat$9(["[", printChildren(path, options, print), "](", printUrl(node.url, ")"), printTitle(node.title, options), ")"]);
+          return concat$10(["[", printChildren(path, options, print), "](", printUrl(node.url, ")"), printTitle(node.title, options), ")"]);
 
         default:
           return options.originalText.slice(node.position.start.offset, node.position.end.offset);
       }
 
     case "image":
-      return concat$9(["![", node.alt || "", "](", printUrl(node.url, ")"), printTitle(node.title, options), ")"]);
+      return concat$10(["![", node.alt || "", "](", printUrl(node.url, ")"), printTitle(node.title, options), ")"]);
 
     case "blockquote":
-      return concat$9(["> ", align$2("> ", printChildren(path, options, print))]);
+      return concat$10(["> ", align$2("> ", printChildren(path, options, print))]);
 
     case "heading":
-      return concat$9(["#".repeat(node.depth) + " ", printChildren(path, options, print)]);
+      return concat$10(["#".repeat(node.depth) + " ", printChildren(path, options, print)]);
 
     case "code":
       {
-        if ( // the first char may point to `\n`, e.g. `\n\t\tbar`, just ignore it
-        /^\n?( {4,}|\t)/.test(options.originalText.slice(node.position.start.offset, node.position.end.offset))) {
+        if (node.isIndented) {
           // indented code block
           var alignment = " ".repeat(4);
-          return align$2(alignment, concat$9([alignment, join$7(hardline$8, node.value.split("\n"))]));
+          return align$2(alignment, concat$10([alignment, join$7(hardline$9, node.value.split("\n"))]));
         } // fenced code block
 
 
@@ -18584,11 +19315,12 @@ function genericPrint$5(path, options, print) {
 
         var _style2 = styleUnit.repeat(Math.max(3, util.getMaxContinuousCount(node.value, styleUnit) + 1));
 
-        return concat$9([_style2, node.lang || "", hardline$8, join$7(hardline$8, node.value.split("\n")), hardline$8, _style2]);
+        return concat$10([_style2, node.lang || "", hardline$9, join$7(hardline$9, node.value.split("\n")), hardline$9, _style2]);
       }
 
-    case "front-matter":
-      return node.value;
+    case "yaml":
+    case "toml":
+      return options.originalText.slice(node.position.start.offset, node.position.end.offset);
 
     case "html":
       {
@@ -18596,25 +19328,23 @@ function genericPrint$5(path, options, print) {
 
         var value = _parentNode2.type === "root" && util.getLast(_parentNode2.children) === node ? node.value.trimRight() : node.value;
         var isHtmlComment = /^<!--[\s\S]*-->$/.test(value);
-        return replaceNewlinesWith(value, isHtmlComment ? hardline$8 : markAsRoot$1(literalline$3));
+        return replaceNewlinesWith(value, isHtmlComment ? hardline$9 : markAsRoot$2(literalline$4));
       }
 
     case "list":
       {
         var nthSiblingIndex = getNthListSiblingIndex(node, path.getParentNode());
-        var isGitDiffFriendlyOrderedList = node.ordered && node.children.length > 1 && /^\s*1(\.|\))/.test(options.originalText.slice(node.children[1].position.start.offset, node.children[1].position.end.offset));
+        var isGitDiffFriendlyOrderedList = node.ordered && node.children.length > 1 && +getOrderedListItemInfo(node.children[1], options.originalText).numberText === 1;
         return printChildren(path, options, print, {
           processor: function processor(childPath, index) {
             var prefix = getPrefix();
-            return concat$9([prefix, align$2(" ".repeat(prefix.length), printListItem(childPath, options, print, prefix))]);
+            return concat$10([prefix, align$2(" ".repeat(prefix.length), printListItem(childPath, options, print, prefix))]);
 
             function getPrefix() {
-              var rawPrefix = node.ordered ? (index === 0 ? node.start : isGitDiffFriendlyOrderedList ? 1 : node.start + index) + (nthSiblingIndex % 2 === 0 ? ". " : ") ") : nthSiblingIndex % 2 === 0 ? "- " : "* "; // do not print trailing spaces for empty list item since it might be treated as `break` node
-              // by [doc-printer](https://github.com/prettier/prettier/blob/1.10.2/src/doc/doc-printer.js#L395-L405),
-              // we don't want to preserve unnecessary trailing spaces.
-
-              var listItem = childPath.getValue();
-              return listItem.children.length ? alignListPrefix(rawPrefix, options) : rawPrefix;
+              var rawPrefix = node.ordered ? (index === 0 ? node.start : isGitDiffFriendlyOrderedList ? 1 : node.start + index) + (nthSiblingIndex % 2 === 0 ? ". " : ") ") : nthSiblingIndex % 2 === 0 ? "- " : "* ";
+              return node.isAligned ||
+              /* workaround for https://github.com/remarkjs/remark/issues/315 */
+              node.hasIndentedCodeblock ? alignListPrefix(rawPrefix, options) : rawPrefix;
             }
           }
         });
@@ -18634,35 +19364,35 @@ function genericPrint$5(path, options, print) {
       }
 
     case "linkReference":
-      return concat$9(["[", printChildren(path, options, print), "]", node.referenceType === "full" ? concat$9(["[", node.identifier, "]"]) : node.referenceType === "collapsed" ? "[]" : ""]);
+      return concat$10(["[", printChildren(path, options, print), "]", node.referenceType === "full" ? concat$10(["[", node.identifier, "]"]) : node.referenceType === "collapsed" ? "[]" : ""]);
 
     case "imageReference":
       switch (node.referenceType) {
         case "full":
-          return concat$9(["![", node.alt || "", "][", node.identifier, "]"]);
+          return concat$10(["![", node.alt || "", "][", node.identifier, "]"]);
 
         default:
-          return concat$9(["![", node.alt, "]", node.referenceType === "collapsed" ? "[]" : ""]);
+          return concat$10(["![", node.alt, "]", node.referenceType === "collapsed" ? "[]" : ""]);
       }
 
     case "definition":
       {
         var lineOrSpace = options.proseWrap === "always" ? line$6 : " ";
-        return group$4(concat$9([concat$9(["[", node.identifier, "]:"]), indent$7(concat$9([lineOrSpace, printUrl(node.url), node.title === null ? "" : concat$9([lineOrSpace, printTitle(node.title, options, false)])]))]));
+        return group$10(concat$10([concat$10(["[", node.identifier, "]:"]), indent$7(concat$10([lineOrSpace, printUrl(node.url), node.title === null ? "" : concat$10([lineOrSpace, printTitle(node.title, options, false)])]))]));
       }
 
     case "footnote":
-      return concat$9(["[^", printChildren(path, options, print), "]"]);
+      return concat$10(["[^", printChildren(path, options, print), "]"]);
 
     case "footnoteReference":
-      return concat$9(["[^", node.identifier, "]"]);
+      return concat$10(["[^", node.identifier, "]"]);
 
     case "footnoteDefinition":
       {
         var _nextNode2 = path.getParentNode().children[path.getName() + 1];
-        return concat$9(["[^", node.identifier, "]: ", group$4(concat$9([align$2(" ".repeat(options.tabWidth), printChildren(path, options, print, {
+        return concat$10(["[^", node.identifier, "]: ", group$10(concat$10([align$2(" ".repeat(options.tabWidth), printChildren(path, options, print, {
           processor: function processor(childPath, index) {
-            return index === 0 ? group$4(concat$9([softline$5, softline$5, childPath.call(print)])) : childPath.call(print);
+            return index === 0 ? group$10(concat$10([softline$5, softline$5, childPath.call(print)])) : childPath.call(print);
           }
         })), _nextNode2 && _nextNode2.type === "footnoteDefinition" ? softline$5 : ""]))]);
       }
@@ -18674,10 +19404,10 @@ function genericPrint$5(path, options, print) {
       return printChildren(path, options, print);
 
     case "break":
-      return /\s/.test(options.originalText[node.position.start.offset]) ? concat$9(["  ", markAsRoot$1(literalline$3)]) : concat$9(["\\", hardline$8]);
+      return /\s/.test(options.originalText[node.position.start.offset]) ? concat$10(["  ", markAsRoot$2(literalline$4)]) : concat$10(["\\", hardline$9]);
 
     case "liquidNode":
-      return replaceNewlinesWith(node.value, hardline$8);
+      return replaceNewlinesWith(node.value, hardline$9);
 
     case "tableRow": // handled in "table"
 
@@ -18691,7 +19421,7 @@ function genericPrint$5(path, options, print) {
 function printListItem(path, options, print, listPrefix) {
   var node = path.getValue();
   var prefix = node.checked === null ? "" : node.checked ? "[x] " : "[ ] ";
-  return concat$9([prefix, printChildren(path, options, print, {
+  return concat$10([prefix, printChildren(path, options, print, {
     processor: function processor(childPath, index) {
       if (index === 0 && childPath.getValue().type !== "list") {
         return align$2(" ".repeat(prefix.length), childPath.call(print));
@@ -18699,7 +19429,7 @@ function printListItem(path, options, print, listPrefix) {
 
       var alignment = " ".repeat(clamp(options.tabWidth - listPrefix.length, 0, 3) // 4+ will cause indented code block
       );
-      return concat$9([alignment, align$2(alignment, childPath.call(print))]);
+      return concat$10([alignment, align$2(alignment, childPath.call(print))]);
     }
   })]);
 }
@@ -18786,7 +19516,7 @@ function getAncestorNode$2(path, typeOrTypes) {
 
 function printLine(path, value, options) {
   if (options.proseWrap === "preserve" && value === "\n") {
-    return hardline$8;
+    return hardline$9;
   }
 
   var isBreakable = options.proseWrap === "always" && !getAncestorNode$2(path, SINGLE_LINE_NODE_TYPES);
@@ -18812,10 +19542,10 @@ function printTable(path, options, print) {
     return 3;
   }) // minimum width = 3 (---, :--, :-:, --:)
   );
-  return join$7(hardline$8, [printRow(contents[0]), printSeparator(), join$7(hardline$8, contents.slice(1).map(printRow))]);
+  return join$7(hardline$9, [printRow(contents[0]), printSeparator(), join$7(hardline$9, contents.slice(1).map(printRow))]);
 
   function printSeparator() {
-    return concat$9(["| ", join$7(" | ", columnMaxWidths.map(function (width, index) {
+    return concat$10(["| ", join$7(" | ", columnMaxWidths.map(function (width, index) {
       switch (node.align[index]) {
         case "left":
           return ":" + "-".repeat(width - 1);
@@ -18833,7 +19563,7 @@ function printTable(path, options, print) {
   }
 
   function printRow(rowContents) {
-    return concat$9(["| ", join$7(" | ", rowContents.map(function (rowContent, columnIndex) {
+    return concat$10(["| ", join$7(" | ", rowContents.map(function (rowContent, columnIndex) {
       switch (node.align[columnIndex]) {
         case "right":
           return alignRight(rowContent, columnMaxWidths[columnIndex]);
@@ -18848,18 +19578,18 @@ function printTable(path, options, print) {
   }
 
   function alignLeft(text, width) {
-    return concat$9([text, " ".repeat(width - util.getStringWidth(text))]);
+    return concat$10([text, " ".repeat(width - util.getStringWidth(text))]);
   }
 
   function alignRight(text, width) {
-    return concat$9([" ".repeat(width - util.getStringWidth(text)), text]);
+    return concat$10([" ".repeat(width - util.getStringWidth(text)), text]);
   }
 
   function alignCenter(text, width) {
     var spaces = width - util.getStringWidth(text);
     var left = Math.floor(spaces / 2);
     var right = spaces - left;
-    return concat$9([" ".repeat(left), text, " ".repeat(right)]);
+    return concat$10([" ".repeat(left), text, " ".repeat(right)]);
   }
 }
 
@@ -18909,7 +19639,7 @@ function printRoot(path, options, print) {
         var ignoreRange = ignoreRanges[0];
 
         if (index === ignoreRange.start.index) {
-          return concat$9([children[ignoreRange.start.index].value, options.originalText.slice(ignoreRange.start.offset, ignoreRange.end.offset), children[ignoreRange.end.index].value]);
+          return concat$10([children[ignoreRange.start.index].value, options.originalText.slice(ignoreRange.start.offset, ignoreRange.end.offset), children[ignoreRange.end.index].value]);
         }
 
         if (ignoreRange.start.index < index && index < ignoreRange.end.index) {
@@ -18929,7 +19659,7 @@ function printRoot(path, options, print) {
 
 function printChildren(path, options, print, events) {
   events = events || {};
-  var postprocessor = events.postprocessor || concat$9;
+  var postprocessor = events.postprocessor || concat$10;
 
   var processor = events.processor || function (childPath) {
     return childPath.call(print);
@@ -18951,14 +19681,14 @@ function printChildren(path, options, print, events) {
       };
 
       if (!shouldNotPrePrintHardline(childNode, data)) {
-        parts.push(hardline$8);
+        parts.push(hardline$9);
 
         if (shouldPrePrintDoubleHardline(childNode, data) || shouldPrePrintTripleHardline(childNode, data)) {
-          parts.push(hardline$8);
+          parts.push(hardline$9);
         }
 
         if (shouldPrePrintTripleHardline(childNode, data)) {
-          parts.push(hardline$8);
+          parts.push(hardline$9);
         }
       }
 
@@ -18999,7 +19729,7 @@ function shouldPrePrintDoubleHardline(node, data) {
 
 function shouldPrePrintTripleHardline(node, data) {
   var isPrevNodeList = data.prevNode && data.prevNode.type === "list";
-  var isIndentedCode = node.type === "code" && /\s/.test(data.options.originalText[node.position.start.offset]);
+  var isIndentedCode = node.type === "code" && node.isIndented;
   return isPrevNodeList && isIndentedCode;
 }
 
@@ -19009,7 +19739,7 @@ function shouldRemainTheSameContent(path) {
 }
 
 function normalizeDoc(doc$$2) {
-  return mapDoc$3(doc$$2, function (currentDoc) {
+  return mapDoc$4(doc$$2, function (currentDoc) {
     if (!currentDoc.parts) {
       return currentDoc;
     }
@@ -19083,10 +19813,16 @@ function clamp(value, min, max) {
 }
 
 function clean$6(ast, newObj, parent) {
-  delete newObj.position; // for codeblock
+  delete newObj.position;
+  delete newObj.raw; // front-matter
+  // for codeblock
 
-  if (ast.type === "code") {
+  if (ast.type === "code" || ast.type === "yaml") {
     delete newObj.value;
+  }
+
+  if (ast.type === "list") {
+    delete newObj.isAligned;
   } // for whitespace: "\n" and " " are considered the same
 
 
@@ -19095,7 +19831,7 @@ function clean$6(ast, newObj, parent) {
   } // for insert pragma
 
 
-  if (parent && parent.type === "root" && parent.children.length > 0 && (parent.children[0] === ast || parent.children[0].type === "front-matter" && parent.children[1] === ast) && ast.type === "html" && pragma$2.startWithPragma(ast.value)) {
+  if (parent && parent.type === "root" && parent.children.length > 0 && (parent.children[0] === ast || (parent.children[0].type === "yaml" || parent.children[0].type === "toml") && parent.children[1] === ast) && ast.type === "html" && pragma$6.startWithPragma(ast.value)) {
     return null;
   }
 }
@@ -19113,70 +19849,62 @@ function hasPrettierIgnore$1(path) {
 
 var printerMarkdown = {
   print: genericPrint$5,
-  embed: embed_1$2,
+  embed: embed_1$4,
   massageAstNode: clean$6,
   hasPrettierIgnore: hasPrettierIgnore$1,
-  insertPragma: pragma$2.insertPragma
+  insertPragma: pragma$6.insertPragma
 };
 
-var CATEGORY_MARKDOWN = "Markdown"; // format based on https://github.com/prettier/prettier/blob/master/src/main/core-options.js
-
 var options$12 = {
-  proseWrap: {
-    since: "1.8.2",
-    category: CATEGORY_MARKDOWN,
-    type: "choice",
-    default: [{
-      since: "1.8.2",
-      value: true
-    }, {
-      since: "1.9.0",
-      value: "preserve"
-    }],
-    description: "How to wrap prose. (markdown)",
-    choices: [{
-      since: "1.9.0",
-      value: "always",
-      description: "Wrap prose if it exceeds the print width."
-    }, {
-      since: "1.9.0",
-      value: "never",
-      description: "Do not wrap prose."
-    }, {
-      since: "1.9.0",
-      value: "preserve",
-      description: "Wrap prose as-is."
-    }, {
-      value: false,
-      deprecated: "1.9.0",
-      redirect: "never"
-    }, {
-      value: true,
-      deprecated: "1.9.0",
-      redirect: "always"
-    }]
-  },
+  proseWrap: commonOptions.proseWrap,
   singleQuote: commonOptions.singleQuote
 };
 
-// https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
+var name$12 = "Markdown";
+var type$11 = "prose";
+var aliases$3 = ["pandoc"];
+var aceMode$11 = "markdown";
+var codemirrorMode$9 = "gfm";
+var codemirrorMimeType$9 = "text/x-gfm";
+var wrap = true;
+var extensions$11 = [".md", ".markdown", ".mdown", ".mdwn", ".mkd", ".mkdn", ".mkdown", ".ronn", ".workbook"];
+var tmScope$11 = "source.gfm";
+var languageId$11 = 222;
+var markdown = {
+  name: name$12,
+  type: type$11,
+  aliases: aliases$3,
+  aceMode: aceMode$11,
+  codemirrorMode: codemirrorMode$9,
+  codemirrorMimeType: codemirrorMimeType$9,
+  wrap: wrap,
+  extensions: extensions$11,
+  tmScope: tmScope$11,
+  languageId: languageId$11
+};
 
+var markdown$1 = Object.freeze({
+	name: name$12,
+	type: type$11,
+	aliases: aliases$3,
+	aceMode: aceMode$11,
+	codemirrorMode: codemirrorMode$9,
+	codemirrorMimeType: codemirrorMimeType$9,
+	wrap: wrap,
+	extensions: extensions$11,
+	tmScope: tmScope$11,
+	languageId: languageId$11,
+	default: markdown
+});
 
-var languages$3 = [{
-  name: "Markdown",
+var require$$0$14 = ( markdown$1 && markdown ) || markdown$1;
+
+var languages$3 = [languageExtend({}, require$$0$14, {
   since: "1.8.0",
   parsers: ["remark"],
-  aliases: ["pandoc"],
-  aceMode: "markdown",
-  codemirrorMode: "gfm",
-  codemirrorMimeType: "text/x-gfm",
-  wrap: true,
-  extensions: [".md", ".markdown", ".mdown", ".mdwn", ".mkd", ".mkdn", ".mkdown", ".ron", ".workbook"],
   filenames: ["README"],
-  tmScope: "source.gfm",
-  linguistLanguageId: 222,
   vscodeLanguageIds: ["markdown"]
-}];
+})];
 var printers$3 = {
   mdast: printerMarkdown
 };
@@ -19186,11 +19914,11 @@ var languageMarkdown = {
   printers: printers$3
 };
 
-var _require$$0$builders$7 = doc.builders;
-var concat$12 = _require$$0$builders$7.concat;
-var hardline$11 = _require$$0$builders$7.hardline;
+var _require$$0$builders$8 = doc.builders;
+var concat$13 = _require$$0$builders$8.concat;
+var hardline$12 = _require$$0$builders$8.hardline;
 
-function embed$4(path, print, textToDoc, options) {
+function embed$6(path, print, textToDoc, options) {
   var node = path.getValue();
   var parent = path.getParentNode();
 
@@ -19230,16 +19958,30 @@ function embed$4(path, print, textToDoc, options) {
     return null;
   }
 
-  return concat$12([options.originalText.slice(node.start, node.contentStart), hardline$11, textToDoc(options.originalText.slice(node.contentStart, node.contentEnd), {
+  return concat$13([options.originalText.slice(node.start, node.contentStart), hardline$12, textToDoc(options.originalText.slice(node.contentStart, node.contentEnd), {
     parser: parser
   }), options.originalText.slice(node.contentEnd, node.end)]);
 }
 
-var embed_1$4 = embed$4;
+var embed_1$6 = embed$6;
 
-var _require$$0$builders$6 = doc.builders;
-var concat$11 = _require$$0$builders$6.concat;
-var hardline$10 = _require$$0$builders$6.hardline;
+function hasPragma$3(text) {
+  return /^\s*<!--\s*@(format|prettier)\s*-->/.test(text);
+}
+
+function insertPragma$7(text) {
+  return "<!-- @format -->\n\n" + text.replace(/^\s*\n/, "");
+}
+
+var pragma$9 = {
+  hasPragma: hasPragma$3,
+  insertPragma: insertPragma$7
+};
+
+var _require$$0$builders$7 = doc.builders;
+var concat$12 = _require$$0$builders$7.concat;
+var hardline$11 = _require$$0$builders$7.hardline;
+var insertPragma$6 = pragma$9.insertPragma;
 
 function genericPrint$6(path, options, print) {
   var n = path.getValue();
@@ -19257,10 +19999,10 @@ function genericPrint$6(path, options, print) {
   res.push(options.originalText.slice(index, n.end)); // Only force a trailing newline if there were any contents.
 
   if (n.tag === "root" && n.children.length) {
-    res.push(hardline$10);
+    res.push(hardline$11);
   }
 
-  return concat$11(res);
+  return concat$12(res);
 }
 
 var clean$7 = function clean(ast, newObj) {
@@ -19272,26 +20014,49 @@ var clean$7 = function clean(ast, newObj) {
 
 var printerVue = {
   print: genericPrint$6,
-  embed: embed_1$4,
-  massageAstNode: clean$7
+  embed: embed_1$6,
+  insertPragma: insertPragma$6,
+  massageAstNode: clean$7,
+  canAttachComment: function canAttachComment(node) {
+    return typeof node.tag === "string";
+  }
 };
 
-// https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
+var name$13 = "Vue";
+var type$12 = "markup";
+var color$3 = "#2c3e50";
+var extensions$12 = [".vue"];
+var tmScope$12 = "text.html.vue";
+var aceMode$12 = "html";
+var languageId$12 = 391;
+var vue = {
+  name: name$13,
+  type: type$12,
+  color: color$3,
+  extensions: extensions$12,
+  tmScope: tmScope$12,
+  aceMode: aceMode$12,
+  languageId: languageId$12
+};
 
+var vue$1 = Object.freeze({
+	name: name$13,
+	type: type$12,
+	color: color$3,
+	extensions: extensions$12,
+	tmScope: tmScope$12,
+	aceMode: aceMode$12,
+	languageId: languageId$12,
+	default: vue
+});
 
-var languages$4 = [{
-  name: "Vue",
+var require$$0$15 = ( vue$1 && vue ) || vue$1;
+
+var languages$4 = [languageExtend({}, require$$0$15, {
   since: "1.10.0",
   parsers: ["vue"],
-  group: "HTML",
-  tmScope: "text.html.vue",
-  aceMode: "html",
-  codemirrorMode: "htmlmixed",
-  codemirrorMimeType: "text/html",
-  extensions: [".vue"],
-  linguistLanguageId: 146,
   vscodeLanguageIds: ["vue"]
-}];
+})];
 var printers$4 = {
   vue: printerVue
 };
@@ -19300,9 +20065,677 @@ var languageVue = {
   printers: printers$4
 };
 
+function isPragma$1(text) {
+  return /^\s*@(prettier|format)\s*$/.test(text);
+}
+
+function hasPragma$4(text) {
+  return /^\s*#[^\n\S]*@(prettier|format)\s*?(\n|$)/.test(text);
+}
+
+function insertPragma$9(text) {
+  return "# @format\n\n".concat(text);
+}
+
+var pragma$11 = {
+  isPragma: isPragma$1,
+  hasPragma: hasPragma$4,
+  insertPragma: insertPragma$9
+};
+
+function getLast$6(array) {
+  return array[array.length - 1];
+}
+
+function getAncestorCount$1(path, filter) {
+  var counter = 0;
+  var pathStackLength = path.stack.length - 1;
+
+  for (var i = 0; i < pathStackLength; i++) {
+    var value = path.stack[i];
+
+    if (isNode$1(value) && filter(value)) {
+      counter++;
+    }
+  }
+
+  return counter;
+}
+
+function isNode$1(value) {
+  return value && typeof value.type === "string";
+}
+
+function mapNode(node, callback, parent) {
+  return callback("children" in node ? Object.assign({}, node, {
+    children: node.children.map(function (childNode) {
+      return mapNode(childNode, callback, node);
+    })
+  }) : node, parent);
+}
+
+function defineShortcut(x, key, getter) {
+  Object.defineProperty(x, key, {
+    get: getter,
+    enumerable: false
+  });
+}
+
+function createNull() {
+  return {
+    type: "null",
+    position: {
+      start: {
+        line: -1,
+        column: -1,
+        offset: -1
+      },
+      end: {
+        line: -1,
+        column: -1,
+        offset: -1
+      }
+    }
+  };
+}
+
+function isNextLineEmpty$6(node, text) {
+  var newlineCount = 0;
+  var textLength = text.length;
+
+  for (var i = node.position.end.offset - 1; i < textLength; i++) {
+    var char = text[i];
+
+    if (char === "\n") {
+      newlineCount++;
+    }
+
+    if (newlineCount === 1 && /\S/.test(char)) {
+      return false;
+    }
+
+    if (newlineCount === 2) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function isLastDescendantNode$1(path) {
+  var node = path.getValue();
+
+  switch (node.type) {
+    case "comment":
+    case "verbatimTag":
+    case "shorthandTag":
+    case "nonSpecificTag":
+      return false;
+  }
+
+  var pathStackLength = path.stack.length;
+
+  for (var i = 1; i < pathStackLength; i++) {
+    var item = path.stack[i];
+    var parentItem = path.stack[i - 1];
+
+    if (Array.isArray(parentItem) && typeof item === "number" && item !== parentItem.length - 1) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function getLastDescendantNode$1(node) {
+  return "children" in node && node.children.length !== 0 ? getLastDescendantNode$1(getLast$6(node.children)) : node;
+}
+
+function isPrettierIgnore$1(comment) {
+  return comment.value.trim() === "prettier-ignore";
+}
+
+function hasPrettierIgnore$3(path) {
+  var node = path.getValue();
+
+  if (node.type === "documentBody") {
+    var document = path.getParentNode();
+    return document.head.children.length !== 0 && function (lastItem) {
+      return lastItem.type === "comment" && isPrettierIgnore$1(lastItem);
+    }(getLast$6(document.head.children));
+  }
+
+  return "leadingComments" in node && node.leadingComments.length !== 0 && isPrettierIgnore$1(getLast$6(node.leadingComments));
+}
+
+function hasExplicitDocumentEndMarker$1(document, text) {
+  return text.slice(document.position.end.offset - 4, document.position.end.offset) === "\n...";
+}
+
+function isBlockValue$1(node) {
+  switch (node.type) {
+    case "blockFolded":
+    case "blockLiteral":
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+function hasLeadingComments$1(node) {
+  return "leadingComments" in node && node.leadingComments.length !== 0;
+}
+
+function hasMiddleComments$1(node) {
+  return "middleComments" in node && node.middleComments.length !== 0;
+}
+
+function hasTrailingComments$1(node) {
+  return "trailingComments" in node && node.trailingComments.length !== 0;
+}
+
+function hasEndComments$1(node) {
+  return "endComments" in node && node.endComments.length !== 0;
+}
+/**
+ * " a   b c   d e   f " -> [" a   b", "c   d", "e   f "]
+ */
+
+
+function splitWithSingleSpace(text) {
+  var parts = [];
+  var lastPart = undefined;
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = text.split(/( +)/g)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var part = _step.value;
+
+      if (part !== " ") {
+        if (lastPart === " ") {
+          parts.push(part);
+        } else {
+          parts.push((parts.pop() || "") + part);
+        }
+      } else if (lastPart === undefined) {
+        parts.unshift("");
+      }
+
+      lastPart = part;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return != null) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  if (lastPart === " ") {
+    parts.push((parts.pop() || "") + " ");
+  }
+
+  if (parts[0] === "") {
+    parts.shift();
+    parts.unshift(" " + (parts.shift() || ""));
+  }
+
+  return parts;
+}
+
+function getFlowScalarLineContents$1(nodeType, content, options) {
+  var rawLineContents = content.split("\n").map(function (lineContent, index, lineContents) {
+    return index === 0 && index === lineContents.length - 1 ? lineContent : index !== 0 && index !== lineContents.length - 1 ? lineContent.trim() : index === 0 ? lineContent.trimRight() : lineContent.trimLeft();
+  });
+
+  if (options.proseWrap === "preserve") {
+    return rawLineContents.map(function (lineContent) {
+      return lineContent.length === 0 ? [] : [lineContent];
+    });
+  }
+
+  return rawLineContents.map(function (lineContent) {
+    return lineContent.length === 0 ? [] : splitWithSingleSpace(lineContent);
+  }).reduce(function (reduced, lineContentWords, index) {
+    return index !== 0 && rawLineContents[index - 1].length !== 0 && lineContentWords.length !== 0 && !( // trailing backslash in quoteDouble should be preserved
+    nodeType === "quoteDouble" && getLast$6(getLast$6(reduced)).endsWith("\\")) ? reduced.concat([reduced.pop().concat(lineContentWords)]) : reduced.concat([lineContentWords]);
+  }, []).map(function (lineContentWords) {
+    return options.proseWrap === "never" ? [lineContentWords.join(" ")] : lineContentWords;
+  });
+}
+
+function getBlockValueLineContents$1(node, _ref) {
+  var parentIndent = _ref.parentIndent,
+      isLastDescendant = _ref.isLastDescendant,
+      options = _ref.options;
+  var content = node.position.start.line === node.position.end.line ? "" : options.originalText.slice(node.position.start.offset, node.position.end.offset) // exclude open line `>` or `|`
+  .match(/^[^\n]*?\n([\s\S]*)$/)[1];
+  var leadingSpaceCount = node.indent === null ? function (match) {
+    return match ? match[1].length : Infinity;
+  }(content.match(/^( *)\S/m)) : node.indent - 1 + parentIndent;
+  var rawLineContents = content.split("\n").map(function (lineContent) {
+    return lineContent.slice(leadingSpaceCount);
+  });
+
+  if (options.proseWrap === "preserve" || node.type === "blockLiteral") {
+    return removeUnnecessaryTrailingNewlines(rawLineContents.map(function (lineContent) {
+      return lineContent.length === 0 ? [] : [lineContent];
+    }));
+  }
+
+  return removeUnnecessaryTrailingNewlines(rawLineContents.map(function (lineContent) {
+    return lineContent.length === 0 ? [] : splitWithSingleSpace(lineContent);
+  }).reduce(function (reduced, lineContentWords, index) {
+    return index !== 0 && rawLineContents[index - 1].length !== 0 && lineContentWords.length !== 0 && !/^\s/.test(lineContentWords[0]) && !/^\s|\s$/.test(getLast$6(reduced)) ? reduced.concat([reduced.pop().concat(lineContentWords)]) : reduced.concat([lineContentWords]);
+  }, []).map(function (lineContentWords) {
+    return lineContentWords.reduce(function (reduced, word) {
+      return (// disallow trailing spaces
+        reduced.length !== 0 && /\s$/.test(getLast$6(reduced)) ? reduced.concat(reduced.pop() + " " + word) : reduced.concat(word)
+      );
+    }, []);
+  }).map(function (lineContentWords) {
+    return options.proseWrap === "never" ? [lineContentWords.join(" ")] : lineContentWords;
+  }));
+
+  function removeUnnecessaryTrailingNewlines(lineContents) {
+    if (node.chomping === "keep") {
+      return getLast$6(lineContents).length === 0 ? lineContents.slice(0, -1) : lineContents;
+    }
+
+    var trailingNewlineCount = 0;
+
+    for (var i = lineContents.length - 1; i >= 0; i--) {
+      if (lineContents[i].length === 0) {
+        trailingNewlineCount++;
+      } else {
+        break;
+      }
+    }
+
+    return trailingNewlineCount === 0 ? lineContents : trailingNewlineCount >= 2 && !isLastDescendant ? // next empty line
+    lineContents.slice(0, -(trailingNewlineCount - 1)) : lineContents.slice(0, -trailingNewlineCount);
+  }
+}
+
+var utils$8 = {
+  getLast: getLast$6,
+  getAncestorCount: getAncestorCount$1,
+  isNode: isNode$1,
+  isBlockValue: isBlockValue$1,
+  mapNode: mapNode,
+  defineShortcut: defineShortcut,
+  createNull: createNull,
+  isNextLineEmpty: isNextLineEmpty$6,
+  isLastDescendantNode: isLastDescendantNode$1,
+  getBlockValueLineContents: getBlockValueLineContents$1,
+  getFlowScalarLineContents: getFlowScalarLineContents$1,
+  getLastDescendantNode: getLastDescendantNode$1,
+  hasPrettierIgnore: hasPrettierIgnore$3,
+  hasLeadingComments: hasLeadingComments$1,
+  hasMiddleComments: hasMiddleComments$1,
+  hasTrailingComments: hasTrailingComments$1,
+  hasEndComments: hasEndComments$1,
+  hasExplicitDocumentEndMarker: hasExplicitDocumentEndMarker$1
+};
+
+var insertPragma$8 = pragma$11.insertPragma;
+var isPragma = pragma$11.isPragma;
+var getAncestorCount = utils$8.getAncestorCount;
+var getBlockValueLineContents = utils$8.getBlockValueLineContents;
+var getFlowScalarLineContents = utils$8.getFlowScalarLineContents;
+var getLast$5 = utils$8.getLast;
+var getLastDescendantNode = utils$8.getLastDescendantNode;
+var hasExplicitDocumentEndMarker = utils$8.hasExplicitDocumentEndMarker;
+var hasLeadingComments = utils$8.hasLeadingComments;
+var hasMiddleComments = utils$8.hasMiddleComments;
+var hasTrailingComments = utils$8.hasTrailingComments;
+var hasEndComments = utils$8.hasEndComments;
+var hasPrettierIgnore$2 = utils$8.hasPrettierIgnore;
+var isLastDescendantNode = utils$8.isLastDescendantNode;
+var isNextLineEmpty$5 = utils$8.isNextLineEmpty;
+var isNode = utils$8.isNode;
+var isBlockValue = utils$8.isBlockValue;
+var docBuilders$3 = doc.builders;
+var conditionalGroup$2 = docBuilders$3.conditionalGroup;
+var breakParent$3 = docBuilders$3.breakParent;
+var concat$14 = docBuilders$3.concat;
+var dedent$4 = docBuilders$3.dedent;
+var dedentToRoot$2 = docBuilders$3.dedentToRoot;
+var fill$5 = docBuilders$3.fill;
+var group$11 = docBuilders$3.group;
+var hardline$13 = docBuilders$3.hardline;
+var ifBreak$4 = docBuilders$3.ifBreak;
+var join$8 = docBuilders$3.join;
+var line$7 = docBuilders$3.line;
+var lineSuffix$2 = docBuilders$3.lineSuffix;
+var literalline$6 = docBuilders$3.literalline;
+var markAsRoot$4 = docBuilders$3.markAsRoot;
+var softline$6 = docBuilders$3.softline;
+
+function genericPrint$7(path, options, print) {
+  var node = path.getValue();
+  var parentNode = path.getParentNode();
+  var tag = "tag" in node && node.tag.type !== "null" ? path.call(print, "tag") : "";
+  var anchor = "anchor" in node && node.anchor.type !== "null" ? path.call(print, "anchor") : "";
+  var nextEmptyLine = (node.type === "mapping" || node.type === "sequence" || node.type === "comment" || node.type === "directive" || node.type === "mappingItem" || node.type === "sequenceItem") && !isLastDescendantNode(path) ? printNextEmptyLine(path, options.originalText) : "";
+  return concat$14([node.type !== "mappingValue" && hasLeadingComments(node) ? concat$14([join$8(hardline$13, path.map(print, "leadingComments")), hardline$13]) : "", tag, tag && anchor ? " " : "", anchor, (node.type === "sequence" || node.type === "mapping") && node.middleComments.length === 0 ? tag || anchor ? hardline$13 : "" : tag || anchor ? " " : "", hasMiddleComments(node) ? concat$14([node.middleComments.length === 1 ? "" : hardline$13, join$8(hardline$13, path.map(print, "middleComments")), hardline$13]) : "", hasPrettierIgnore$2(path) ? options.originalText.slice(node.position.start.offset, node.position.end.offset) : group$11(_print(node, parentNode, path, options, print)), !isBlockValue(node) && hasTrailingComments(node) // trailing comments for block value are handled themselves
+  ? lineSuffix$2(concat$14([" ", parentNode.type === "mappingKey" && path.getParentNode(2).type === "mapping" && isInlineNode(node) ? "" : breakParent$3, join$8(hardline$13, path.map(print, "trailingComments"))])) : "", nextEmptyLine, hasEndComments(node) ? function (endComments) {
+    return node.type === "sequenceItem" ? align$3(2, endComments) : endComments;
+  }(concat$14([hardline$13, join$8(hardline$13, path.map(print, "endComments"))])) : ""]);
+}
+
+function _print(node, parentNode, path, options, print) {
+  switch (node.type) {
+    case "root":
+      return concat$14([concat$14(path.map(function (childPath, index) {
+        return index === node.children.length - 1 ? print(childPath) : concat$14([print(childPath), hasTrailingComments(node.children[index]) || childPath.call(hasPrettierIgnore$2, "body") && hasExplicitDocumentEndMarker(node.children[index], options.originalText) ? "" : concat$14([hardline$13, "..."]), hardline$13]);
+      }, "children")), node.children.length === 0 || function (lastDescendantNode) {
+        return isBlockValue(lastDescendantNode) && lastDescendantNode.chomping === "keep";
+      }(getLastDescendantNode(node)) ? "" : hardline$13]);
+
+    case "document":
+      return concat$14([node.head.children.length === 0 ? path.call(print, "body") : join$8(hardline$13, [path.call(print, "head"), "---"].concat(node.body.children.length === 0 ? [] : path.call(print, "body"))), hasTrailingComments(node) ? concat$14([hardline$13, "..."]) : ""]);
+
+    case "documentHead":
+    case "documentBody":
+      return join$8(hardline$13, path.map(print, "children"));
+
+    case "directive":
+      return concat$14(["%", join$8(" ", [node.name].concat(node.parameters))]);
+
+    case "comment":
+      return concat$14(["#", node.value]);
+
+    case "alias":
+      return concat$14(["*", node.value]);
+
+    case "null":
+      return "";
+
+    case "verbatimTag":
+      return concat$14(["!<", node.value, ">"]);
+
+    case "shorthandTag":
+      return concat$14([node.handle, node.suffix]);
+
+    case "nonSpecificTag":
+      return "!";
+
+    case "anchor":
+      return concat$14(["&", node.value]);
+
+    case "plain":
+      return printFlowScalarContent(node.type, options.originalText.slice(node.position.start.offset, node.position.end.offset), options);
+
+    case "quoteDouble":
+    case "quoteSingle":
+      {
+        var singleQuote = "'";
+        var doubleQuote = '"';
+        var raw = options.originalText.slice(node.position.start.offset + 1, node.position.end.offset - 1);
+
+        if (node.type === "quoteSingle" && raw.includes("\\") || node.type === "quoteDouble" && /\\[^"]/.test(raw)) {
+          // only quoteDouble can use escape chars
+          // and quoteSingle do not need to escape backslashes
+          var originalQuote = node.type === "quoteDouble" ? doubleQuote : singleQuote;
+          return concat$14([originalQuote, printFlowScalarContent(node.type, raw, options), originalQuote]);
+        } else if (raw.includes(doubleQuote)) {
+          return concat$14([singleQuote, printFlowScalarContent(node.type, node.type === "quoteDouble" ? // double quote needs to be escaped by backslash in quoteDouble
+          raw.replace(/\\"/g, doubleQuote) : raw, options), singleQuote]);
+        }
+
+        if (raw.includes(singleQuote)) {
+          return concat$14([doubleQuote, printFlowScalarContent(node.type, node.type === "quoteSingle" ? // single quote needs to be escaped by 2 single quotes in quoteSingle
+          raw.replace(/''/g, singleQuote) : raw, options), doubleQuote]);
+        }
+
+        var quote = options.singleQuote ? singleQuote : doubleQuote;
+        return concat$14([quote, printFlowScalarContent(node.type, raw, options), quote]);
+      }
+
+    case "blockFolded":
+    case "blockLiteral":
+      {
+        var parentIndent = getAncestorCount(path, function (ancestorNode) {
+          return ancestorNode.type === "sequence" || ancestorNode.type === "mapping";
+        });
+        var isLastDescendant = isLastDescendantNode(path);
+        return concat$14([node.type === "blockFolded" ? ">" : "|", node.indent === null ? "" : node.indent.toString(), node.chomping === "clip" ? "" : node.chomping === "keep" ? "+" : "-", hasTrailingComments(node) ? concat$14([" ", join$8(hardline$13, path.map(print, "trailingComments"))]) : "", (node.indent === null ? dedent$4 : dedentToRoot$2)(align$3(node.indent === null ? options.tabWidth : node.indent - 1 + parentIndent, concat$14(getBlockValueLineContents(node, {
+          parentIndent: parentIndent,
+          isLastDescendant: isLastDescendant,
+          options: options
+        }).reduce(function (reduced, lineWords, index, lineContents) {
+          return reduced.concat(index === 0 ? hardline$13 : lineContents[index - 1].length === 0 ? hardline$13 : index === lineContents.length - 1 && lineWords.length === 0 ? dedentToRoot$2(literalline$6) : markAsRoot$4(literalline$6), fill$5(join$8(line$7, lineWords).parts), index === lineContents.length - 1 && node.chomping === "keep" && isLastDescendant ? lineWords.length === 0 || !getLast$5(lineWords).endsWith(" ") ? dedentToRoot$2(hardline$13) : dedentToRoot$2(literalline$6) : []);
+        }, []))))]);
+      }
+
+    case "sequence":
+      return join$8(hardline$13, path.map(print, "children"));
+
+    case "sequenceItem":
+      return concat$14(["- ", align$3(2, path.call(print, "node"))]);
+
+    case "mappingKey":
+      return path.call(print, "node");
+
+    case "mappingValue":
+      return path.call(print, "node");
+
+    case "mapping":
+      return join$8(hardline$13, path.map(print, "children"));
+
+    case "mappingItem":
+    case "flowMappingItem":
+      {
+        if (node.key.type === "null" && node.value.type === "null") {
+          return concat$14([":", line$7]);
+        }
+
+        var key = path.call(print, "key");
+        var value = path.call(print, "value");
+
+        if (node.value.type === "null") {
+          return node.type === "flowMappingItem" && path.getParentNode().type !== "flowSequence" ? key : concat$14(["? ", align$3(2, key)]);
+        }
+
+        if (node.key.type === "null") {
+          return concat$14([":", node.value.node.type === "null" ? "" : " ", align$3(2, value)]);
+        }
+
+        var groupId = Symbol("mappingKey");
+        var forceExplicitKey = hasLeadingComments(node.value) || node.key.type !== "null" && !isInlineNode(node.key.node);
+        return forceExplicitKey ? concat$14(["? ", align$3(2, key), hardline$13, join$8("", path.map(print, "value", "leadingComments").map(function (comment) {
+          return concat$14([comment, hardline$13]);
+        })), ": ", align$3(2, value)]) : conditionalGroup$2([concat$14([group$11(concat$14([ifBreak$4("? "), group$11(align$3(2, key), {
+          id: groupId
+        })])), ifBreak$4(concat$14([hardline$13, ": ", align$3(2, value)]), indent(concat$14([needsSpaceInFrontOfMappingValue(node) ? " " : "", ":", hasLeadingComments(node.value.node) || parentNode.type === "mapping" && hasTrailingComments(node.key.node) && isInlineNode(node.value.node) || (node.value.node.type === "mapping" || node.value.node.type === "sequence") && node.value.node.tag.type === "null" && node.value.node.anchor.type === "null" ? hardline$13 : node.value.node.type === "null" ? "" : line$7, value])), {
+          groupId: groupId
+        })])]);
+      }
+
+    case "flowMapping":
+    case "flowSequence":
+      {
+        var openMarker = node.type === "flowMapping" ? "{" : "[";
+        var closeMarker = node.type === "flowMapping" ? "}" : "]";
+        var bracketSpacing = node.type === "flowMapping" && node.children.length !== 0 && options.bracketSpacing ? line$7 : softline$6;
+
+        var isLastItemEmptyMappingItem = node.children.length !== 0 && function (lastItem) {
+          return lastItem.type === "flowMappingItem" && lastItem.key.type === "null" && lastItem.value.type === "null";
+        }(getLast$5(node.children));
+
+        return concat$14([openMarker, indent(concat$14([bracketSpacing, concat$14(path.map(function (childPath, index) {
+          return concat$14([print(childPath), index === node.children.length - 1 ? "" : concat$14([",", line$7, node.children[index].position.start.line !== node.children[index + 1].position.start.line ? printNextEmptyLine(childPath, options.originalText) : ""])]);
+        }, "children")), ifBreak$4(",", "")])), isLastItemEmptyMappingItem ? "" : bracketSpacing, closeMarker]);
+      }
+
+    case "flowSequenceItem":
+      return path.call(print, "node");
+    // istanbul ignore next
+
+    default:
+      throw new Error("Unexpected node type ".concat(node.type));
+  }
+
+  function indent(doc$$2) {
+    return docBuilders$3.align(" ".repeat(options.tabWidth), doc$$2);
+  }
+}
+
+function align$3(n, doc$$2) {
+  return typeof n === "number" && n > 0 ? docBuilders$3.align(" ".repeat(n), doc$$2) : docBuilders$3.align(n, doc$$2);
+}
+
+function isInlineNode(node) {
+  switch (node.type) {
+    case "plain":
+    case "quoteDouble":
+    case "quoteSingle":
+    case "alias":
+    case "flowMapping":
+    case "flowSequence":
+    case "null":
+      return true;
+
+    default:
+      return false;
+  }
+}
+
+function needsSpaceInFrontOfMappingValue(node) {
+  // istanbul ignore else
+  if (node.key.type !== "null") {
+    switch (node.key.node.type) {
+      case "alias":
+        return true;
+    }
+  }
+
+  return false;
+}
+
+function printNextEmptyLine(path, originalText) {
+  var node = path.getValue();
+  var root = path.stack[0];
+  root.isNextEmptyLinePrintedChecklist = root.isNextEmptyLinePrintedChecklist || [];
+
+  if (!root.isNextEmptyLinePrintedChecklist[node.position.end.line]) {
+    if (isNextLineEmpty$5(node, originalText)) {
+      root.isNextEmptyLinePrintedChecklist[node.position.end.line] = true;
+      return softline$6;
+    }
+  }
+
+  return "";
+}
+
+function printFlowScalarContent(nodeType, content, options) {
+  var lineContents = getFlowScalarLineContents(nodeType, content, options);
+  return join$8(hardline$13, lineContents.map(function (lineContentWords) {
+    return fill$5(join$8(line$7, lineContentWords).parts);
+  }));
+}
+
+function clean$8(node, newNode
+/*, parent */
+) {
+  if (isNode(newNode)) {
+    delete newNode.position;
+
+    switch (newNode.type) {
+      case "comment":
+        // insert pragma
+        if (isPragma(newNode.value)) {
+          return null;
+        }
+
+        break;
+
+      case "quoteDouble":
+      case "quoteSingle":
+        newNode.type = "quote";
+        break;
+    }
+  }
+}
+
+var printerYaml = {
+  print: genericPrint$7,
+  massageAstNode: clean$8,
+  insertPragma: insertPragma$8
+};
+
+var options$15 = {
+  bracketSpacing: commonOptions.bracketSpacing,
+  singleQuote: commonOptions.singleQuote,
+  proseWrap: commonOptions.proseWrap
+};
+
+var name$14 = "YAML";
+var type$13 = "data";
+var tmScope$13 = "source.yaml";
+var aliases$4 = ["yml"];
+var extensions$13 = [".yml", ".mir", ".reek", ".rviz", ".sublime-syntax", ".syntax", ".yaml", ".yaml-tmlanguage", ".yml.mysql"];
+var filenames$3 = [".clang-format", ".clang-tidy", ".gemrc", "glide.lock"];
+var aceMode$13 = "yaml";
+var codemirrorMode$10 = "yaml";
+var codemirrorMimeType$10 = "text/x-yaml";
+var languageId$13 = 407;
+var yaml = {
+  name: name$14,
+  type: type$13,
+  tmScope: tmScope$13,
+  aliases: aliases$4,
+  extensions: extensions$13,
+  filenames: filenames$3,
+  aceMode: aceMode$13,
+  codemirrorMode: codemirrorMode$10,
+  codemirrorMimeType: codemirrorMimeType$10,
+  languageId: languageId$13
+};
+
+var yaml$1 = Object.freeze({
+	name: name$14,
+	type: type$13,
+	tmScope: tmScope$13,
+	aliases: aliases$4,
+	extensions: extensions$13,
+	filenames: filenames$3,
+	aceMode: aceMode$13,
+	codemirrorMode: codemirrorMode$10,
+	codemirrorMimeType: codemirrorMimeType$10,
+	languageId: languageId$13,
+	default: yaml
+});
+
+var require$$0$17 = ( yaml$1 && yaml ) || yaml$1;
+
+var languages$5 = [languageExtend({}, require$$0$17, {
+  since: "1.14.0",
+  parsers: ["yaml"],
+  vscodeLanguageIds: ["yaml"]
+})];
+var languageYaml = {
+  languages: languages$5,
+  printers: {
+    yaml: printerYaml
+  },
+  options: options$15
+};
+
 var version = require$$0.version;
 var getSupportInfo = support.getSupportInfo;
-var internalPlugins = [languageJs, languageCss, languageGraphql, languageMarkdown, languageVue];
+var internalPlugins = [languageJs, languageCss, languageGraphql, languageMarkdown, languageVue, languageYaml];
 
 var isArray = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) === "[object Array]";
