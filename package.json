@@ -56,13 +56,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "vue-cli-service lint",
-      "git add"
-    ],
-    "*.{ts,tsx,js,jsx,json,scss,md}": [
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "*.{ts,tsx,js,jsx}": "vue-cli-service lint --no-fix",
+    "*.{ts,tsx,js,jsx,json,scss,md}": "prettier-eslint-check"
   }
 }
