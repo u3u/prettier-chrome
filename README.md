@@ -22,7 +22,7 @@ This extension is based on the latest version of [Prettier](https://prettier.io/
 ## Install
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/prettier/nnaminoiljgamnfnemmlcbdlmnleponp)
-- [Get the Chrome Extension](https://github.com/u3u/prettier-chrome/releases/download/v0.2.1/prettier.crx)
+- [Get the Chrome Extension](https://github.com/u3u/prettier-chrome/releases/download/v0.3.0/prettier.crx)
 
 ## Usage
 
