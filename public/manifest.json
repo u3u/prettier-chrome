@@ -27,6 +27,7 @@
         "lib/prettier/parser-postcss.js",
         "lib/prettier/parser-typescript.js",
         "lib/prettier/parser-vue.js",
+        "lib/prettier/parser-yaml.js",
         "scripts/content.min.js"
       ]
     }
