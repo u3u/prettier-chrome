@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Prettier",
   "author": "u3u <qwq@qwq.cat>",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Prettier is an opinionated code formatter.",
   "homepage_url": "https://github.com/u3u/prettier-chrome",
   "icons": {
@@ -46,6 +46,5 @@
     "default_icon": "icons/icon.png",
     "default_popup": "index.html#/popup"
   },
-  "content_security_policy":
-    "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
