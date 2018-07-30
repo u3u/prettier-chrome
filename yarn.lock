@@ -501,28 +501,6 @@
     "@babel/helper-plugin-utils" "7.0.0-beta.47"
     "@babel/plugin-syntax-decorators" "7.0.0-beta.47"
 
-"@babel/plugin-proposal-export-namespace-from@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-proposal-export-namespace-from/-/plugin-proposal-export-namespace-from-7.0.0-beta.47.tgz#38171dd0fd5f54aee377d338ed41bb92e25d6720"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
-    "@babel/plugin-syntax-export-namespace-from" "7.0.0-beta.47"
-
-"@babel/plugin-proposal-function-sent@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-proposal-function-sent/-/plugin-proposal-function-sent-7.0.0-beta.47.tgz#3ad46c04a277a887731f21843013292d254f7ba9"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
-    "@babel/helper-wrap-function" "7.0.0-beta.47"
-    "@babel/plugin-syntax-function-sent" "7.0.0-beta.47"
-
-"@babel/plugin-proposal-numeric-separator@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-proposal-numeric-separator/-/plugin-proposal-numeric-separator-7.0.0-beta.47.tgz#3ace5cbacb62c3fa223c3c0b66c0c16e63a8e259"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
-    "@babel/plugin-syntax-numeric-separator" "7.0.0-beta.47"
-
 "@babel/plugin-proposal-object-rest-spread@7.0.0-beta.47":
   version "7.0.0-beta.47"
   resolved "https://registry.npmjs.org/@babel/plugin-proposal-object-rest-spread/-/plugin-proposal-object-rest-spread-7.0.0-beta.47.tgz#e1529fddc88e948868ee1d0edaa27ebd9502322d"
@@ -550,13 +528,6 @@
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.49"
     "@babel/plugin-syntax-optional-catch-binding" "7.0.0-beta.49"
-
-"@babel/plugin-proposal-throw-expressions@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-proposal-throw-expressions/-/plugin-proposal-throw-expressions-7.0.0-beta.47.tgz#9a67f8b0852b4b0b255eff5d6d25fa436928424f"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
-    "@babel/plugin-syntax-throw-expressions" "7.0.0-beta.47"
 
 "@babel/plugin-proposal-unicode-property-regex@7.0.0-beta.47":
   version "7.0.0-beta.47"
@@ -610,29 +581,11 @@
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.47"
 
-"@babel/plugin-syntax-export-namespace-from@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-syntax-export-namespace-from/-/plugin-syntax-export-namespace-from-7.0.0-beta.47.tgz#fd446c76c59849f15e6cde235b5b8e153413f21e"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
-
 "@babel/plugin-syntax-flow@7.0.0-beta.49":
   version "7.0.0-beta.49"
   resolved "https://registry.npmjs.org/@babel/plugin-syntax-flow/-/plugin-syntax-flow-7.0.0-beta.49.tgz#5b3f0b65ca9660534535643b82530fb1d58e63ee"
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.49"
-
-"@babel/plugin-syntax-function-sent@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-syntax-function-sent/-/plugin-syntax-function-sent-7.0.0-beta.47.tgz#8d15536f55b21acdf9bfaa177c46591a589fe8b0"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
-
-"@babel/plugin-syntax-import-meta@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-syntax-import-meta/-/plugin-syntax-import-meta-7.0.0-beta.47.tgz#8ab5174209a954b91e327004a7d16737bcc4774d"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
 
 "@babel/plugin-syntax-jsx@7.0.0-beta.47":
   version "7.0.0-beta.47"
@@ -645,12 +598,6 @@
   resolved "https://registry.npmjs.org/@babel/plugin-syntax-jsx/-/plugin-syntax-jsx-7.0.0-beta.49.tgz#15b832504b49f116f9c484e8e40a5e17c542ed13"
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.49"
-
-"@babel/plugin-syntax-numeric-separator@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-syntax-numeric-separator/-/plugin-syntax-numeric-separator-7.0.0-beta.47.tgz#9f06cb770a94f464b3b2889d2110080bc302fc80"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
 
 "@babel/plugin-syntax-object-rest-spread@7.0.0-beta.47":
   version "7.0.0-beta.47"
@@ -675,12 +622,6 @@
   resolved "https://registry.npmjs.org/@babel/plugin-syntax-optional-catch-binding/-/plugin-syntax-optional-catch-binding-7.0.0-beta.49.tgz#3e1dd3d5daeb4270e4ee4863641d4faa06bbcd11"
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.49"
-
-"@babel/plugin-syntax-throw-expressions@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/plugin-syntax-throw-expressions/-/plugin-syntax-throw-expressions-7.0.0-beta.47.tgz#8ca197bab3534f443eecd7eb79da47e199dafaf7"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
 
 "@babel/plugin-transform-arrow-functions@7.0.0-beta.47":
   version "7.0.0-beta.47"
@@ -1168,31 +1109,6 @@
     invariant "^2.2.2"
     semver "^5.3.0"
 
-"@babel/preset-stage-2@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/preset-stage-2/-/preset-stage-2-7.0.0-beta.47.tgz#deb930c44d7d6e519a33174bba121a2a630ed654"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
-    "@babel/plugin-proposal-decorators" "7.0.0-beta.47"
-    "@babel/plugin-proposal-export-namespace-from" "7.0.0-beta.47"
-    "@babel/plugin-proposal-function-sent" "7.0.0-beta.47"
-    "@babel/plugin-proposal-numeric-separator" "7.0.0-beta.47"
-    "@babel/plugin-proposal-throw-expressions" "7.0.0-beta.47"
-    "@babel/preset-stage-3" "7.0.0-beta.47"
-
-"@babel/preset-stage-3@7.0.0-beta.47":
-  version "7.0.0-beta.47"
-  resolved "https://registry.npmjs.org/@babel/preset-stage-3/-/preset-stage-3-7.0.0-beta.47.tgz#17028f3b5dddc548d80404c86ed62622f601597b"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.47"
-    "@babel/plugin-proposal-async-generator-functions" "7.0.0-beta.47"
-    "@babel/plugin-proposal-class-properties" "7.0.0-beta.47"
-    "@babel/plugin-proposal-object-rest-spread" "7.0.0-beta.47"
-    "@babel/plugin-proposal-optional-catch-binding" "7.0.0-beta.47"
-    "@babel/plugin-proposal-unicode-property-regex" "7.0.0-beta.47"
-    "@babel/plugin-syntax-dynamic-import" "7.0.0-beta.47"
-    "@babel/plugin-syntax-import-meta" "7.0.0-beta.47"
-
 "@babel/runtime@7.0.0-beta.47":
   version "7.0.0-beta.47"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.0.0-beta.47.tgz#273f5e71629e80f6cbcd7507503848615e59f7e0"
@@ -1383,9 +1299,9 @@
   dependencies:
     "@types/estree" "*"
 
-"@types/chrome@^0.0.69":
-  version "0.0.69"
-  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.69.tgz#1d45bb79dd712b05704e4411f9eff3f270e19651"
+"@types/chrome@^0.0.71":
+  version "0.0.71"
+  resolved "http://registry.npm.taobao.org/@types/chrome/download/@types/chrome-0.0.71.tgz#db895511053befa58decf31d11054b41de15fbee"
   dependencies:
     "@types/filesystem" "*"
 
@@ -1419,61 +1335,62 @@
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.13.2.tgz#ffe96278e712a8d4e467e367a338b05e22872646"
 
-"@vue/babel-preset-app@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/babel-preset-app/-/babel-preset-app-3.0.0-rc.5.tgz#7069a37ed7a536cc962f871b943b75922c61f8f9"
+"@vue/babel-preset-app@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/babel-preset-app/download/@vue/babel-preset-app-3.0.0-rc.9.tgz#ec1863c92d4ec979bb8f5880980f469a273f2dd3"
   dependencies:
+    "@babel/plugin-proposal-class-properties" "7.0.0-beta.47"
+    "@babel/plugin-proposal-decorators" "7.0.0-beta.47"
+    "@babel/plugin-syntax-dynamic-import" "7.0.0-beta.47"
     "@babel/plugin-syntax-jsx" "7.0.0-beta.47"
     "@babel/plugin-transform-runtime" "7.0.0-beta.47"
     "@babel/preset-env" "7.0.0-beta.47"
-    "@babel/preset-stage-2" "7.0.0-beta.47"
     "@babel/runtime" "7.0.0-beta.47"
     babel-helper-vue-jsx-merge-props "^2.0.3"
     babel-plugin-dynamic-import-node "^2.0.0"
     babel-plugin-transform-vue-jsx "^4.0.1"
 
-"@vue/cli-overlay@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-overlay/-/cli-overlay-3.0.0-rc.5.tgz#0a61adb1b6af9a2fce75b97cc83c54ee5227f629"
+"@vue/cli-overlay@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/cli-overlay/download/@vue/cli-overlay-3.0.0-rc.9.tgz#542ac6fc1642e326f2770df06cf73566d39b38a7"
 
-"@vue/cli-plugin-babel@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-babel/-/cli-plugin-babel-3.0.0-rc.5.tgz#73d710f970fd2b08ae13ff4669458c1989a9b058"
+"@vue/cli-plugin-babel@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/cli-plugin-babel/download/@vue/cli-plugin-babel-3.0.0-rc.9.tgz#866d2dd420b75642f9e4cdfb08dd9ce76a3fed77"
   dependencies:
     "@babel/core" "7.0.0-beta.47"
-    "@vue/babel-preset-app" "^3.0.0-rc.5"
+    "@vue/babel-preset-app" "^3.0.0-rc.9"
     babel-loader "^8.0.0-0"
 
-"@vue/cli-plugin-eslint@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-3.0.0-rc.5.tgz#48870b2d6e511b6abe5bd8b5f15168d3cff466bf"
+"@vue/cli-plugin-eslint@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/cli-plugin-eslint/download/@vue/cli-plugin-eslint-3.0.0-rc.9.tgz#543b2934108abda8e1b930b21a479d15128b3daa"
   dependencies:
-    "@vue/cli-shared-utils" "^3.0.0-rc.5"
+    "@vue/cli-shared-utils" "^3.0.0-rc.9"
     babel-eslint "^8.2.5"
     eslint "^4.19.1"
     eslint-loader "^2.0.0"
     eslint-plugin-vue "^4.5.0"
     launch-editor "^2.2.1"
 
-"@vue/cli-plugin-typescript@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-typescript/-/cli-plugin-typescript-3.0.0-rc.5.tgz#64f2752ba0e6d8bb7e7b8af1bcdd4b3e8e11be28"
+"@vue/cli-plugin-typescript@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/cli-plugin-typescript/download/@vue/cli-plugin-typescript-3.0.0-rc.9.tgz#503ba744034622a28b0e75c3543a6c554b15c4c3"
   dependencies:
     "@types/node" "^10.5.2"
-    "@vue/cli-shared-utils" "^3.0.0-rc.5"
+    "@vue/cli-shared-utils" "^3.0.0-rc.9"
     fork-ts-checker-webpack-plugin "^0.4.3"
     globby "^8.0.1"
     ts-loader "^4.4.2"
     tslint "^5.10.0"
-    typescript "~2.9.0"
 
-"@vue/cli-service@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.0.0-rc.5.tgz#ed931795d7efebcd4afe794fc845874ddfacce63"
+"@vue/cli-service@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/cli-service/download/@vue/cli-service-3.0.0-rc.9.tgz#a4cede79350534711186c37115ba464bdba4fb57"
   dependencies:
     "@intervolga/optimize-cssnano-plugin" "^1.0.5"
-    "@vue/cli-overlay" "^3.0.0-rc.5"
-    "@vue/cli-shared-utils" "^3.0.0-rc.5"
+    "@vue/cli-overlay" "^3.0.0-rc.9"
+    "@vue/cli-shared-utils" "^3.0.0-rc.9"
     "@vue/preload-webpack-plugin" "^1.0.0"
     "@vue/web-component-wrapper" "^1.2.0"
     acorn "^5.7.1"
@@ -1520,9 +1437,9 @@
     webpack-merge "^4.1.3"
     yorkie "^1.0.3"
 
-"@vue/cli-shared-utils@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-3.0.0-rc.5.tgz#665cc1af7454609313cd1de68ba1dddd82f3c4de"
+"@vue/cli-shared-utils@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/cli-shared-utils/download/@vue/cli-shared-utils-3.0.0-rc.9.tgz#557a03970dc141712265d857b9a7c4eeca603a35"
   dependencies:
     chalk "^2.4.1"
     execa "^0.10.0"
@@ -1549,17 +1466,17 @@
     source-map "^0.5.6"
     vue-template-es2015-compiler "^1.6.0"
 
-"@vue/eslint-config-airbnb@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/eslint-config-airbnb/-/eslint-config-airbnb-3.0.0-rc.5.tgz#b828e5c3858abcf71b2eaf551b360d5aaf1817f9"
+"@vue/eslint-config-airbnb@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/eslint-config-airbnb/download/@vue/eslint-config-airbnb-3.0.0-rc.9.tgz#2eaaf921c5c6e8a95f00ace3fa8bfda465787205"
   dependencies:
     eslint-config-airbnb-base "^12.1.0"
     eslint-import-resolver-webpack "^0.9.0"
     eslint-plugin-import "^2.11.0"
 
-"@vue/eslint-config-typescript@^3.0.0-rc.5":
-  version "3.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@vue/eslint-config-typescript/-/eslint-config-typescript-3.0.0-rc.5.tgz#784561e4bf17d3492dc703303eefa33ef55db61a"
+"@vue/eslint-config-typescript@^3.0.0-rc.9":
+  version "3.0.0-rc.9"
+  resolved "http://registry.npm.taobao.org/@vue/eslint-config-typescript/download/@vue/eslint-config-typescript-3.0.0-rc.9.tgz#cf20066873151411328ad314c0661784b7151332"
   dependencies:
     eslint-plugin-typescript "^0.12.0"
     typescript-eslint-parser "^16.0.0"
@@ -1794,9 +1711,9 @@ ajv@^6.1.0:
     json-schema-traverse "^0.3.0"
     uri-js "^4.2.1"
 
-all-contributors-cli@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-5.2.1.tgz#24309dcdfd5570161b8254baba18dc94fcb1abde"
+all-contributors-cli@^5.3.0:
+  version "5.3.0"
+  resolved "http://registry.npm.taobao.org/all-contributors-cli/download/all-contributors-cli-5.3.0.tgz#ce648246968bb06c5ae8038ad0e8d24fb176b07c"
   dependencies:
     async "^2.0.0-rc.1"
     chalk "^2.3.0"
@@ -3753,9 +3670,9 @@ elegant-spinner@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/elegant-spinner/-/elegant-spinner-1.0.1.tgz#db043521c95d7e303fd8f345bedc3349cfb0729e"
 
-element-ui@^2.4.4:
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.4.4.tgz#b50ac888fee1a2adb8fa7205b12aadb3962e77e3"
+element-ui@^2.4.5:
+  version "2.4.5"
+  resolved "http://registry.npm.taobao.org/element-ui/download/element-ui-2.4.5.tgz#ca1d0fc3f6ec0b5ca2a717655e6778a8e24ca673"
   dependencies:
     async-validator "~1.8.1"
     babel-helper-vue-jsx-merge-props "^2.0.0"
@@ -4531,7 +4448,7 @@ from2@^2.1.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
 
-fs-extra@^5.0.0:
+fs-extra@5.0.0, fs-extra@^5.0.0:
   version "5.0.0"
   resolved "https://registry.npmjs.org/fs-extra/-/fs-extra-5.0.0.tgz#414d0110cdd06705734d055652c5411260c31abd"
   dependencies:
@@ -7507,9 +7424,13 @@ prettier-eslint@^8.5.0:
     typescript "^2.5.1"
     typescript-eslint-parser "^11.0.0"
 
-prettier@^1.11.1, prettier@^1.12.1, prettier@^1.13.7, prettier@^1.7.0:
+prettier@^1.11.1, prettier@^1.12.1, prettier@^1.7.0:
   version "1.13.7"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.13.7.tgz#850f3b8af784a49a6ea2d2eaa7ed1428a34b7281"
+
+prettier@^1.14.0:
+  version "1.14.0"
+  resolved "http://registry.npm.taobao.org/prettier/download/prettier-1.14.0.tgz#847c235522035fd988100f1f43cf20a7d24f9372"
 
 pretty-error@^2.0.2:
   version "2.1.1"
@@ -8011,7 +7932,13 @@ resolve-url@^0.2.1:
   version "0.2.1"
   resolved "https://registry.npmjs.org/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
 
-resolve@^1.1.6, resolve@^1.3.2, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.6.0, resolve@^1.7.1:
+resolve@1.8.1:
+  version "1.8.1"
+  resolved "http://registry.npm.taobao.org/resolve/download/resolve-1.8.1.tgz#82f1ec19a423ac1fbd080b0bab06ba36e84a7a26"
+  dependencies:
+    path-parse "^1.0.5"
+
+resolve@^1.1.6, resolve@^1.3.2, resolve@^1.4.0, resolve@^1.5.0, resolve@^1.6.0:
   version "1.7.1"
   resolved "https://registry.npmjs.org/resolve/-/resolve-1.7.1.tgz#aadd656374fd298aee895bc026b8297418677fd3"
   dependencies:
@@ -8133,14 +8060,14 @@ rollup-plugin-replace@^2.0.0:
     minimatch "^3.0.2"
     rollup-pluginutils "^2.0.1"
 
-rollup-plugin-typescript2@^0.15.1:
-  version "0.15.1"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.15.1.tgz#7b35d0eaa6ad5a54a253ed158a565b99d8f15372"
+rollup-plugin-typescript2@^0.16.1:
+  version "0.16.1"
+  resolved "http://registry.npm.taobao.org/rollup-plugin-typescript2/download/rollup-plugin-typescript2-0.16.1.tgz#72e1f8a2e450550eabdc3d474e735feae322b474"
   dependencies:
-    fs-extra "^5.0.0"
-    resolve "^1.7.1"
-    rollup-pluginutils "^2.0.1"
-    tslib "1.9.2"
+    fs-extra "5.0.0"
+    resolve "1.8.1"
+    rollup-pluginutils "2.3.0"
+    tslib "1.9.3"
 
 rollup-plugin-uglify@^3.0.0:
   version "3.0.0"
@@ -8148,7 +8075,7 @@ rollup-plugin-uglify@^3.0.0:
   dependencies:
     uglify-es "^3.3.7"
 
-rollup-pluginutils@^2.0.1:
+rollup-pluginutils@2.3.0, rollup-pluginutils@^2.0.1:
   version "2.3.0"
   resolved "https://registry.npmjs.org/rollup-pluginutils/-/rollup-pluginutils-2.3.0.tgz#478ace04bd7f6da2e724356ca798214884738fc4"
   dependencies:
@@ -8972,9 +8899,9 @@ ts-loader@^4.4.2:
     micromatch "^3.1.4"
     semver "^5.0.1"
 
-tslib@1.9.2:
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.2.tgz#8be0cc9a1f6dc7727c38deb16c2ebd1a2892988e"
+tslib@1.9.3:
+  version "1.9.3"
+  resolved "http://registry.npm.taobao.org/tslib/download/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
 tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.9.1"
@@ -9048,7 +8975,7 @@ typescript-eslint-parser@^16.0.0:
     lodash.unescape "4.0.1"
     semver "5.5.0"
 
-typescript@^2.5.1, typescript@~2.9.0:
+typescript@^2.5.1:
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.1.tgz#fdb19d2c67a15d11995fd15640e373e09ab09961"
 
@@ -9291,7 +9218,7 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-class-component@^6.0.0, vue-class-component@^6.2.0:
+vue-class-component@^6.2.0:
   version "6.2.0"
   resolved "https://registry.npmjs.org/vue-class-component/-/vue-class-component-6.2.0.tgz#7adb1daa9a868c75f30f97f33f4f1b94aee62089"
 
