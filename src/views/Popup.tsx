@@ -30,14 +30,25 @@ const msgbox = css`
 
 @Component
 export default class Popup extends Vue {
-  @State('cacheOptions') private options!: Prettier.Options;
-  @Mutation('updateCache') private updateCache!: (payload: any) => void;
-  @Mutation('save') private save!: () => void;
-  @Mutation('reset') private reset!: () => void;
+  @State('cacheOptions')
+  private options!: Prettier.Options;
+
+  @Mutation('updateCache')
+  private updateCache!: (payload: any) => void;
+
+  @Mutation('save')
+  private save!: () => void;
+
+  @Mutation('reset')
+  private reset!: () => void;
 
   // #region 计算属性
   private get parser(): string {
     return this.options.parser;
+  }
+
+  private set parser(parser: string) {
+    this.updateCache({ parser });
   }
 
   private get printWidth(): number {
@@ -164,9 +175,14 @@ export default class Popup extends Vue {
             placeholder="Specify which parser to use"
             v-model={this.parser}
             style={{ width: '100%' }}
-            disabled
           >
             <Option label="markdown" value="markdown" />
+            <Option label="babylon" value="babylon" />
+            <Option label="flow" value="flow" />
+            <Option label="typescript" value="typescript" />
+            <Option label="postcss" value="postcss" />
+            <Option label="json" value="json" />
+            <Option label="graphql" value="graphql" />
           </Select>
         </FormItem>
         <FormItem label="printWidth:" title="Fit code within this line limit">
@@ -231,7 +247,8 @@ export default class Popup extends Vue {
           <Tooltip placement="top-start">
             <div slot="content">
               {/* eslint-disable-next-line max-len */}
-              If true, puts the `>` of a multi-line jsx element at the end of<br />
+              If true, puts the `>` of a multi-line jsx element at the end of
+              <br />
               the last line instead of being alone on the next line
             </div>
             <Switch v-model={this.jsxBracketSameLine} />

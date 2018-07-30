@@ -12,7 +12,14 @@ declare namespace Prettier {
     bracketSpacing: boolean;
     jsxBracketSameLine: boolean;
     arrowParens: 'avoid' | 'always';
-    parser: 'markdown';
+    parser:
+      | 'babylon'
+      | 'flow'
+      | 'typescript'
+      | 'postcss'
+      | 'json'
+      | 'graphql'
+      | 'markdown';
     proseWrap: 'always' | 'never' | 'preserve';
   }
 }

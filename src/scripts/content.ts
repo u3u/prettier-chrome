@@ -17,7 +17,6 @@ window.addEventListener('message', (event) => {
       {
         action: 'setValue',
         value: prettier.format(value, {
-          parser: 'markdown',
           plugins: prettierPlugins,
           ...options,
         }),
