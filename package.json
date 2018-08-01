@@ -45,7 +45,7 @@
     "rollup-plugin-typescript2": "^0.16.1",
     "vue-emotion": "^0.4.2",
     "vue-template-compiler": "^2.5.16",
-    "vue-tsx-support": "^2.0.1"
+    "vue-tsx-support": "^2.1.1"
   },
   "browserslist": [
     "> 1%",
