@@ -20,7 +20,7 @@ window.addEventListener('message', (event) => {
         break;
       case 'setValue':
         editor.setValue(value);
-        ['keydown', 'keyup', 'change'].forEach(type =>
+        ['keydown', 'keyup', 'change', 'input'].forEach(type =>
           activeElement.dispatchEvent(new Event(type)),
         );
         break;
