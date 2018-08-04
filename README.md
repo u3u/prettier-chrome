@@ -52,7 +52,7 @@ Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 
 <!-- prettier-ignore -->
-| [<img src="https://avatars2.githubusercontent.com/u/20062482?v=4" width="100px;"/><br /><sub><b>さくら</b></sub>](https://qwq.cat)<br />[💻](https://github.com/u3u/prettier-chrome/commits?author=u3u "Code") [📖](https://github.com/u3u/prettier-chrome/commits?author=u3u "Documentation") [💡](#example-u3u "Examples") [🎨](#design-u3u "Design") [🤔](#ideas-u3u "Ideas, Planning, & Feedback") |
+| [<img src="https://avatars2.githubusercontent.com/u/20062482?v=4" width="100px;"/><br /><sub><b>さくら</b></sub>](https://qwq.cat)<br />[💻](https://github.com/u3u/prettier-chrome/commits?author=u3u "Code") [📖](https://github.com/u3u/prettier-chrome/commits?author=u3u "Documentation") [🎨](#design-u3u "Design") [🤔](#ideas-u3u "Ideas, Planning, & Feedback") |
 | :---: |
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
