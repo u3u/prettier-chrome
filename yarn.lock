@@ -1711,9 +1711,9 @@ ajv@^6.1.0:
     json-schema-traverse "^0.3.0"
     uri-js "^4.2.1"
 
-all-contributors-cli@^5.3.0:
-  version "5.3.0"
-  resolved "http://registry.npm.taobao.org/all-contributors-cli/download/all-contributors-cli-5.3.0.tgz#ce648246968bb06c5ae8038ad0e8d24fb176b07c"
+all-contributors-cli@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/all-contributors-cli/-/all-contributors-cli-5.4.0.tgz#a2870d83920d5f16bece0045649f9ebbf7315909"
   dependencies:
     async "^2.0.0-rc.1"
     chalk "^2.3.0"
