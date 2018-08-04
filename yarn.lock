@@ -9292,9 +9292,9 @@ vue-tsx-support@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/vue-tsx-support/-/vue-tsx-support-2.1.1.tgz#697db1d38bad53543429e9ecdff19704b0399390"
 
-vue@^2.5.16:
-  version "2.5.16"
-  resolved "https://registry.npmjs.org/vue/-/vue-2.5.16.tgz#07edb75e8412aaeed871ebafa99f4672584a0085"
+vue@^2.5.17:
+  version "2.5.17"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
 
 vuex-class@^0.3.1:
   version "0.3.1"
