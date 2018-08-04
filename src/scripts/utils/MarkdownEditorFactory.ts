@@ -36,7 +36,7 @@ export default class MarkdownEditorFactory {
   }
 
   public static isAceMarkdownEditor(el: Element): boolean {
-    const aceEditorWrapper: any = el.closest('.ace-editor');
+    const aceEditorWrapper: any = el.closest('.ace_editor');
     return aceEditorWrapper && aceEditorWrapper.env.editor;
   }
 }
