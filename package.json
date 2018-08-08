@@ -28,7 +28,7 @@
     "@types/chrome": "^0.0.71",
     "@types/prettier": "^1.13.2",
     "@vue/cli-plugin-babel": "^3.0.0-rc.11",
-    "@vue/cli-plugin-eslint": "^3.0.0-rc.10",
+    "@vue/cli-plugin-eslint": "^3.0.0-rc.11",
     "@vue/cli-plugin-typescript": "^3.0.0-rc.11",
     "@vue/cli-service": "^3.0.0-rc.10",
     "@vue/eslint-config-airbnb": "^3.0.0-rc.10",
