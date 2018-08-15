@@ -7,10 +7,15 @@ injectGlobal`
   * {
     outline: none !important;
   }
+
   html, body, #app {
     overflow-x: hidden;
+  }
+
+  html {
     -webkit-font-smoothing: antialiased;
   }
+
   body {
     margin: 0;
   }

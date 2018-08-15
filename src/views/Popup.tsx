@@ -14,16 +14,6 @@ import {
 } from 'element-ui';
 import { css } from 'vue-emotion';
 
-const form = css`
-  label {
-    font-size: 12px;
-  }
-
-  .el-form-item:last-child {
-    margin-bottom: 0;
-  }
-`;
-
 const msgbox = css`
   width: 300px;
 `;
@@ -163,11 +153,18 @@ export default class Popup extends Vue {
         size="mini"
         labelWidth="130px"
         labelPosition="right"
-        class={form}
-        style={{
-          padding: '18px',
-          minWidth: '360px',
-        }}
+        class={css`
+          padding: 18px;
+          min-width: 360px;
+
+          label {
+            font-size: 12px;
+          }
+
+          .el-form-item:last-child {
+            margin-bottom: 0;
+          }
+        `}
       >
         <FormItem label="parser:">
           <Select
