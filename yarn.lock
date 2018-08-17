@@ -1299,9 +1299,9 @@
   dependencies:
     "@types/estree" "*"
 
-"@types/chrome@^0.0.71":
-  version "0.0.71"
-  resolved "http://registry.npm.taobao.org/@types/chrome/download/@types/chrome-0.0.71.tgz#db895511053befa58decf31d11054b41de15fbee"
+"@types/chrome@^0.0.72":
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.72.tgz#ab34692f69c806e6f02c0189e4cdb4d4722572c7"
   dependencies:
     "@types/filesystem" "*"
 

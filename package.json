@@ -25,7 +25,7 @@
     "vuex-class": "^0.3.1"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.71",
+    "@types/chrome": "^0.0.72",
     "@types/prettier": "^1.13.2",
     "@vue/cli-plugin-babel": "^3.0.0",
     "@vue/cli-plugin-eslint": "^3.0.0",
