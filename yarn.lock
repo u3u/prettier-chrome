@@ -1302,9 +1302,9 @@
   dependencies:
     "@types/estree" "*"
 
-"@types/chrome@^0.0.72":
-  version "0.0.72"
-  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.72.tgz#ab34692f69c806e6f02c0189e4cdb4d4722572c7"
+"@types/chrome@^0.0.73":
+  version "0.0.73"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.73.tgz#5bc75f41f17f5875b0b28907ecece66fc19bed00"
   dependencies:
     "@types/filesystem" "*"
 
