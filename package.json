@@ -18,7 +18,7 @@
     "element-ui": "^2.4.7",
     "prettier": "^1.14.3",
     "vue": "^2.5.17",
-    "vue-class-component": "^6.2.0",
+    "vue-class-component": "^6.3.2",
     "vue-property-decorator": "^7.2.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
