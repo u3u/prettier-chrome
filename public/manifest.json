@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Prettier",
   "author": "u3u <qwq@qwq.cat>",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Prettier is an opinionated code formatter.",
   "homepage_url": "https://github.com/u3u/prettier-chrome",
   "icons": {
@@ -26,7 +26,9 @@
         "lib/prettier/parser-graphql.js",
         "lib/prettier/parser-postcss.js",
         "lib/prettier/parser-typescript.js",
+        "lib/prettier/parser-html.js",
         "lib/prettier/parser-vue.js",
+        "lib/prettier/parser-angular.js",
         "lib/prettier/parser-yaml.js",
         "scripts/content.min.js"
       ]

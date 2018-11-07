@@ -46,7 +46,6 @@ export default [
     parentId: '1',
     enabled: true,
     title: 'Report Issue...',
-    click: () =>
-      window.open('https://github.com/u3u/prettier-chrome/issues/new'),
+    click: () => window.open('https://github.com/u3u/prettier-chrome/issues/new'),
   },
 ] as chrome.contextMenus.CreateProperties[];

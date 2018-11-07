@@ -177,9 +177,16 @@ export default class Popup extends Vue {
             <Option label="babylon" value="babylon" />
             <Option label="flow" value="flow" />
             <Option label="typescript" value="typescript" />
-            <Option label="postcss" value="postcss" />
+            <Option label="css" value="css" />
+            <Option label="scss" value="scss" />
+            <Option label="less" value="less" />
             <Option label="json" value="json" />
             <Option label="graphql" value="graphql" />
+            <Option label="mdx" value="mdx" />
+            <Option label="html" value="html" />
+            <Option label="vue" value="vue" />
+            <Option label="angular" value="angular" />
+            <Option label="yaml" value="yaml" />
           </Select>
         </FormItem>
         <FormItem label="printWidth:" title="Fit code within this line limit">
@@ -243,7 +250,6 @@ export default class Popup extends Vue {
         <FormItem label="jsxBracketSameLine:">
           <Tooltip placement="top-start">
             <div slot="content">
-              {/* eslint-disable-next-line max-len */}
               If true, puts the `>` of a multi-line jsx element at the end of
               <br />
               the last line instead of being alone on the next line

@@ -7,6 +7,7 @@ export const defaultOptions: Prettier.Options = {
   singleQuote: true,
   trailingComma: 'es5',
   bracketSpacing: true,
+  jsxSingleQuote: false,
   jsxBracketSameLine: false,
   arrowParens: 'always',
   parser: 'markdown',

@@ -18,9 +18,8 @@ function registerCommands(ctxMenus: chrome.contextMenus.CreateProperties[]) {
   chrome.commands.onCommand.addListener((command: string) => {
     if (command === 'format-document') {
       const formatContextMenu: any = contextMenus.find(
-        item =>
-          item.title !== undefined &&
-          item.title.toLowerCase().includes('format'),
+        item => item.title !== undefined
+          && item.title.toLowerCase().includes('format'),
       );
       formatContextMenu.click();
     }

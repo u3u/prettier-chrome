@@ -10,16 +10,24 @@ declare namespace Prettier {
     singleQuote: boolean;
     trailingComma: 'none' | 'es5' | 'all';
     bracketSpacing: boolean;
+    jsxSingleQuote: boolean;
     jsxBracketSameLine: boolean;
     arrowParens: 'avoid' | 'always';
     parser:
       | 'babylon'
       | 'flow'
       | 'typescript'
-      | 'postcss'
+      | 'css'
+      | 'scss'
+      | 'less'
       | 'json'
       | 'graphql'
-      | 'markdown';
+      | 'markdown'
+      | 'mdx'
+      | 'html'
+      | 'vue'
+      | 'angular'
+      | 'yaml';
     proseWrap: 'always' | 'never' | 'preserve';
   }
 }
