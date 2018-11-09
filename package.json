@@ -47,7 +47,7 @@
     "typescript": "^3.1.6",
     "vue-emotion": "^0.4.2",
     "vue-template-compiler": "^2.5.17",
-    "vue-tsx-support": "^2.2.0"
+    "vue-tsx-support": "^2.2.1"
   },
   "browserslist": [
     "> 1%",
