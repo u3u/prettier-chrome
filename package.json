@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "element-ui": "^2.4.9",
-    "prettier": "^1.15.1",
+    "prettier": "^1.15.2",
     "vue": "^2.5.17",
     "vue-class-component": "^6.3.2",
     "vue-property-decorator": "^7.2.0",
