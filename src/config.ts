@@ -12,4 +12,5 @@ export const defaultOptions: Prettier.Options = {
   arrowParens: 'always',
   parser: 'markdown',
   proseWrap: 'preserve',
+  htmlWhitespaceSensitivity: 'css',
 };

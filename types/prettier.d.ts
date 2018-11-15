@@ -29,5 +29,6 @@ declare namespace Prettier {
       | 'angular'
       | 'yaml';
     proseWrap: 'always' | 'never' | 'preserve';
+    htmlWhitespaceSensitivity: 'css' | 'strict' | 'ignore';
   }
 }
