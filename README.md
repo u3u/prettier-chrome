@@ -13,7 +13,7 @@
 
 > 🎨 An extension that can be formatted using Prettier in Chrome
 
-This extension is based on the latest version of [Prettier](https://prettier.io/) v1.13.0 development. Thanks Prettier 🙏
+~~This extension is based on the latest version of [Prettier](https://prettier.io/) v1.13.0 development.~~ Thanks Prettier 🙏
 
 ## Preview
 
