@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "strict": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "types": ["node", "chrome"],
+    "lib": ["esnext", "dom", "dom.iterable"]
+  },
+  "include": ["**/*.ts", "../../types/**/*.ts"]
+}

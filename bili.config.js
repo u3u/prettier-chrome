@@ -12,4 +12,7 @@ module.exports = {
   babel: {
     babelrc: false,
   },
+  typescript2: {
+    tsconfig: 'src/scripts/tsconfig.json',
+  },
 };
