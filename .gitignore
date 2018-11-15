@@ -2,6 +2,7 @@
 .rpt2_cache
 *.crx
 *.pem
+*.zip
 node_modules
 /dist
 
