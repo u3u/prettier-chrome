@@ -38,7 +38,7 @@
     "babel-plugin-component": "git://github.com/u3u/babel-plugin-component.git",
     "babel-plugin-emotion": "^9.2.11",
     "babel-plugin-jsx-v-model": "^2.0.3",
-    "bili": "3.3.4",
+    "bili": "3.4.0",
     "emotion": "^9.2.12",
     "lint-staged": "^8.0.4",
     "prettier-eslint-check": "^1.0.1",
