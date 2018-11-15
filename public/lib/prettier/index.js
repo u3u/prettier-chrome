@@ -12,7 +12,7 @@ var thirdParty = require('./third-party');
 var thirdParty__default = thirdParty['default'];
 
 var name = "prettier";
-var version$1 = "1.15.1";
+var version$1 = "1.15.2";
 var description = "Prettier is an opinionated code formatter";
 var bin = {
   "prettier": "./bin/prettier.js"
@@ -31,7 +31,7 @@ var dependencies = {
   "@babel/parser": "7.1.5",
   "@glimmer/syntax": "0.30.3",
   "@iarna/toml": "2.0.0",
-  "angular-estree-parser": "1.1.3",
+  "angular-estree-parser": "1.1.5",
   "angular-html-parser": "1.0.0",
   "camelcase": "4.1.0",
   "chalk": "2.1.0",
@@ -108,7 +108,7 @@ var devDependencies = {
   "jest-snapshot-serializer-raw": "1.1.0",
   "jest-watch-typeahead": "0.1.0",
   "mkdirp": "0.5.1",
-  "prettier": "1.15.0",
+  "prettier": "1.15.1",
   "prettylint": "1.0.0",
   "rimraf": "2.6.2",
   "rollup": "0.47.6",
@@ -8859,6 +8859,17 @@ function optionInfoToSchema(optionInfo, _ref5) {
 
   if (optionInfo.deprecated) {
     handlers.deprecated = true;
+  } // allow CLI overriding, e.g., prettier package.json --tab-width 1 --tab-width 2
+
+
+  if (isCLI && !optionInfo.array) {
+    var originalPreprocess = parameters.preprocess || function (x) {
+      return x;
+    };
+
+    parameters.preprocess = function (value, schema, utils) {
+      return schema.preprocess(originalPreprocess(Array.isArray(value) ? value[value.length - 1] : value), utils);
+    };
   }
 
   return optionInfo.array ? lib$1.ArraySchema.create(Object.assign(isCLI ? {
@@ -11270,9 +11281,8 @@ function isNextLineEmpty(text, node, locEnd) {
   return isNextLineEmptyAfterIndex(text, locEnd(node));
 }
 
-function getNextNonSpaceNonCommentCharacterIndex(text, node, locEnd) {
+function getNextNonSpaceNonCommentCharacterIndexWithStartIndex(text, idx) {
   var oldIdx = null;
-  var idx = locEnd(node);
 
   while (idx !== oldIdx) {
     oldIdx = idx;
@@ -11283,6 +11293,10 @@ function getNextNonSpaceNonCommentCharacterIndex(text, node, locEnd) {
   }
 
   return idx;
+}
+
+function getNextNonSpaceNonCommentCharacterIndex(text, node, locEnd) {
+  return getNextNonSpaceNonCommentCharacterIndexWithStartIndex(text, locEnd(node));
 }
 
 function getNextNonSpaceNonCommentCharacter(text, node, locEnd) {
@@ -11678,6 +11692,7 @@ var util$1 = {
   getParentExportDeclaration,
   getPenultimate,
   getLast: getLast$3,
+  getNextNonSpaceNonCommentCharacterIndexWithStartIndex,
   getNextNonSpaceNonCommentCharacterIndex,
   getNextNonSpaceNonCommentCharacter,
   skip,
@@ -22379,8 +22394,19 @@ function handleLastFunctionArgComments(text, precedingNode, enclosingNode, follo
   }
 
   if (enclosingNode && enclosingNode.type === "FunctionDeclaration" && followingNode && followingNode.type === "BlockStatement") {
-    addBlockStatementFirstComment(followingNode, comment);
-    return true;
+    var functionParamRightParenIndex = function () {
+      if (enclosingNode.params.length !== 0) {
+        return util$1.getNextNonSpaceNonCommentCharacterIndexWithStartIndex(text, options.locEnd(util$1.getLast(enclosingNode.params)));
+      }
+
+      var functionParamLeftParenIndex = util$1.getNextNonSpaceNonCommentCharacterIndexWithStartIndex(text, options.locEnd(enclosingNode.id));
+      return util$1.getNextNonSpaceNonCommentCharacterIndexWithStartIndex(text, functionParamLeftParenIndex + 1);
+    }();
+
+    if (options.locStart(comment) > functionParamRightParenIndex) {
+      addBlockStatementFirstComment(followingNode, comment);
+      return true;
+    }
   }
 
   return false;
@@ -22982,6 +23008,7 @@ function needsParens(path$$1, options) {
         case "SpreadProperty":
         case "BinaryExpression":
         case "LogicalExpression":
+        case "NGPipeExpression":
         case "ExportDefaultDeclaration":
         case "AwaitExpression":
         case "JSXSpreadAttribute":
@@ -23244,13 +23271,14 @@ function genericPrint(path$$1, options, printPath, args) {
   var parentExportDecl = getParentExportDeclaration$1(path$$1);
   var decorators = [];
 
-  if (node.decorators && node.decorators.length > 0 && // If the parent node is an export declaration and the decorator
+  if (node.type === "ClassMethod" || node.type === "ClassProperty" || node.type === "TSAbstractClassProperty" || node.type === "ClassPrivateProperty") {// their decorators are handled themselves
+  } else if (node.decorators && node.decorators.length > 0 && // If the parent node is an export declaration and the decorator
   // was written before the export, the export will be responsible
   // for printing the decorators.
   !(parentExportDecl && options.locStart(parentExportDecl, {
     ignoreDecorators: true
   }) > options.locStart(node.decorators[0]))) {
-    var shouldBreak = node.type === "ClassDeclaration" || hasNewlineInRange$1(options.originalText, options.locStart(node.decorators[0]), options.locEnd(getLast$4(node.decorators))) || hasNewline$2(options.originalText, options.locEnd(getLast$4(node.decorators)));
+    var shouldBreak = node.type === "ClassExpression" || node.type === "ClassDeclaration" || hasNewlineBetweenOrAfterDecorators(node, options);
     var separator = shouldBreak ? hardline$3 : line$3;
     path$$1.each(function (decoratorPath) {
       var decorator = decoratorPath.getValue();
@@ -23311,6 +23339,15 @@ function genericPrint(path$$1, options, printPath, args) {
   }
 
   return concat$4(parts);
+}
+
+function hasNewlineBetweenOrAfterDecorators(node, options) {
+  return hasNewlineInRange$1(options.originalText, options.locStart(node.decorators[0]), options.locEnd(getLast$4(node.decorators))) || hasNewline$2(options.originalText, options.locEnd(getLast$4(node.decorators)));
+}
+
+function printDecorators(path$$1, options, print) {
+  var node = path$$1.getValue();
+  return group$1(concat$4([join$2(line$3, path$$1.map(print, "decorators")), hasNewlineBetweenOrAfterDecorators(node, options) ? hardline$3 : line$3]));
 }
 
 function hasPrettierIgnore(path$$1) {
@@ -24003,7 +24040,7 @@ function printPathNoParens(path$$1, options, print, args) {
       parts.push(n.abstract ? "abstract " : "", printTypeScriptModifiers(path$$1, options, print), "interface ", path$$1.call(print, "id"), n.typeParameters ? path$$1.call(print, "typeParameters") : "", " ");
 
       if (n.heritage.length) {
-        parts.push(group$1(indent$2(concat$4([softline$1, "extends ", indent$2(join$2(concat$4([",", line$3]), path$$1.map(print, "heritage"))), " "]))));
+        parts.push(group$1(indent$2(concat$4([softline$1, "extends ", (n.heritage.length === 1 ? identity$1 : indent$2)(join$2(concat$4([",", line$3]), path$$1.map(print, "heritage"))), " "]))));
       }
 
       parts.push(path$$1.call(print, "body"));
@@ -24044,10 +24081,10 @@ function printPathNoParens(path$$1, options, print, args) {
 
         var _parent3 = path$$1.getParentNode(0);
 
-        var shouldBreak = n.type === "TSInterfaceBody" || n.type === "ObjectPattern" && _parent3.type !== "FunctionDeclaration" && _parent3.type !== "FunctionExpression" && _parent3.type !== "ArrowFunctionExpression" && _parent3.type !== "AssignmentPattern" && _parent3.type !== "CatchClause" && n.properties.some(function (property) {
+        var isFlowInterfaceLikeBody = isTypeAnnotation && _parent3 && (_parent3.type === "InterfaceDeclaration" || _parent3.type === "DeclareInterface" || _parent3.type === "DeclareClass") && path$$1.getName() === "body";
+        var shouldBreak = n.type === "TSInterfaceBody" || isFlowInterfaceLikeBody || n.type === "ObjectPattern" && _parent3.type !== "FunctionDeclaration" && _parent3.type !== "FunctionExpression" && _parent3.type !== "ArrowFunctionExpression" && _parent3.type !== "AssignmentPattern" && _parent3.type !== "CatchClause" && n.properties.some(function (property) {
           return property.value && (property.value.type === "ObjectPattern" || property.value.type === "ArrayPattern");
         }) || n.type !== "ObjectPattern" && firstProperty && hasNewlineInRange$1(options.originalText, options.locStart(n), options.locStart(firstProperty));
-        var isFlowInterfaceLikeBody = isTypeAnnotation && _parent3 && (_parent3.type === "InterfaceDeclaration" || _parent3.type === "DeclareInterface" || _parent3.type === "DeclareClass") && path$$1.getName() === "body";
         var separator = isFlowInterfaceLikeBody ? ";" : n.type === "TSInterfaceBody" || n.type === "TSTypeLiteral" ? ifBreak$1(semi, ";") : ",";
         var leftBrace = n.exact ? "{|" : "{";
         var rightBrace = n.exact ? "|}" : "}"; // Unfortunately, things are grouped together in the ast can be
@@ -24141,6 +24178,10 @@ function printPathNoParens(path$$1, options, print, args) {
     // Babel 6
 
     case "ClassMethod":
+      if (n.decorators && n.decorators.length !== 0) {
+        parts.push(printDecorators(path$$1, options, print));
+      }
+
       if (n.static) {
         parts.push("static ");
       }
@@ -24659,6 +24700,10 @@ function printPathNoParens(path$$1, options, print, args) {
     case "TSAbstractClassProperty":
     case "ClassPrivateProperty":
       {
+        if (n.decorators && n.decorators.length !== 0) {
+          parts.push(printDecorators(path$$1, options, print));
+        }
+
         if (n.accessibility) {
           parts.push(n.accessibility + " ");
         }
@@ -25026,7 +25071,7 @@ function printPathNoParens(path$$1, options, print, args) {
         }
 
         if (n["extends"].length > 0) {
-          parts.push(group$1(indent$2(concat$4([line$3, "extends ", indent$2(join$2(concat$4([",", line$3]), path$$1.map(print, "extends")))]))));
+          parts.push(group$1(indent$2(concat$4([line$3, "extends ", (n.extends.length === 1 ? identity$1 : indent$2)(join$2(concat$4([",", line$3]), path$$1.map(print, "extends")))]))));
         }
 
         parts.push(" ", path$$1.call(print, "body"));
@@ -25569,13 +25614,14 @@ function printPathNoParens(path$$1, options, print, args) {
             parts.push("declare ");
           }
 
-          parts.push(printTypeScriptModifiers(path$$1, options, print)); // Global declaration looks like this:
+          parts.push(printTypeScriptModifiers(path$$1, options, print));
+          var textBetweenNodeAndItsId = options.originalText.slice(options.locStart(n), options.locStart(n.id)); // Global declaration looks like this:
           // (declare)? global { ... }
 
-          var isGlobalDeclaration = n.id.type === "Identifier" && n.id.name === "global" && !/namespace|module/.test(options.originalText.slice(options.locStart(n), options.locStart(n.id)));
+          var isGlobalDeclaration = n.id.type === "Identifier" && n.id.name === "global" && !/namespace|module/.test(textBetweenNodeAndItsId);
 
           if (!isGlobalDeclaration) {
-            parts.push(isExternalModule ? "module " : "namespace ");
+            parts.push(isExternalModule || /\smodule\s/.test(textBetweenNodeAndItsId) ? "module " : "namespace ");
           }
         }
 
@@ -25858,7 +25904,8 @@ var functionCompositionFunctionNames = new Set(["pipe", // RxJS, Ramda
 "composeK", // Ramda
 "flow", // Lodash
 "flowRight", // Lodash
-"connect" // Redux
+"connect", // Redux
+"createSelector" // Reselect
 ]);
 
 function isFunctionCompositionFunction(node) {
@@ -27608,7 +27655,7 @@ function isTestCall(n, parent) {
         return false;
       }
 
-      return isFunctionOrArrowExpression(n.arguments[1]) && n.arguments[1].params.length <= 1 || isAngularTestWrapper(n.arguments[1]);
+      return (n.arguments.length === 2 ? isFunctionOrArrowExpression(n.arguments[1]) : isFunctionOrArrowExpressionWithBody(n.arguments[1]) && n.arguments[1].params.length <= 1) || isAngularTestWrapper(n.arguments[1]);
     }
   }
 
@@ -27633,13 +27680,17 @@ function isFunctionOrArrowExpression(node) {
   return node.type === "FunctionExpression" || node.type === "ArrowFunctionExpression";
 }
 
+function isFunctionOrArrowExpressionWithBody(node) {
+  return node.type === "FunctionExpression" || node.type === "ArrowFunctionExpression" && node.body.type === "BlockStatement";
+}
+
 function isUnitTestSetUp(n) {
   var unitTestSetUpRe = /^(before|after)(Each|All)$/;
   return n.callee.type === "Identifier" && unitTestSetUpRe.test(n.callee.name) && n.arguments.length === 1;
 }
 
 function isTheOnlyJSXElementInMarkdown(options, path$$1) {
-  if (options.parentParser !== "markdown") {
+  if (options.parentParser !== "markdown" && options.parentParser !== "mdx") {
     return false;
   }
 
@@ -27722,6 +27773,10 @@ function printIndentableBlockComment(comment) {
 
 function rawText(node) {
   return node.extra ? node.extra.raw : node.raw;
+}
+
+function identity$1(x) {
+  return x;
 }
 
 var printerEstree = {
@@ -28928,7 +28983,7 @@ function genericPrint$2(path$$1, options, print) {
         return concat$8(["@", // If a Less file ends up being parsed with the SCSS parser, Less
         // variable declarations will be parsed as at-rules with names ending
         // with a colon, so keep the original case then.
-        isDetachedRulesetCallNode(node) || node.name.endsWith(":") ? node.name : maybeToLowerCase(node.name), node.params ? concat$8([isDetachedRulesetCallNode(node) ? "" : isTemplatePlaceholderNode(node) ? node.raws.afterName : " ", path$$1.call(print, "params")]) : "", node.selector ? indent$5(concat$8([" ", path$$1.call(print, "selector")])) : "", node.value ? group$6(concat$8([" ", path$$1.call(print, "value"), isSCSSControlDirectiveNode(node) ? hasParensAroundNode(node) ? " " : line$5 : ""])) : node.name === "else" ? " " : "", node.nodes ? concat$8([isSCSSControlDirectiveNode(node) ? "" : " ", "{", indent$5(concat$8([node.nodes.length > 0 ? softline$3 : "", printNodeSequence(path$$1, options, print)])), softline$3, "}"]) : isTemplatePlaceholderNode(node) && !_parentNode.raws.semicolon && options.originalText[options.locEnd(node) - 1] !== ";" ? "" : ";"]);
+        isDetachedRulesetCallNode(node) || node.name.endsWith(":") ? node.name : maybeToLowerCase(node.name), node.params ? concat$8([isDetachedRulesetCallNode(node) ? "" : isTemplatePlaceholderNode(node) && /^\s*\n/.test(node.raws.afterName) ? /^\s*\n\s*\n/.test(node.raws.afterName) ? concat$8([hardline$6, hardline$6]) : hardline$6 : " ", path$$1.call(print, "params")]) : "", node.selector ? indent$5(concat$8([" ", path$$1.call(print, "selector")])) : "", node.value ? group$6(concat$8([" ", path$$1.call(print, "value"), isSCSSControlDirectiveNode(node) ? hasParensAroundNode(node) ? " " : line$5 : ""])) : node.name === "else" ? " " : "", node.nodes ? concat$8([isSCSSControlDirectiveNode(node) ? "" : " ", "{", indent$5(concat$8([node.nodes.length > 0 ? softline$3 : "", printNodeSequence(path$$1, options, print)])), softline$3, "}"]) : isTemplatePlaceholderNode(node) && !_parentNode.raws.semicolon && options.originalText[options.locEnd(node) - 1] !== ";" ? "" : ";"]);
       }
     // postcss-media-query-parser
 
@@ -29230,7 +29285,7 @@ function genericPrint$2(path$$1, options, print) {
 
 
           if (isGridValue) {
-            if (iNode.source.start.line !== iNextNode.source.start.line) {
+            if (iNode.source && iNextNode.source && iNode.source.start.line !== iNextNode.source.start.line) {
               _parts.push(hardline$6);
 
               didBreak = true;
@@ -30368,7 +30423,7 @@ var languageGraphql = {
   printers: printers$3
 };
 
-const json$6 = {"cjkPattern":"[\\u1100-\\u11ff\\u2e80-\\u2e99\\u2e9b-\\u2ef3\\u2f00-\\u2fd5\\u3000-\\u303f\\u3041-\\u3096\\u309d-\\u309f\\u30a1-\\u30fa\\u30fd-\\u30ff\\u3105-\\u312e\\u3131-\\u318e\\u31a0-\\u31ba\\u31f0-\\u321e\\u3260-\\u327e\\u32d0-\\u32fe\\u3300-\\u3357\\u3400-\\u4db5\\u4e00-\\u9fea\\ua960-\\ua97c\\uac00-\\ud7a3\\ud7b0-\\ud7c6\\ud7cb-\\ud7fb\\uf900-\\ufa6d\\ufa70-\\ufad9\\ufe10-\\ufe1f\\ufe30-\\ufe6f\\uff00-\\uffef]|[\\ud840-\\ud868\\ud86a-\\ud86c\\ud86f-\\ud872\\ud874-\\ud879][\\udc00-\\udfff]|\\ud82c[\\udc00-\\udd1e]|\\ud83c[\\ude00]|\\ud869[\\udc00-\\uded6\\udf00-\\udfff]|\\ud86d[\\udc00-\\udf34\\udf40-\\udfff]|\\ud86e[\\udc00-\\udc1d\\udc20-\\udfff]|\\ud873[\\udc00-\\udea1\\udeb0-\\udfff]|\\ud87a[\\udc00-\\udfe0]|\\ud87e[\\udc00-\\ude1d]","kPattern":"[\\u1100-\\u11ff\\u302e-\\u302f\\u3131-\\u318e\\u3200-\\u321e\\u3260-\\u327e\\ua960-\\ua97c\\uac00-\\ud7a3\\ud7b0-\\ud7c6\\ud7cb-\\ud7fb\\uffa0-\\uffbe\\uffc2-\\uffc7\\uffca-\\uffcf\\uffd2-\\uffd7\\uffda-\\uffdc]","punctuationPattern":"[\\u0021-\\u002f\\u003a-\\u0040\\u005b-\\u0060\\u007b-\\u007e\\u00a1\\u00a7\\u00ab\\u00b6-\\u00b7\\u00bb\\u00bf\\u037e\\u0387\\u055a-\\u055f\\u0589-\\u058a\\u05be\\u05c0\\u05c3\\u05c6\\u05f3-\\u05f4\\u0609-\\u060a\\u060c-\\u060d\\u061b\\u061e-\\u061f\\u066a-\\u066d\\u06d4\\u0700-\\u070d\\u07f7-\\u07f9\\u0830-\\u083e\\u085e\\u0964-\\u0965\\u0970\\u09fd\\u0af0\\u0df4\\u0e4f\\u0e5a-\\u0e5b\\u0f04-\\u0f12\\u0f14\\u0f3a-\\u0f3d\\u0f85\\u0fd0-\\u0fd4\\u0fd9-\\u0fda\\u104a-\\u104f\\u10fb\\u1360-\\u1368\\u1400\\u166d-\\u166e\\u169b-\\u169c\\u16eb-\\u16ed\\u1735-\\u1736\\u17d4-\\u17d6\\u17d8-\\u17da\\u1800-\\u180a\\u1944-\\u1945\\u1a1e-\\u1a1f\\u1aa0-\\u1aa6\\u1aa8-\\u1aad\\u1b5a-\\u1b60\\u1bfc-\\u1bff\\u1c3b-\\u1c3f\\u1c7e-\\u1c7f\\u1cc0-\\u1cc7\\u1cd3\\u2010-\\u2027\\u2030-\\u2043\\u2045-\\u2051\\u2053-\\u205e\\u207d-\\u207e\\u208d-\\u208e\\u2308-\\u230b\\u2329-\\u232a\\u2768-\\u2775\\u27c5-\\u27c6\\u27e6-\\u27ef\\u2983-\\u2998\\u29d8-\\u29db\\u29fc-\\u29fd\\u2cf9-\\u2cfc\\u2cfe-\\u2cff\\u2d70\\u2e00-\\u2e2e\\u2e30-\\u2e49\\u3001-\\u3003\\u3008-\\u3011\\u3014-\\u301f\\u3030\\u303d\\u30a0\\u30fb\\ua4fe-\\ua4ff\\ua60d-\\ua60f\\ua673\\ua67e\\ua6f2-\\ua6f7\\ua874-\\ua877\\ua8ce-\\ua8cf\\ua8f8-\\ua8fa\\ua8fc\\ua92e-\\ua92f\\ua95f\\ua9c1-\\ua9cd\\ua9de-\\ua9df\\uaa5c-\\uaa5f\\uaade-\\uaadf\\uaaf0-\\uaaf1\\uabeb\\ufd3e-\\ufd3f\\ufe10-\\ufe19\\ufe30-\\ufe52\\ufe54-\\ufe61\\ufe63\\ufe68\\ufe6a-\\ufe6b\\uff01-\\uff03\\uff05-\\uff0a\\uff0c-\\uff0f\\uff1a-\\uff1b\\uff1f-\\uff20\\uff3b-\\uff3d\\uff3f\\uff5b\\uff5d\\uff5f-\\uff65]|\\ud800[\\udd00-\\udd02\\udf9f\\udfd0]|\\ud801[\\udd6f]|\\ud802[\\udc57\\udd1f\\udd3f\\ude50-\\ude58\\ude7f\\udef0-\\udef6\\udf39-\\udf3f\\udf99-\\udf9c]|\\ud804[\\udc47-\\udc4d\\udcbb-\\udcbc\\udcbe-\\udcc1\\udd40-\\udd43\\udd74-\\udd75\\uddc5-\\uddc9\\uddcd\\udddb\\udddd-\\udddf\\ude38-\\ude3d\\udea9]|\\ud805[\\udc4b-\\udc4f\\udc5b\\udc5d\\udcc6\\uddc1-\\uddd7\\ude41-\\ude43\\ude60-\\ude6c\\udf3c-\\udf3e]|\\ud806[\\ude3f-\\ude46\\ude9a-\\ude9c\\ude9e-\\udea2]|\\ud807[\\udc41-\\udc45\\udc70-\\udc71]|\\ud809[\\udc70-\\udc74]|\\ud81a[\\ude6e-\\ude6f\\udef5\\udf37-\\udf3b\\udf44]|\\ud82f[\\udc9f]|\\ud836[\\ude87-\\ude8b]|\\ud83a[\\udd5e-\\udd5f]"};
+const json$6 = {"cjkPattern":"[\\u1100-\\u11ff\\u2e80-\\u2e99\\u2e9b-\\u2ef3\\u2f00-\\u2fd5\\u3000-\\u303f\\u3041-\\u3096\\u309d-\\u309f\\u30a1-\\u30fa\\u30fc-\\u30ff\\u3105-\\u312e\\u3131-\\u318e\\u3190-\\u3191\\u3196-\\u31ba\\u31c0-\\u31e3\\u31f0-\\u321e\\u322a-\\u3247\\u3260-\\u327e\\u328a-\\u32b0\\u32c0-\\u32cb\\u32d0-\\u32fe\\u3300-\\u3370\\u337b-\\u337f\\u33e0-\\u33fe\\u3400-\\u4db5\\u4e00-\\u9fea\\ua960-\\ua97c\\uac00-\\ud7a3\\ud7b0-\\ud7c6\\ud7cb-\\ud7fb\\uf900-\\ufa6d\\ufa70-\\ufad9\\ufe10-\\ufe1f\\ufe30-\\ufe6f\\uff00-\\uffef]|[\\ud840-\\ud868\\ud86a-\\ud86c\\ud86f-\\ud872\\ud874-\\ud879][\\udc00-\\udfff]|\\ud82c[\\udc00-\\udd1e]|\\ud83c[\\ude00\\ude50-\\ude51]|\\ud869[\\udc00-\\uded6\\udf00-\\udfff]|\\ud86d[\\udc00-\\udf34\\udf40-\\udfff]|\\ud86e[\\udc00-\\udc1d\\udc20-\\udfff]|\\ud873[\\udc00-\\udea1\\udeb0-\\udfff]|\\ud87a[\\udc00-\\udfe0]|\\ud87e[\\udc00-\\ude1d]","kPattern":"[\\u1100-\\u11ff\\u3001-\\u3003\\u3008-\\u3011\\u3013-\\u301f\\u302e-\\u3030\\u3037\\u30fb\\u3131-\\u318e\\u3200-\\u321e\\u3260-\\u327e\\ua960-\\ua97c\\uac00-\\ud7a3\\ud7b0-\\ud7c6\\ud7cb-\\ud7fb\\ufe45-\\ufe46\\uff61-\\uff65\\uffa0-\\uffbe\\uffc2-\\uffc7\\uffca-\\uffcf\\uffd2-\\uffd7\\uffda-\\uffdc]","punctuationPattern":"[\\u0021-\\u002f\\u003a-\\u0040\\u005b-\\u0060\\u007b-\\u007e\\u00a1\\u00a7\\u00ab\\u00b6-\\u00b7\\u00bb\\u00bf\\u037e\\u0387\\u055a-\\u055f\\u0589-\\u058a\\u05be\\u05c0\\u05c3\\u05c6\\u05f3-\\u05f4\\u0609-\\u060a\\u060c-\\u060d\\u061b\\u061e-\\u061f\\u066a-\\u066d\\u06d4\\u0700-\\u070d\\u07f7-\\u07f9\\u0830-\\u083e\\u085e\\u0964-\\u0965\\u0970\\u09fd\\u0af0\\u0df4\\u0e4f\\u0e5a-\\u0e5b\\u0f04-\\u0f12\\u0f14\\u0f3a-\\u0f3d\\u0f85\\u0fd0-\\u0fd4\\u0fd9-\\u0fda\\u104a-\\u104f\\u10fb\\u1360-\\u1368\\u1400\\u166d-\\u166e\\u169b-\\u169c\\u16eb-\\u16ed\\u1735-\\u1736\\u17d4-\\u17d6\\u17d8-\\u17da\\u1800-\\u180a\\u1944-\\u1945\\u1a1e-\\u1a1f\\u1aa0-\\u1aa6\\u1aa8-\\u1aad\\u1b5a-\\u1b60\\u1bfc-\\u1bff\\u1c3b-\\u1c3f\\u1c7e-\\u1c7f\\u1cc0-\\u1cc7\\u1cd3\\u2010-\\u2027\\u2030-\\u2043\\u2045-\\u2051\\u2053-\\u205e\\u207d-\\u207e\\u208d-\\u208e\\u2308-\\u230b\\u2329-\\u232a\\u2768-\\u2775\\u27c5-\\u27c6\\u27e6-\\u27ef\\u2983-\\u2998\\u29d8-\\u29db\\u29fc-\\u29fd\\u2cf9-\\u2cfc\\u2cfe-\\u2cff\\u2d70\\u2e00-\\u2e2e\\u2e30-\\u2e49\\u3001-\\u3003\\u3008-\\u3011\\u3014-\\u301f\\u3030\\u303d\\u30a0\\u30fb\\ua4fe-\\ua4ff\\ua60d-\\ua60f\\ua673\\ua67e\\ua6f2-\\ua6f7\\ua874-\\ua877\\ua8ce-\\ua8cf\\ua8f8-\\ua8fa\\ua8fc\\ua92e-\\ua92f\\ua95f\\ua9c1-\\ua9cd\\ua9de-\\ua9df\\uaa5c-\\uaa5f\\uaade-\\uaadf\\uaaf0-\\uaaf1\\uabeb\\ufd3e-\\ufd3f\\ufe10-\\ufe19\\ufe30-\\ufe52\\ufe54-\\ufe61\\ufe63\\ufe68\\ufe6a-\\ufe6b\\uff01-\\uff03\\uff05-\\uff0a\\uff0c-\\uff0f\\uff1a-\\uff1b\\uff1f-\\uff20\\uff3b-\\uff3d\\uff3f\\uff5b\\uff5d\\uff5f-\\uff65]|\\ud800[\\udd00-\\udd02\\udf9f\\udfd0]|\\ud801[\\udd6f]|\\ud802[\\udc57\\udd1f\\udd3f\\ude50-\\ude58\\ude7f\\udef0-\\udef6\\udf39-\\udf3f\\udf99-\\udf9c]|\\ud804[\\udc47-\\udc4d\\udcbb-\\udcbc\\udcbe-\\udcc1\\udd40-\\udd43\\udd74-\\udd75\\uddc5-\\uddc9\\uddcd\\udddb\\udddd-\\udddf\\ude38-\\ude3d\\udea9]|\\ud805[\\udc4b-\\udc4f\\udc5b\\udc5d\\udcc6\\uddc1-\\uddd7\\ude41-\\ude43\\ude60-\\ude6c\\udf3c-\\udf3e]|\\ud806[\\ude3f-\\ude46\\ude9a-\\ude9c\\ude9e-\\udea2]|\\ud807[\\udc41-\\udc45\\udc70-\\udc71]|\\ud809[\\udc70-\\udc74]|\\ud81a[\\ude6e-\\ude6f\\udef5\\udf37-\\udf3b\\udf44]|\\ud82f[\\udc9f]|\\ud836[\\ude87-\\ude8b]|\\ud83a[\\udd5e-\\udd5f]"};
 
 var cjkPattern = json$6.cjkPattern;
 var kPattern = json$6.kPattern;
@@ -30489,7 +30544,7 @@ function getFencedCodeBlockValue$2(node, originalText) {
   var text = originalText.slice(node.position.start.offset, node.position.end.offset);
   var leadingSpaceCount = text.match(/^\s*/)[0].length;
   var replaceRegex = new RegExp(`^\\s{0,${leadingSpaceCount}}`);
-  var lineContents = text.split("\n");
+  var lineContents = text.replace(/\r\n?/g, "\n").split("\n");
   var markerStyle = text[leadingSpaceCount]; // ` or ~
 
   var marker = text.slice(leadingSpaceCount).match(new RegExp(`^[${markerStyle}]+`))[0]; // https://spec.commonmark.org/0.28/#example-104: Closing fences may be indented by 0-3 spaces
@@ -31030,7 +31085,7 @@ function genericPrint$4(path$$1, options, print) {
         if (node.isIndented) {
           // indented code block
           var alignment = " ".repeat(4);
-          return align$2(alignment, concat$12([alignment, join$9(hardline$10, node.value.split("\n"))]));
+          return align$2(alignment, concat$12([alignment, replaceNewlinesWith(node.value, hardline$10)]));
         } // fenced code block
 
 
@@ -31038,7 +31093,7 @@ function genericPrint$4(path$$1, options, print) {
 
         var _style2 = styleUnit.repeat(Math.max(3, util$1.getMaxContinuousCount(node.value, styleUnit) + 1));
 
-        return concat$12([_style2, node.lang || "", hardline$10, join$9(hardline$10, getFencedCodeBlockValue(node, options.originalText).split("\n")), hardline$10, _style2]);
+        return concat$12([_style2, node.lang || "", hardline$10, replaceNewlinesWith(getFencedCodeBlockValue(node, options.originalText), hardline$10), hardline$10, _style2]);
       }
 
     case "yaml":
@@ -31194,7 +31249,7 @@ function getNthListSiblingIndex(node, parentNode) {
 }
 
 function replaceNewlinesWith(str, doc$$2) {
-  return join$9(doc$$2, str.split("\n"));
+  return join$9(doc$$2, str.replace(/\r\n?/g, "\n").split("\n"));
 }
 
 function getNthSiblingIndex(node, parentNode, condition) {
@@ -32016,33 +32071,47 @@ function mapObject(object, fn) {
   return newObject;
 }
 
-function hasPrettierIgnore$3(path$$1) {
-  var node = path$$1.getValue();
+function shouldPreserveContent$1(node) {
+  if (node.type === "element" && node.fullName === "template" && node.attrMap.lang && node.attrMap.lang !== "html") {
+    return true;
+  } // unterminated node in ie conditional comment
+  // e.g. <!--[if lt IE 9]><html><![endif]-->
 
-  if (node.type === "attribute" || node.type === "text") {
-    return false;
+
+  if (node.type === "ieConditionalComment" && node.lastChild && !node.lastChild.isSelfClosing && !node.lastChild.endSourceSpan) {
+    return true;
+  } // incomplete html in ie conditional comment
+  // e.g. <!--[if lt IE 9]></div><![endif]-->
+
+
+  if (node.type === "ieConditionalComment" && !node.complete) {
+    return true;
   } // TODO: handle non-text children in <pre>
 
 
   if (isPreLikeNode$1(node) && node.children.some(function (child) {
-    return child.type !== "text";
+    return child.type !== "text" && child.type !== "interpolation";
   })) {
     return true;
   }
 
-  var parentNode = path$$1.getParentNode();
+  return false;
+}
 
-  if (!parentNode) {
+function hasPrettierIgnore$3(node) {
+  if (node.type === "attribute" || node.type === "text") {
     return false;
   }
 
-  var index = path$$1.getName();
-
-  if (typeof index !== "number" || index === 0) {
+  if (!node.parent) {
     return false;
   }
 
-  var prevNode = parentNode.children[index - 1];
+  if (typeof node.index !== "number" || node.index === 0) {
+    return false;
+  }
+
+  var prevNode = node.parent.children[node.index - 1];
   return isPrettierIgnore$1(prevNode);
 }
 
@@ -32089,6 +32158,10 @@ function isLeadingSpaceSensitiveNode(node) {
     return false;
   }
 
+  if ((node.type === "text" || node.type === "interpolation") && node.prev && (node.prev.type === "text" || node.prev.type === "interpolation")) {
+    return true;
+  }
+
   if (!node.parent || node.parent.cssDisplay === "none") {
     return false;
   }
@@ -32115,6 +32188,10 @@ function isLeadingSpaceSensitiveNode(node) {
 function isTrailingSpaceSensitiveNode(node) {
   if (isFrontMatterNode(node)) {
     return false;
+  }
+
+  if ((node.type === "text" || node.type === "interpolation") && node.next && (node.next.type === "text" || node.next.type === "interpolation")) {
+    return true;
   }
 
   if (!node.parent || node.parent.cssDisplay === "none") {
@@ -32183,7 +32260,7 @@ function isCustomElementWithSurroundingLineBreak(node) {
 }
 
 function isCustomElement(node) {
-  return node.type === "element" && !node.namespace && node.name.includes("-");
+  return node.type === "element" && !node.namespace && (node.name.includes("-") || /[A-Z]/.test(node.name[0]));
 }
 
 function hasSurroundingLineBreak(node) {
@@ -32483,8 +32560,12 @@ function normalizeParts$2(parts) {
   return newParts;
 }
 
-function identity$1(x) {
+function identity$2(x) {
   return x;
+}
+
+function shouldNotPrintClosingTag$1(node) {
+  return !node.isSelfClosing && !node.endSourceSpan && (hasPrettierIgnore$3(node) || shouldPreserveContent$1(node.parent));
 }
 
 var utils_1$3 = {
@@ -32502,7 +32583,7 @@ var utils_1$3 = {
   getNodeCssStyleWhiteSpace,
   getPrettierIgnoreAttributeCommentData: getPrettierIgnoreAttributeCommentData$1,
   hasPrettierIgnore: hasPrettierIgnore$3,
-  identity: identity$1,
+  identity: identity$2,
   inferScriptParser: inferScriptParser$1,
   isDanglingSpaceSensitiveNode,
   isFrontMatterNode,
@@ -32516,7 +32597,9 @@ var utils_1$3 = {
   preferHardlineAsLeadingSpaces: preferHardlineAsLeadingSpaces$1,
   preferHardlineAsTrailingSpaces,
   replaceDocNewlines: replaceDocNewlines$1,
-  replaceNewlines: replaceNewlines$1
+  replaceNewlines: replaceNewlines$1,
+  shouldNotPrintClosingTag: shouldNotPrintClosingTag$1,
+  shouldPreserveContent: shouldPreserveContent$1
 };
 
 var canHaveInterpolation$1 = utils_1$3.canHaveInterpolation;
@@ -33388,6 +33471,8 @@ var normalizeParts$1 = utils_1$3.normalizeParts;
 var preferHardlineAsLeadingSpaces = utils_1$3.preferHardlineAsLeadingSpaces;
 var replaceDocNewlines = utils_1$3.replaceDocNewlines;
 var replaceNewlines = utils_1$3.replaceNewlines;
+var shouldNotPrintClosingTag = utils_1$3.shouldNotPrintClosingTag;
+var shouldPreserveContent = utils_1$3.shouldPreserveContent;
 var insertPragma$6 = pragma$9.insertPragma;
 var printVueFor = syntaxVue.printVueFor;
 var printVueSlotScope = syntaxVue.printVueSlotScope;
@@ -33498,7 +33583,7 @@ function genericPrint$5(path$$1, options, print) {
           }) : isScriptLikeTag(node) && node.parent.type === "root" && options.parser === "vue" ? childrenDoc : indent$9(childrenDoc);
         }(concat$14([shouldHugContent ? ifBreak$5(softline$7, "", {
           groupId: attrGroupId
-        }) : node.firstChild.type === "text" && node.firstChild.isWhitespaceSensitive && node.firstChild.isIndentationSensitive ? node.firstChild.value.indexOf("\n") === -1 ? "" : literalline$6 : node.firstChild.hasLeadingSpaces && node.firstChild.isLeadingSpaceSensitive ? line$9 : softline$7, printChildren$1(path$$1, options, print)])), (node.next ? needsToBorrowPrevClosingTagEndMarker(node.next) : needsToBorrowLastChildClosingTagEndMarker(node.parent)) ? node.lastChild.hasTrailingSpaces && node.lastChild.isTrailingSpaceSensitive ? " " : "" : shouldHugContent ? ifBreak$5(softline$7, "", {
+        }) : node.firstChild.type === "text" && node.firstChild.isWhitespaceSensitive && node.firstChild.isIndentationSensitive ? node.children.length === 1 && node.firstChild.type === "text" && node.firstChild.value.indexOf("\n") === -1 || node.firstChild.sourceSpan.start.line === node.lastChild.sourceSpan.end.line ? "" : literalline$6 : node.firstChild.hasLeadingSpaces && node.firstChild.isLeadingSpaceSensitive ? line$9 : softline$7, printChildren$1(path$$1, options, print)])), (node.next ? needsToBorrowPrevClosingTagEndMarker(node.next) : needsToBorrowLastChildClosingTagEndMarker(node.parent)) ? node.lastChild.hasTrailingSpaces && node.lastChild.isTrailingSpaceSensitive ? " " : "" : shouldHugContent ? ifBreak$5(softline$7, "", {
           groupId: attrGroupId
         }) : node.lastChild.hasTrailingSpaces && node.lastChild.isTrailingSpaceSensitive ? line$9 : node.type === "element" && isPreLikeNode(node) && node.lastChild.type === "text" && (node.lastChild.value.indexOf("\n") === -1 || new RegExp(`\\n\\s{${options.tabWidth * countParents(path$$1, function (n) {
           return n.parent && n.parent.type !== "root";
@@ -33616,12 +33701,17 @@ function printChildren$1(path$$1, options, print) {
   }, "children"));
 
   function printChild(childPath) {
-    if (!hasPrettierIgnore$2(childPath)) {
-      return print(childPath);
+    var child = childPath.getValue();
+
+    if (hasPrettierIgnore$2(child)) {
+      return concat$14([].concat(printOpeningTagPrefix(child), replaceNewlines(options.originalText.slice(options.locStart(child) + (child.prev && needsToBorrowNextOpeningTagStartMarker(child.prev) ? printOpeningTagStartMarker(child).length : 0), options.locEnd(child) - (child.next && needsToBorrowPrevClosingTagEndMarker(child.next) ? printClosingTagEndMarker(child).length : 0)), literalline$6), printClosingTagSuffix(child)));
     }
 
-    var child = childPath.getValue();
-    return concat$14([printOpeningTagPrefix(child), options.originalText.slice(options.locStart(child) + (child.prev && needsToBorrowNextOpeningTagStartMarker(child.prev) ? printOpeningTagStartMarker(child).length : 0), options.locEnd(child) - (child.next && needsToBorrowPrevClosingTagEndMarker(child.next) ? printClosingTagEndMarker(child).length : 0), printClosingTagSuffix(child))]);
+    if (shouldPreserveContent(child)) {
+      return concat$14([].concat(printOpeningTagPrefix(child), group$14(printOpeningTag(childPath, options, print)), replaceNewlines(options.originalText.slice(child.startSourceSpan.end.offset - (child.firstChild && needsToBorrowParentOpeningTagEndMarker(child.firstChild) ? printOpeningTagEndMarker(child).length : 0), child.endSourceSpan.start.offset + (child.lastChild && needsToBorrowParentClosingTagStartMarker(child.lastChild) ? printClosingTagStartMarker(child).length : 0)), literalline$6), printClosingTag(child), printClosingTagSuffix(child)));
+    }
+
+    return print(childPath);
   }
 
   function printBetweenLine(prevNode, nextNode) {
@@ -33679,7 +33769,7 @@ function printOpeningTag(path$$1, options, print) {
     };
     return path$$1.map(function (attrPath) {
       var attr = attrPath.getValue();
-      return hasPrettierIgnoreAttribute(attr) ? options.originalText.slice(options.locStart(attr), options.locEnd(attr)) : print(attrPath);
+      return hasPrettierIgnoreAttribute(attr) ? concat$14(replaceNewlines(options.originalText.slice(options.locStart(attr), options.locEnd(attr)), literalline$6)) : print(attrPath);
     }, "attrs");
   }(node.prev && node.prev.type === "comment" && getPrettierIgnoreAttributeCommentData(node.prev.value)))])),
   /**
@@ -33825,6 +33915,10 @@ function printOpeningTagEndMarker(node) {
 function printClosingTagStartMarker(node) {
   assert(!node.isSelfClosing);
 
+  if (shouldNotPrintClosingTag(node)) {
+    return "";
+  }
+
   switch (node.type) {
     case "ieConditionalComment":
       return "<!";
@@ -33835,6 +33929,10 @@ function printClosingTagStartMarker(node) {
 }
 
 function printClosingTagEndMarker(node) {
+  if (shouldNotPrintClosingTag(node)) {
+    return "";
+  }
+
   switch (node.type) {
     case "comment":
       return "-->";
@@ -33937,7 +34035,8 @@ function printEmbeddedAttributeValue(node, originalTextToDoc, options) {
       // copied from https://github.com/vuejs/vue/blob/v2.5.17/src/compiler/codegen/events.js#L3-L4
       var fnExpRE = /^([\w$_]+|\([^)]*?\))\s*=>|^function\s*\(/;
       var simplePathRE = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*|\['[^']*?']|\["[^"]*?"]|\[\d+]|\[[A-Za-z_$][\w$]*])*$/;
-      var value = getValue();
+      var value = getValue() // https://github.com/vuejs/vue/blob/v2.5.17/src/compiler/helpers.js#L104
+      .trim();
       return printMaybeHug(simplePathRE.test(value) || fnExpRE.test(value) ? textToDoc(value, {
         parser: "__js_expression"
       }) : stripTrailingHardline$2(textToDoc(value, {
