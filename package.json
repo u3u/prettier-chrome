@@ -40,7 +40,7 @@
     "babel-plugin-jsx-v-model": "^2.0.3",
     "bili": "3.4.0",
     "emotion": "^9.2.12",
-    "lint-staged": "^8.0.4",
+    "lint-staged": "^8.1.4",
     "prettier-eslint-check": "^1.0.1",
     "prettier-eslint-cli": "^4.7.1",
     "rollup-plugin-typescript2": "^0.18.0",
