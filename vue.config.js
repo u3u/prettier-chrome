@@ -4,7 +4,7 @@
 const path = require('path');
 
 module.exports = {
-  baseUrl: './',
+  publicPath: './',
   chainWebpack: (config) => {
     // Config resolve alias
     config.resolve.alias
