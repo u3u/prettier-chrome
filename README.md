@@ -22,7 +22,7 @@
 ## Install
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/prettier/nnaminoiljgamnfnemmlcbdlmnleponp)
-- [Get the Chrome Extension](https://github.com/u3u/prettier-chrome/releases/download/v0.4.1/prettier.crx)
+- [Get the Chrome Extension](https://github.com/u3u/prettier-chrome/releases/download/v1.0.0/prettier.crx)
 
 ## Usage
 
