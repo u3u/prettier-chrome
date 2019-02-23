@@ -45,7 +45,7 @@
     "prettier-eslint-cli": "^4.7.1",
     "rollup-plugin-typescript2": "^0.19.2",
     "ts-import-plugin": "^1.5.5",
-    "typescript": "~3.2.2",
+    "typescript": "~3.3.3333",
     "typescript-styled-plugin": "^0.13.0",
     "vue-emotion": "^0.4.2",
     "vue-template-compiler": "^2.6.7",
