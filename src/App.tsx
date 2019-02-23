@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { injectGlobal } from 'vue-emotion';
+import 'element-ui/lib/theme-chalk/base.css';
 
 // eslint-disable-next-line no-unused-expressions
 injectGlobal`
