@@ -2,10 +2,35 @@
 // https://github.com/vuejs/vue-cli/blob/dev/docs/config.md
 // https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
 const path = require('path');
+const tsImportPluginFactory = require('ts-import-plugin');
 
 module.exports = {
   publicPath: './',
   chainWebpack: (config) => {
+    const tsLoaderOptions = {
+      getCustomTransformers: () => ({
+        before: [
+          tsImportPluginFactory({
+            libraryName: 'element-ui',
+            libraryDirectory: 'lib',
+            camel2DashComponentName: true,
+            style: cmptPath => [
+                'element-ui',
+                'lib',
+                'theme-chalk',
+                `${cmptPath.split('/').pop()}.css`,
+              ].join('/'),
+          }),
+        ],
+      }),
+    };
+
+    // Config plugins
+    config.module
+      .rule('ts')
+      .use('ts-loader')
+      .tap(options => ({ ...options, ...tsLoaderOptions }));
+
     // Config resolve alias
     config.resolve.alias
       .set('assets', path.resolve(__dirname, 'src/assets'))

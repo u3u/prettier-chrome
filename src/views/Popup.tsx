@@ -18,20 +18,7 @@ const msgbox = css`
   width: 300px;
 `;
 
-// https://github.com/ElementUI/babel-plugin-component/issues/33
-const ElSwitch = Switch;
-
-@Component({
-  components: {
-    Form,
-    FormItem,
-    Input,
-    Select,
-    Option,
-    Button,
-    Tooltip,
-  },
-})
+@Component
 export default class Popup extends Vue {
   @State('cacheOptions')
   private options!: Prettier.Options;
@@ -219,7 +206,7 @@ export default class Popup extends Vue {
         </FormItem>
         <FormItem label="useTabs:">
           <Tooltip content="Indent lines with tabs" placement="top-start">
-            <ElSwitch v-model={this.useTabs} />
+            <Switch v-model={this.useTabs} />
           </Tooltip>
         </FormItem>
         <FormItem label="semi:">
@@ -227,7 +214,7 @@ export default class Popup extends Vue {
             content="Whether to add a semicolon at the end of every line"
             placement="top-start"
           >
-            <ElSwitch v-model={this.semi} />
+            <Switch v-model={this.semi} />
           </Tooltip>
         </FormItem>
         <FormItem label="singleQuote:">
@@ -235,7 +222,7 @@ export default class Popup extends Vue {
             content="If true, will use single instead of double quotes"
             placement="top-start"
           >
-            <ElSwitch v-model={this.singleQuote} />
+            <Switch v-model={this.singleQuote} />
           </Tooltip>
         </FormItem>
         <FormItem
@@ -257,7 +244,7 @@ export default class Popup extends Vue {
             content="Controls the printing of spaces inside object literals"
             placement="top-start"
           >
-            <ElSwitch v-model={this.bracketSpacing} />
+            <Switch v-model={this.bracketSpacing} />
           </Tooltip>
         </FormItem>
         <FormItem label="jsxBracketSameLine:">
@@ -267,7 +254,7 @@ export default class Popup extends Vue {
               <br />
               the last line instead of being alone on the next line
             </div>
-            <ElSwitch v-model={this.jsxBracketSameLine} />
+            <Switch v-model={this.jsxBracketSameLine} />
           </Tooltip>
         </FormItem>
         <FormItem
