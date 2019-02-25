@@ -37,7 +37,7 @@
     "all-contributors-cli": "^6.1.2",
     "babel-plugin-import": "^1.11.0",
     "babel-plugin-jsx-v-model": "^2.0.3",
-    "bili": "4.2.5",
+    "bili": "4.4.0",
     "emotion": "^10.0.7",
     "eslint": "^5.14.1",
     "eslint-plugin-vue": "^5.2.2",
