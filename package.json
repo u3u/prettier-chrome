@@ -35,7 +35,7 @@
     "@vue/eslint-config-airbnb": "^4.0.0",
     "@vue/eslint-config-typescript": "^4.0.0",
     "all-contributors-cli": "^6.1.2",
-    "babel-plugin-emotion": "^9.2.11",
+    "babel-plugin-emotion": "^10.0.7",
     "babel-plugin-import": "^1.11.0",
     "babel-plugin-jsx-v-model": "^2.0.3",
     "bili": "4.4.0",
