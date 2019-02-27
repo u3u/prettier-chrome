@@ -7,7 +7,6 @@ install:
 
 script:
   - yarn lint
-  - yarn lint:prettier
 
 cache:
   yarn: true
