@@ -1,3 +1,5 @@
+import parsers from './parsers';
+
 const script = document.createElement('script');
 script.src = chrome.runtime.getURL('scripts/prettier.min.js');
 script.onload = () => script.remove();
@@ -17,7 +19,7 @@ window.addEventListener('message', (event) => {
       {
         action: 'setValue',
         value: prettier.format(value, {
-          plugins: prettierPlugins,
+          plugins: [{ parsers }],
           ...options,
         }),
       },
