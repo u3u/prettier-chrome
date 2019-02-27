@@ -15,7 +15,7 @@ import {
 import { css } from 'vue-emotion';
 
 const msgbox = css`
-  width: 300px;
+  width: 300px !important;
 `;
 
 @Component
