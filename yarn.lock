@@ -1168,6 +1168,16 @@
     find-root "^1.1.0"
     source-map "^0.7.2"
 
+"@emotion/cache@10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.0.tgz#e22eadcb770de4131ec707c84207e9e1ce210413"
+  integrity sha512-1/sT6GNyvWmxCtJek8ZDV+b+a+NMDx8/61UTnnF3rqrTY7bLTjw+fmXO7WgUIH0owuWKxza/J/FfAWC/RU4G7A==
+  dependencies:
+    "@emotion/sheet" "0.9.2"
+    "@emotion/stylis" "0.8.3"
+    "@emotion/utils" "0.11.1"
+    "@emotion/weak-memoize" "0.2.2"
+
 "@emotion/cache@^10.0.7":
   version "10.0.7"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.7.tgz#6221de2e939f62022c04b4df2c165ce577809f23"
@@ -1187,6 +1197,13 @@
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.6.6.tgz#62266c5f0eac6941fece302abad69f2ee7e25e44"
   integrity sha512-ojhgxzUHZ7am3D2jHkMzPpsBAiB005GF5YU4ea+8DNPybMk01JJUM9V9YRlF/GE95tcOm8DxQvWA2jq19bGalQ==
+
+"@emotion/is-prop-valid@0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.7.3.tgz#a6bf4fa5387cbba59d44e698a4680f481a8da6cc"
+  integrity sha512-uxJqm/sqwXw3YPA5GXX365OBcJGFtxUVkB6WyezqFHlNe9jqUWH5ur2O2M8dGBz61kn1g3ZBlzUunFQXQIClhA==
+  dependencies:
+    "@emotion/memoize" "0.7.1"
 
 "@emotion/memoize@0.7.1":
   version "0.7.1"
@@ -1506,7 +1523,7 @@
     tslint "^5.12.1"
     webpack ">=4 < 4.29"
 
-"@vue/cli-service@^3.4.1":
+"@vue/cli-service@^3.2.0", "@vue/cli-service@^3.4.1":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.4.1.tgz#65ef3ed00b8e6eeeca736308a703c264cfa280cc"
   integrity sha512-HAF2yeafVJVKiBaapvbVIK4cM+lDU4r6aJzbKLOonzQrnI45T2NLEvYC+9uW7C5LvC1d4g1XUx25Q8ixSBKegQ==
@@ -4033,11 +4050,6 @@ emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
   integrity sha1-TapNnbAPmBmIDHn6RXrlsJof04k=
-
-emotion-utils@^9.1.0:
-  version "9.1.0"
-  resolved "https://registry.npmjs.org/emotion-utils/-/emotion-utils-9.1.0.tgz#7484dbf18f3b1dc1de68559d1ff35a74caa998dc"
-  integrity sha512-Zdy9TiZzMDRsCufivL/ZhQ0JdfGGSOc20opRjaBOemF5h2kYI/MD/bLcXfAZgzYVL12WNQegZIme6l+N/JFE4Q==
 
 emotion@^10.0.7:
   version "10.0.7"
@@ -10739,12 +10751,15 @@ vue-class-component@^7.0.1:
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-7.0.1.tgz#7af2225c600667c7042b60712eefdf41dfc6de63"
   integrity sha512-YIihdl7YmceEOjSwcxLhCXCNA3TKC2FStuMcjtuzhUAgw5x5d1T5gZTmVQHGyOaQsaKffL4GlZzYN3dlMYl53w==
 
-vue-emotion@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.npmjs.org/vue-emotion/-/vue-emotion-0.4.2.tgz#df97359aadd49cc476eb23ba44b7d2962a669ced"
-  integrity sha1-35c1mq3UnMR26yO6RLfSlipmnO0=
+vue-emotion@^0.4.28:
+  version "0.4.28"
+  resolved "https://registry.yarnpkg.com/vue-emotion/-/vue-emotion-0.4.28.tgz#ce7adfa82f31be9a7b9e11c874748b42f04919bf"
+  integrity sha512-EBGjY4WT9lbQ6DlfXexUmScedG0LcEU89VGI4M62ruW6w2dWXeJ1SdH5gybxqG6kf3w78LYIEPgvFHF/+eOb4A==
   dependencies:
-    emotion-utils "^9.1.0"
+    "@emotion/cache" "10.0.0"
+    "@emotion/is-prop-valid" "0.7.3"
+    "@emotion/utils" "0.11.1"
+    "@vue/cli-service" "^3.2.0"
     nano-assign "^1.0.0"
 
 vue-eslint-parser@^2.0.3:
