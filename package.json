@@ -29,7 +29,7 @@
     "@types/node": "^11.9.5",
     "@types/prettier": "^1.16.1",
     "@vue/cli-plugin-babel": "^3.4.1",
-    "@vue/cli-plugin-eslint": "^3.4.1",
+    "@vue/cli-plugin-eslint": "^3.5.0",
     "@vue/cli-plugin-typescript": "^3.4.1",
     "@vue/cli-service": "^3.4.1",
     "@vue/eslint-config-airbnb": "^4.0.0",
