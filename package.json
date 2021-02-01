@@ -40,7 +40,7 @@
     "babel-plugin-jsx-v-model": "^2.0.3",
     "bili": "4.4.0",
     "emotion": "^10.0.7",
-    "eslint": "^5.14.1",
+    "eslint": "^7.19.0",
     "eslint-plugin-vue": "^5.2.2",
     "lint-staged": "^8.1.4",
     "prettier-eslint-check": "^1.0.3",
